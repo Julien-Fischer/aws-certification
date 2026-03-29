@@ -180,6 +180,23 @@ body {
   overflow-x: auto;
 }
 
+.markdown-content table {
+  border-collapse: collapse;
+  border-color: var(--aws-gray);
+  margin-bottom: 20px;
+}
+
+.markdown-content td {
+  border-width: 1px;
+  border-style: solid;
+  padding: 0.5rem;
+}
+
+.markdown-content hr {
+  margin-top: 20px;
+  display: block;
+}
+
 .dark .markdown-content pre {
   border-color: rgba(255,255,255,0.1);
 }
