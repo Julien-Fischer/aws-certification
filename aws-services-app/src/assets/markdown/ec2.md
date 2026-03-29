@@ -62,7 +62,7 @@ Control placement of EC2 instances within AWS infrastructure:
 
 ---
 
-## ❓ Exam Practice Questions
+## ❓ Exam Practice Quiz
 
 ### 🔹 Multiple Choice
 **Q1.** Which EC2 purchasing option provides the largest discount but can be interrupted at short notice?  
