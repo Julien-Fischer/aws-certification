@@ -116,7 +116,7 @@ export class AwsServicesService {
       id: 'AI',
       name: 'Machine Learning',
       description: 'AWS Machine Learning Services',
-      icon: 'fas fa-comment-nodes',
+      icon: 'fas fa-brain',
       category: 'Data, AI & Analytics',
       markdownFile: 'machine_learning.md'
     },
