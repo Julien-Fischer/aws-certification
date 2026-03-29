@@ -126,7 +126,7 @@ body {
   font-size: 0.9rem;
 }
 
-.back-button {
+.main-button {
   background-color: var(--aws-orange);
   border: none;
   color: white;
@@ -136,7 +136,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.back-button:hover {
+.main-button:hover {
   background-color: #e68900;
   transform: translateY(-2px);
 }
