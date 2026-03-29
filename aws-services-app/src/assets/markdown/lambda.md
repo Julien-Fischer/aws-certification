@@ -33,13 +33,13 @@ AWS Lambda is a **serverless compute service** that runs code without provisioni
 ---
 
 ## 🌍 Lambda@Edge vs CloudFront Functions
-| Feature              | Lambda@Edge | CloudFront Functions |
-|----------------------|-------------|-----------------------|
-| Execution location   | Edge locations | Edge locations |
-| Runtime              | Node.js, Python | Lightweight JS only |
-| Max execution time   | ~5 seconds | <1 ms |
+| Feature              | Lambda@Edge                                                     | CloudFront Functions                                 |
+|----------------------|-----------------------------------------------------------------|------------------------------------------------------|
+| Execution location   | Edge locations                                                  | Edge locations                                       |
+| Runtime              | Node.js, Python                                                 | Lightweight JS only                                  |
+| Max execution time   | ~5 seconds                                                      | <1 ms                                                |
 | Use cases            | Complex request/response manipulation (auth, headers, rewrites) | Simple header manipulation, redirects, caching logic |
-| Cost                 | Higher | Lower |
+| Cost                 | Higher                                                          | Lower                                                |
 
 ---
 

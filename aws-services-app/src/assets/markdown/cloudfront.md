@@ -57,12 +57,12 @@
 ### 🔄 Comparison
 | Feature            | CloudFront (CDN)         | Global Accelerator            |
 |--------------------|--------------------------|-------------------------------|
-| Layer              | L7 (HTTP/HTTPS)         | L4 (TCP/UDP)                  |
-| Focus              | Performance via caching | Global availability & routing |
-| Origins            | S3, ALB, EC2, custom    | ALB, NLB, EC2, EIP            |
-| Best for           | Web content, media, APIs| Latency-sensitive global apps |
-| Caching            | Yes                     | No                            |
-| IP addresses       | DNS-based               | Static Anycast IPs            |
+| Layer              | L7 (HTTP/HTTPS)          | L4 (TCP/UDP)                  |
+| Focus              | Performance via caching  | Global availability & routing |
+| Origins            | S3, ALB, EC2, custom     | ALB, NLB, EC2, EIP            |
+| Best for           | Web content, media, APIs | Latency-sensitive global apps |
+| Caching            | Yes                      | No                            |
+| IP addresses       | DNS-based                | Static Anycast IPs            |
 
 ---
 
