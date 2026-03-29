@@ -58,14 +58,14 @@
 
 ## 📊 Comparison Table
 
-| Feature                | CLB           | ALB (L7)                    | NLB (L4)                 | GWLB (L3) |
-|-------------------------|--------------|-----------------------------|--------------------------|-----------|
-| OSI Layer              | 4 & 7        | 7 (HTTP/HTTPS)              | 4 (TCP/UDP, TLS)         | 3 (IP)    |
-| Use case               | Legacy       | Web, microservices, APIs    | High perf., real-time    | Firewalls |
-| Routing features       | Basic        | Path, host, headers, query  | Port, protocol           | IP-based  |
-| Performance            | Low/Med      | High                        | **Highest, lowest latency** | Medium   |
-| Cross-Zone LB cost     | Free opt.    | Always on, free             | Optional, charges apply  | Charges   |
-| Sticky sessions        | Yes          | Yes (cookies)               | No                       | No        |
+| Feature               | CLB         | ALB (L7)                    | NLB (L4)                    | GWLB (L3) |
+|-----------------------|-------------|-----------------------------|-----------------------------|-----------|
+| OSI Layer             | 4 & 7       | 7 (HTTP/HTTPS)              | 4 (TCP/UDP, TLS)            | 3 (IP)    |
+| Use case              | Legacy      | Web, microservices, APIs    | High perf., real-time       | Firewalls |
+| Routing features      | Basic       | Path, host, headers, query  | Port, protocol              | IP-based  |
+| Performance           | Low/Med     | High                        | **Highest, lowest latency** | Medium    |
+| Cross-Zone LB cost    | Free opt.   | Always on, free             | Optional, charges apply     | Charge    |
+| Sticky sessions       | Yes         | Yes (cookies)               | No                          | No        |
 
 ---
 
