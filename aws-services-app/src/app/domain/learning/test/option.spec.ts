@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {Option} from "../quiz";
+import {Option} from "../models/quiz";
 
 describe('Option', () => {
     it('constructs with correct prefix and label from dotted string', () => {

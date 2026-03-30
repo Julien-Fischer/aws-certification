@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from "../domain/models/quiz";
-import {RevisionCard} from "../domain/models/revision-card";
+import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from "../domain/learning/models/quiz";
+import {RevisionCard} from "../domain/learning/models/revision-card";
 
 @Injectable({
   providedIn: 'root',

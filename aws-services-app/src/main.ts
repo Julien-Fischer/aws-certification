@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app/ui/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
-import {awsServicesProviderInjectionToken} from "./app/domain/services/aws-service-provider";
+import {awsServicesProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
 import {InMemoryAwsServicesProvider} from "./app/infra/in-memory-aws-services-provider";
 
 bootstrapApplication(AppComponent, {
