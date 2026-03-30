@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/models/quiz";
+import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/learning/models/quiz";
 
 @Component({
   selector: 'app-quiz',

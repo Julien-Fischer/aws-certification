@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 import {QuizComponent} from "./quiz.component";
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {Answer, Option, MultipleChoiceQuiz, Quiz, TrueFalseQuiz} from "../../../domain/models/quiz";
+import {Answer, Option, MultipleChoiceQuiz, Quiz, TrueFalseQuiz} from "../../../domain/learning/models/quiz";
 
 class MockShuffler implements Shuffler {
 

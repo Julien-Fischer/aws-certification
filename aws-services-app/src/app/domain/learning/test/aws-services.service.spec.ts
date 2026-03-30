@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import {Observable, of} from 'rxjs';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
-import { AwsServicesService } from './aws-services.service';
-import { awsServicesProviderInjectionToken, AwsServicesProvider } from './aws-service-provider';
+import { AwsServicesService } from '../services/aws-services.service';
+import { awsServicesProviderInjectionToken, AwsServicesProvider } from '../aws-service-provider';
 import { AwsService } from '../models/aws-service.model';
 import { RevisionCard } from '../models/revision-card';
 

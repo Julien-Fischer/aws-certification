@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import { Observable, of} from 'rxjs';
 import { AwsService, ServiceCategory } from '../models/aws-service.model';
-import {AwsServicesProvider, awsServicesProviderInjectionToken} from "./aws-service-provider";
+import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
 import {RevisionCard} from "../models/revision-card";
 
 @Injectable({
