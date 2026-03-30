@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
-import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from '../models/aws-service.model';
-
-type Page = {
-  mainContent: string;
-  multipleChoiceQuizzes: MultipleChoiceQuiz[];
-  trueFalseQuizzes: TrueFalseQuiz[];
-};
+import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from "../domain/models/quiz";
+import {RevisionCard} from "../domain/models/revision-card";
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +10,7 @@ export class MarkdownParserService {
   private multipleChoiceParser = new MultipleChoiceParser()
   private trueFalseParser = new TrueFalseParser();
 
-  parse(content: string): Page {
+  parse(content: string): RevisionCard {
     const quizSection = this.extractQuizSection(content);
     const mainContent = this.extractMainContent(content, quizSection);
 
