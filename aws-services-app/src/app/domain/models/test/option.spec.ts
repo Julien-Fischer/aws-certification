@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { Option } from './aws-service.model';
+import { describe, it, expect } from 'vitest';
+import {Option} from "../quiz";
 
 describe('Option', () => {
     it('constructs with correct prefix and label from dotted string', () => {

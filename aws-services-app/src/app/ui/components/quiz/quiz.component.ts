@@ -1,9 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Quiz } from '../../models/aws-service.model';
-import type { MultipleChoiceQuiz } from '../../models/aws-service.model';
-import {Option} from '../../models/aws-service.model';
-import {Shuffler, shufflerInjectionToken} from "../../services/Arrays";
+import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
+import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/models/quiz";
 
 @Component({
   selector: 'app-quiz',
@@ -17,12 +15,10 @@ export class QuizComponent implements OnInit {
   private static readonly SUCCESS_THRESHOLD = 0.5;
 
   private _quizzes: Quiz[] = [];
-  private shuffler: Shuffler;
 
   constructor(
-      @Inject(shufflerInjectionToken) shuffler: Shuffler
+      @Inject(shufflerInjectionToken) private shuffler: Shuffler
   ) {
-    this.shuffler = shuffler;
   }
 
   @Input()

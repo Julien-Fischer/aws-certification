@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { AwsServicesService } from '../../services/aws-services.service';
-import {AwsService, Quiz} from '../../models/aws-service.model';
+import {AwsServicesService} from '../../../domain/services/aws-services.service';
+import {AwsService} from '../../../domain/models/aws-service.model';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
-import {MarkdownParserService} from "../../services/markdown-parser.service";
+import {Quiz} from "../../../domain/models/quiz";
+import {RevisionCard} from "../../../domain/models/revision-card";
 
 @Component({
   selector: 'app-service-detail',
@@ -25,8 +26,7 @@ export class ServiceDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private awsServicesService: AwsServicesService,
-    private markdownParser: MarkdownParserService
+    private awsServicesService: AwsServicesService
   ) {}
 
   ngOnInit(): void {
@@ -51,10 +51,10 @@ export class ServiceDetailComponent implements OnInit {
     );
   }
 
-  private loadMarkdownContent(filename: string): void {
-    this.awsServicesService.getMarkdownContent(filename).subscribe({
-      next: (content) => {
-        const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = this.markdownParser.parse(content);
+  private loadMarkdownContent(serviceName: string): void {
+    this.awsServicesService.getRevisionCards(serviceName).subscribe({
+      next: (page: RevisionCard) => {
+        const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = page;
         this.markdownContent = marked(mainContent) as string;
         this.trueFalseQuizzes = trueFalseQuizzes;
         this.multipleChoiceQuizzes = multipleChoiceQuizzes;

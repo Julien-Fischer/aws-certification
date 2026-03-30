@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {Answer, Option} from "./aws-service.model";
+import { Answer, Option } from "../quiz";
 
 describe('Answer', () => {
     it('constructs with string value', () => {
