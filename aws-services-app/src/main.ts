@@ -7,6 +7,8 @@ import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
 import {awsServicesProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
 import {InMemoryAwsServicesProvider} from "./app/infra/in-memory-aws-services-provider";
+import {scoreBoardInjectionToken} from "./app/domain/scoring/score";
+import {LocalStorageScoreBoard} from "./app/infra/scoring/local-storage-score-board";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -19,6 +21,10 @@ bootstrapApplication(AppComponent, {
     {
       provide: awsServicesProviderInjectionToken,
       useClass: InMemoryAwsServicesProvider
+    },
+    {
+      provide: scoreBoardInjectionToken,
+      useClass: LocalStorageScoreBoard
     }
   ]
 }).catch(err => console.error(err));
