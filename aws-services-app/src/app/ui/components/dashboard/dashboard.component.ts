@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
-import { AwsServicesService } from '../../services/aws-services.service';
-import { ServiceCategory, AwsService } from '../../models/aws-service.model';
+import { AwsServicesService } from '../../../domain/services/aws-services.service';
+import { ServiceCategory } from '../../../domain/models/aws-service.model';
 
 @Component({
   selector: 'app-dashboard',

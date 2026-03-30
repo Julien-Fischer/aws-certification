@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import {QuizComponent} from "./quiz.component";
-import {Shuffler, shufflerInjectionToken} from "../../services/Arrays";
-import {Answer, MultipleChoiceQuiz, Option, Quiz, TrueFalseQuiz} from "../../models/aws-service.model";
+import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
+import {Answer, Option, MultipleChoiceQuiz, Quiz, TrueFalseQuiz} from "../../../domain/models/quiz";
 
 class MockShuffler implements Shuffler {
 
