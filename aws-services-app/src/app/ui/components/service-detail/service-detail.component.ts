@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import {AwsServicesService} from '../../../domain/services/aws-services.service';
-import {AwsService} from '../../../domain/models/aws-service.model';
+import {AwsServicesService} from '../../../domain/learning/services/aws-services.service';
+import {AwsService} from '../../../domain/learning/models/aws-service.model';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
-import {Quiz} from "../../../domain/models/quiz";
-import {RevisionCard} from "../../../domain/models/revision-card";
+import {Quiz} from "../../../domain/learning/models/quiz";
+import {RevisionCard} from "../../../domain/learning/models/revision-card";
 
 @Component({
   selector: 'app-service-detail',
