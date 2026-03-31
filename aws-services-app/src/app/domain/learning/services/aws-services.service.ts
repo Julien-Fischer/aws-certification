@@ -3,6 +3,7 @@ import { Observable, of} from 'rxjs';
 import { AwsService, ServiceCategory } from '../models/aws-service.model';
 import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
 import {RevisionCard} from "../models/revision-card";
+import {AwsServiceId} from "../../shared/AwsServiceId";
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +18,13 @@ export class AwsServicesService {
     this.services.push(...this.awsServicesProvider.getAll());
   }
 
-  getServiceById(id: string): Observable<AwsService | undefined> {
-    const service = this.services.find(s => s.id === id);
+  getServiceById(id: AwsServiceId): Observable<AwsService | undefined> {
+    const service = this.services.find(s => id.hasValue(s.id));
     return of(service);
   }
 
-  getRevisionCards(serviceName: string): Observable<RevisionCard> {
-    return this.awsServicesProvider.getRevisionCards(serviceName)
+  getRevisionCards(id: AwsServiceId): Observable<RevisionCard> {
+    return this.awsServicesProvider.getRevisionCards(id)
   }
 
   getServiceCategories(): Observable<ServiceCategory[]> {

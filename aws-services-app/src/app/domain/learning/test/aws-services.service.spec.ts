@@ -5,6 +5,7 @@ import { AwsServicesService } from '../services/aws-services.service';
 import { awsServicesProviderInjectionToken, AwsServicesProvider } from '../aws-service-provider';
 import { AwsService } from '../models/aws-service.model';
 import { RevisionCard } from '../models/revision-card';
+import {AwsServiceId} from "../../shared/AwsServiceId";
 
 describe('AwsServicesService', () => {
   let service: AwsServicesService;
@@ -13,22 +14,22 @@ describe('AwsServicesService', () => {
   class MockServiceProvider implements AwsServicesProvider {
 
     private services: AwsService[] = [];
-    private revisionCards: Map<string, RevisionCard> = new Map();
+    private revisionCards: Map<AwsServiceId, RevisionCard> = new Map();
 
     havingServices(...services: AwsService[]) {
       this.services.push(...services);
     }
 
-    havingRevisionCard(filename: string, card: RevisionCard) {
-      this.revisionCards.set(filename, card);
+    havingRevisionCard(id: AwsServiceId, card: RevisionCard) {
+      this.revisionCards.set(id, card);
     }
 
     getAll(): AwsService[] {
       return this.services;
     }
 
-    getRevisionCards(filename: string): Observable<RevisionCard> {
-      return of(this.revisionCards.get(filename)!);
+    getRevisionCards(id: AwsServiceId): Observable<RevisionCard> {
+      return of(this.revisionCards.get(id)!);
     }
   }
 

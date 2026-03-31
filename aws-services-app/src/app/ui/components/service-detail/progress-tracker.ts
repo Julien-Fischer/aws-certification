@@ -1,4 +1,4 @@
-import Percentage from "../../../domain/shared/percentage";
+import Percentage from "../../../domain/scoring/models/percentage";
 import Score from "../../../domain/scoring/models/score";
 
 export default class ProgressTracker {

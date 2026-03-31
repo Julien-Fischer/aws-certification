@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import Percentage from "../percentage";
-import Ratio from "../Ratio";
+import Percentage from "../models/percentage";
 
 describe('Percentage', () => {
 

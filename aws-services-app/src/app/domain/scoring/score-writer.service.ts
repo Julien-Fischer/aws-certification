@@ -18,14 +18,12 @@ export class ScoreWriterService implements ScoreWriter {
     score(serviceId: AwsServiceId, score: Score): void {
         const highscore: Highscore = this.storage.getItem(serviceId, Highscore.NONE);
         if (score.beats(highscore)) {
-            console.log('high score bested!')
             this.saveNewHighScore(serviceId, score);
         }
     }
 
-    private saveNewHighScore(serviceId: AwsServiceId, score: Score) {
-        const newHighscore = Highscore.from(score, serviceId);
-            console.log('writing new high score!!!', score.progress.toString(), score.accuracy.toString(), score)
-        this.storage.setItem(serviceId, newHighscore);
+    private saveNewHighScore(id: AwsServiceId, score: Score) {
+        const newHighscore = Highscore.from(score, new Date());
+        this.storage.setItem(id, newHighscore);
     }
 }

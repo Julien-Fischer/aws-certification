@@ -8,6 +8,9 @@ import {storageInjectionToken} from "../storage";
 import {ScoreWriterService} from "../score-writer.service";
 import InMemoryStorage from "./utils/in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
+import {expectThat} from "./utils/score-assertions";
+
+const aurora = new AwsServiceId('aurora');
 
 describe('LeaderboardService', () => {
     let storage = new InMemoryStorage();
@@ -36,33 +39,30 @@ describe('LeaderboardService', () => {
     });
 
     it(`returns specified service's highscore when exists`, () => {
-        whenService('aurora')
+        whenService(aurora)
             .hasHighScore(aScore().withAccuracy(35));
 
-        const highscore = leaderboard.getHighscore('aurora');
+        const highscore = leaderboard.getHighscore(aurora);
 
-        expect(highscore)
-            .toStrictEqual(aHighscore().withAccuracy(35).forService('aurora').build())
+        expectThat(highscore)
+            .is(aHighscore().withAccuracy(35).build())
     });
 
     it(`returns highscore of zero when service's has no highscore`, () => {
-        whenService('aurora').hasNoHighscore();
+        whenService(aurora).hasNoHighscore();
 
-        const highscore = leaderboard.getHighscore('aurora');
+        const highscore = leaderboard.getHighscore(aurora);
 
-        expect(highscore)
-            .toStrictEqual(Highscore.NONE);
+        expectThat(highscore).hasNoHighscore();
     });
 
 
-    function whenService(serviceId: AwsServiceId) {
+    function whenService(id: AwsServiceId) {
         return {
             hasHighScore(score: ScoreBuilder) {
-                scoreWriter.score(serviceId, score.build());
+                scoreWriter.score(id, score.build());
             },
-            hasNoHighscore() {
-
-            }
+            hasNoHighscore() { }
         }
     }
 

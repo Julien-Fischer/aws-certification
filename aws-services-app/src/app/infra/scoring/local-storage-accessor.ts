@@ -2,7 +2,7 @@ import {AwsServiceId} from "../../domain/shared/AwsServiceId";
 import Highscore from "../../domain/scoring/models/highscore";
 import type {Storage} from "../../domain/scoring/storage"
 import {Injectable} from "@angular/core";
-import Percentage from "../../domain/shared/percentage";
+import Percentage from "../../domain/scoring/models/percentage";
 
 @Injectable({
     providedIn: 'root',
@@ -45,7 +45,6 @@ function toHighscore(item: string): Highscore {
     return new Highscore(
         new Percentage(parsed.progress.value),
         new Percentage(parsed.accuracy.value),
-        parsed.date,
-        parsed.service
+        parsed.date
     );
 }

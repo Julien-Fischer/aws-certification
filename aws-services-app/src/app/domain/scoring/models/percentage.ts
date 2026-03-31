@@ -1,4 +1,4 @@
-import Ratio from "./Ratio";
+import Ratio from "./ratio";
 
 export default class Percentage {
 

@@ -11,6 +11,7 @@ import { RevisionCard } from '../../../domain/learning/models/revision-card';
 import Score from '../../../domain/scoring/models/score';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
 import ProgressTracker from './progress-tracker';
+import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
 
 @Component({
   selector: 'app-service-detail',
@@ -37,7 +38,7 @@ export class ServiceDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const serviceId = this.route.snapshot.paramMap.get('id');
+    const serviceId = this.serviceId();
     if (serviceId) {
       this.loadService(serviceId);
     } else {
@@ -45,12 +46,17 @@ export class ServiceDetailComponent implements OnInit {
     }
   }
 
-  private loadService(serviceId: string): void {
+  private serviceId(): AwsServiceId {
+    const idParam = this.route.snapshot.paramMap.get('id')!;
+    return new AwsServiceId(idParam);
+  }
+
+  private loadService(serviceId: AwsServiceId): void {
     this.awsServicesService.getServiceById(serviceId).subscribe(
         service => {
           this.service = service;
           if (service) {
-            this.loadMarkdownContent(service.markdownFile);
+            this.loadMarkdownContent(serviceId);
           } else {
             this.loading = false;
           }
@@ -58,10 +64,10 @@ export class ServiceDetailComponent implements OnInit {
     );
   }
 
-  private loadMarkdownContent(serviceName: string): void {
-    this.awsServicesService.getRevisionCards(serviceName).subscribe({
-      next: (page: RevisionCard) => {
-        const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = page;
+  private loadMarkdownContent(id: AwsServiceId): void {
+    this.awsServicesService.getRevisionCards(id).subscribe({
+      next: (card: RevisionCard) => {
+        const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
         this.markdownContent = marked(mainContent) as string;
         this.trueFalseQuizzes = trueFalseQuizzes;
         this.multipleChoiceQuizzes = multipleChoiceQuizzes;
@@ -91,7 +97,7 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   private notifyScore(score: Score) {
-    this.scoreWriter.score(this.service!.id, score);
+    this.scoreWriter.score(this.serviceId(), score);
   }
 
   resetProgressTracker() {

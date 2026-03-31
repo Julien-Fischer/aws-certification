@@ -2,9 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
 import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/learning/models/quiz";
-import Score from "../../../domain/scoring/models/score";
-import Percentage from "../../../domain/shared/percentage";
-import Ratio from "../../../domain/shared/Ratio";
+import Ratio from "../../../domain/scoring/models/ratio";
 
 @Component({
   selector: 'app-quiz',

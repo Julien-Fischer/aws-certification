@@ -4,7 +4,6 @@ export interface AwsService {
   description: string;
   icon: string;
   category: string;
-  markdownFile: string;
 }
 
 export interface ServiceCategory {
