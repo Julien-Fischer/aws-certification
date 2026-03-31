@@ -1,0 +1,18 @@
+<div class="mt-3 flex flex-col gap-2">
+    <div class="flex justify-between text-xs text-[var(--text-secondary)]">
+        <span class="progress-label">Progress</span>
+        <span class="progress-value">{{ progressValue() }}</span>
+    </div>
+    <div class="w-full bg-[var(--bg-color)] rounded-full h-2 overflow-hidden">
+        <div class="progress-bar progress h-full bg-gradient-to-r from-[#fb923c] to-[#f7b139] rounded-full transition-all duration-1000 ease-out"
+             [ngStyle]="{'width': progressValue() }"></div>
+    </div>
+    <div class="flex justify-between text-xs text-[var(--text-secondary)]">
+        <span class="accuracy-label">Accuracy</span>
+        <span class="accuracy-value ">{{ accuracyValue() }}</span>
+    </div>
+    <div class="w-full bg-[var(--bg-color)] rounded-full h-2 overflow-hidden">
+        <div class="progress-bar accuracy h-full bg-gradient-to-r from-[#3b82f6] to-[#22d3ee] rounded-full transition-all duration-1000 ease-out"
+             [ngStyle]="{'width': accuracyValue() }"></div>
+    </div>
+</div>

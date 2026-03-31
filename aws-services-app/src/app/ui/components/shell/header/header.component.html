@@ -15,6 +15,12 @@
             </div>
         </div>
         <div class="flex items-center ml-auto">
+            <button (click)="gamification.toggle()"
+                    class="theme-toggle-btn mr-4"
+                    [class.active]="gamification.isEnabled()"
+                    [title]="gamification.isEnabled() ? 'Disable Gamification' : 'Enable Gamification'">
+                <i class="fas fa-gamepad fa-xl w-5 h-5 block flex align-items-center justify-center"></i>
+            </button>
             <button (click)="themeService.toggleTheme()" class="theme-toggle-btn mr-4" [title]="themeService.isDark() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
                 <i [class]="themeService.isDark() ? 'fas fa-sun fa-xl' : 'fas fa-moon fa-xl'"></i>
             </button>

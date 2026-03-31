@@ -4,6 +4,8 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {QuizComponent} from "./quiz.component";
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
 import {Answer, Option, MultipleChoiceQuiz, Quiz, TrueFalseQuiz} from "../../../domain/learning/models/quiz";
+import PageObject from "../../test/page-object";
+import Score from "../../../domain/scoring/models/score";
 
 class MockShuffler implements Shuffler {
 
@@ -349,17 +351,14 @@ describe('QuizComponent', () => {
 });
 
 
-export class QuizComponentPage {
+export class QuizComponentPage extends PageObject<QuizComponent> {
 
-    constructor(private fixture: ComponentFixture<QuizComponent>) { }
-
-    async stabilize() {
-        this.fixture.detectChanges();
-        await this.fixture.whenStable();
+    constructor(fixture: ComponentFixture<QuizComponent>) {
+        super(fixture);
     }
 
     get progressBar() {
-        return this.lookup('.progress-bar') as HTMLElement;
+        return this.lookupElement('.progress-bar') as HTMLElement;
     }
 
     get progress() {
@@ -367,11 +366,11 @@ export class QuizComponentPage {
     }
 
     get questionHeader() {
-        return this.lookupTextOf('h5');
+        return this.lookupTextOfElement('h5');
     }
 
     get questionText() {
-        return this.lookupTextOf('.lead');
+        return this.lookupTextOfElement('.lead');
     }
 
     get optionCards() {
@@ -395,11 +394,11 @@ export class QuizComponentPage {
     }
 
     get trueButton() {
-        return this.lookup('button.btn-outline-success') as HTMLElement;
+        return this.lookupElement('button.btn-outline-success') as HTMLElement;
     }
 
     get falseButton() {
-        return this.lookup('button.btn-outline-danger') as HTMLElement;
+        return this.lookupElement('button.btn-outline-danger') as HTMLElement;
     }
 
     isTrueButtonActive() {
@@ -411,11 +410,11 @@ export class QuizComponentPage {
     }
 
     get feedbackSection() {
-        return this.lookup('.feedback-section') as HTMLElement;
+        return this.lookupElement('.feedback-section') as HTMLElement;
     }
 
     get feedbackText() {
-        return this.lookupTextOf('.feedback-section .fw-bold');
+        return this.lookupTextOfElement('.feedback-section .fw-bold');
     }
 
     isFeedbackSuccess() {
@@ -427,11 +426,11 @@ export class QuizComponentPage {
     }
 
     get submitButton() {
-        return this.lookup('button.main-button:not([disabled])') as HTMLElement;
+        return this.lookupElement('button.main-button:not([disabled])') as HTMLElement;
     }
 
     get nextButton() {
-        return this.lookup('button.main-button') as HTMLElement;
+        return this.lookupElement('button.main-button') as HTMLElement;
     }
 
     isSubmitButtonDisabled() {
@@ -440,32 +439,32 @@ export class QuizComponentPage {
     }
 
     get completionScore() {
-        return this.lookupTextOf('.lead .fw-bold');
+        return this.lookupTextOfElement('.lead .fw-bold');
     }
 
-    get score() {
+    get score(): number {
         return this.fixture.componentInstance.score;
     }
 
     get tryAgainButton() {
-        return this.lookup('button.btn-primary') as HTMLElement;
+        return this.lookupElement('button.btn-primary') as HTMLElement;
     }
 
     isQuizComplete() {
-        return !!this.lookup('.text-center.py-4 h3');
+        return !!this.lookupElement('.text-center.py-4 h3');
     }
 
     hasNoQuiz(): boolean {
-        const p = this.lookup('p') as HTMLElement | null;
+        const p = this.lookupElement('p') as HTMLElement | null;
         return !!p && (p.textContent?.trim() === 'No quiz questions available for this service.' || false);
     }
 
     hasSuccessIcon(): boolean {
-        return !!this.lookup('.fa-trophy');
+        return !!this.lookupElement('.fa-trophy');
     }
 
     hasFailureIcon(): boolean {
-        return !!this.lookup('.fa-thumbs-down');
+        return !!this.lookupElement('.fa-thumbs-down');
     }
 
     async clickOption(index: number) {
@@ -492,15 +491,6 @@ export class QuizComponentPage {
         await this.clickElement(this.tryAgainButton);
     }
 
-    private async clickElement(button: HTMLElement | null) {
-        if (button == null) {
-            throw new Error('Button is null');
-        }
-        button.click();
-        this.fixture.detectChanges();
-        await this.stabilize();
-    }
-
     private hasOptionClass(index: number, className: string) {
         const card = this.optionCards[index];
         if (card == null) {
@@ -509,11 +499,4 @@ export class QuizComponentPage {
         return card.classList.contains(className);
     }
 
-    private lookup(searchString: string) {
-        return this.fixture.nativeElement.querySelector(searchString);
-    }
-
-    private lookupTextOf(searchString: string) {
-        return this.lookup(searchString)?.textContent?.trim() || '';
-    }
 }

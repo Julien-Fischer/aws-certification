@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {describe, it, expect, beforeEach} from 'vitest';
 
 import {MarkdownParserService} from '../markdown-parser.service';
-import {Answer, Option} from "../../domain/learning/models/quiz";
+import {Answer, Option} from "../../../domain/learning/models/quiz";
 
 const mainContent = `
 # 📊 AWS Audit & Monitoring – Revision Card
