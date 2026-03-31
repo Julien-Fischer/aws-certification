@@ -2,6 +2,9 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
 import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/learning/models/quiz";
+import Score from "../../../domain/scoring/models/score";
+import Percentage from "../../../domain/shared/percentage";
+import Ratio from "../../../domain/shared/Ratio";
 
 @Component({
   selector: 'app-quiz',
@@ -12,7 +15,7 @@ import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/learning/models/
 })
 export class QuizComponent implements OnInit {
 
-  private static readonly SUCCESS_THRESHOLD = 0.5;
+  private static readonly SUCCESS_THRESHOLD = new Ratio(0.5);
 
   private _quizzes: Quiz[] = [];
 
@@ -20,6 +23,9 @@ export class QuizComponent implements OnInit {
       @Inject(shufflerInjectionToken) private shuffler: Shuffler
   ) {
   }
+
+  @Input() onAnswer: (isCorrect: boolean) => void = () => {};
+  @Input() onRetry: () => void = () => {};
 
   @Input()
   set quizzes(value: Quiz[]) {
@@ -55,6 +61,7 @@ export class QuizComponent implements OnInit {
     this.quizCompleted = false;
     this.score = 0;
     this.progress = 0;
+    this.onRetry();
   }
 
   selectOption(option: string): void {
@@ -72,6 +79,7 @@ export class QuizComponent implements OnInit {
     }
     this.progress = Math.round((this.currentIndex + 1) / this.quizzes.length * 100);
     this.showFeedback = true;
+    this.onAnswer(this.isCorrect);
   }
 
   nextQuestion(): void {
@@ -90,7 +98,7 @@ export class QuizComponent implements OnInit {
   }
 
   hasSucceeded(): boolean {
-    return this.score / this.quizzes.length >= QuizComponent.SUCCESS_THRESHOLD;
+    return QuizComponent.SUCCESS_THRESHOLD.isLessThan(this.correctAnswersRatio());
   }
 
   matchesAnswer(candidate: string): boolean;
@@ -100,6 +108,10 @@ export class QuizComponent implements OnInit {
       return this.currentQuiz.answer.toString() === candidate;
     }
     return this.currentQuiz.answer.value.hasPrefix(candidate.prefix);
+  }
+
+  private correctAnswersRatio(): Ratio {
+    return new Ratio(this.score / this.quizzes.length);
   }
 
   private hasMultipleChoice(quiz: Quiz | (Quiz & { options: unknown })) {

@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import { HeaderComponent } from './header.component';
+import {GamificationService} from "../../../services/gamification.service";
+import {provideGamification} from "../../../test/stub-gamification";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -22,7 +24,8 @@ describe('HeaderComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [HeaderComponent]
+      imports: [HeaderComponent],
+      providers: [provideGamification()]
     })
     .compileComponents();
 
