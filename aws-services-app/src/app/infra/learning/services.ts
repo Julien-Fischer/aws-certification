@@ -1,4 +1,4 @@
-import {AwsService} from "../domain/learning/models/aws-service.model";
+import {AwsService} from "../../domain/learning/models/aws-service.model";
 
 export const AWS_SERVICES: AwsService[] = [
     // Compute Services

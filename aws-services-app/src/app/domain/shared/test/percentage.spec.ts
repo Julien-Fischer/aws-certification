@@ -75,4 +75,12 @@ describe('Percentage', () => {
         expect(Percentage.ONE_HUNDRED.toString()).toBe('100%');
     });
 
+    it('toFixed', () => {
+        const oneAndAHalf = new Percentage(1.5);
+        expect(oneAndAHalf.toFixed(0)).toBe('2%');
+        expect(oneAndAHalf.toFixed(1)).toBe('1.5%');
+        expect(oneAndAHalf.toFixed(2)).toBe('1.50%');
+        expect(oneAndAHalf.toFixed(3)).toBe('1.500%');
+    });
+
 });

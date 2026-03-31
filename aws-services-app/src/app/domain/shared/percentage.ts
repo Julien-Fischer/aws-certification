@@ -43,6 +43,14 @@ export default class Percentage {
         return `${this.value}%`
     }
 
+    toFixed(decimals: number): string {
+        return this.value.toFixed(decimals) + '%';
+    }
+
+    public static ofRatio(ratio: number): Percentage {
+        return new Ratio(ratio).toPercentage();
+    }
+
     private static validate(value: number) {
         if (!Number.isFinite(value)) {
             throw new Error(`Percentage must be a finite number. Got ${value}`);
