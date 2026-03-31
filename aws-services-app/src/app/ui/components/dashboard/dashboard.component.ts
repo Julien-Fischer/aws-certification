@@ -8,6 +8,7 @@ import {AwsService, ServiceCategory} from '../../../domain/learning/models/aws-s
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
 import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
+import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
 
 @Component({
   selector: 'app-dashboard',
@@ -36,6 +37,6 @@ export class DashboardComponent implements OnInit {
   }
 
   protected getHighscore(service: AwsService): Highscore {
-    return this.leaderBoard.getHighscore(service.id);
+    return this.leaderBoard.getHighscore(new AwsServiceId(service.id));
   }
 }

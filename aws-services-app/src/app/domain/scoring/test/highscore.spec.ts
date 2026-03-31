@@ -1,61 +1,41 @@
 import { describe, it, expect } from 'vitest';
-import {aScore} from "./utils/score-builder";
+import Score from "../models/score";
 
 describe('Score', () => {
 
-    it('constructs successfully with valid percentages and date', () => {
-        const score = aScore()
-            .completed(75)
-            .withAccuracy(90)
-            .on(new Date('2026-03-30T10:00:00Z'))
-            .build();
-
-        expect(score.progress.value).toBe(75);
-        expect(score.accuracy.value).toBe(90);
-        expect(score.date).toBeInstanceOf(Date);
-        expect(score.date.getTime()).toBe(new Date('2026-03-30T10:00:00Z').getTime());
-    });
-
     it('progress takes precedence over accuracy', () => {
-        const moreAdvancedButLessAccurate = aScore()
-            .completed(51)
-            .withAccuracy(10)
-            .build()
-        const lessAdvancedButMoreAccurate = aScore()
-            .completed(50)
-            .withAccuracy(99)
-            .build()
-
-        expect(moreAdvancedButLessAccurate.beats(lessAdvancedButMoreAccurate)).toBe(true);
-        expect(lessAdvancedButMoreAccurate.beats(moreAdvancedButLessAccurate)).toBe(false);
-    });
-
-    it('higher score wins, progress being equal', () => {
-        const bestAccuracy = aScore()
-            .completed(60)
-            .withAccuracy(85)
-            .build();
-        const lowerAccuracy = aScore()
-            .completed(60)
-            .withAccuracy(75)
-            .build();
+        const bestAccuracy  = Score.of(51,  0);
+        const lowerAccuracy = Score.of(50, 99);
 
         expect(bestAccuracy.beats(lowerAccuracy)).toBe(true);
         expect(lowerAccuracy.beats(bestAccuracy)).toBe(false);
     });
 
-    it('equal scores and progress are considered equal', () => {
-        const a = aScore()
-            .completed(60)
-            .withAccuracy(80)
-            .build();
-        const b = aScore()
-            .completed(60)
-            .withAccuracy(80)
-            .build();
+    it('higher accuracy wins when progress are equal', () => {
+        const bestAccuracy  = Score.of(60, 85);
+        const lowerAccuracy = Score.of(60, 75);
+
+        expect(bestAccuracy.beats(lowerAccuracy)).toBe(true);
+        expect(lowerAccuracy.beats(bestAccuracy)).toBe(false);
+    });
+
+    it('two scores are equal when their components are equal', () => {
+        const a = Score.of(60, 80);
+        const b = Score.of(60, 80);
 
         expect(a.beats(b)).toBe(false);
         expect(b.beats(a)).toBe(false);
+        expect(a.isEqualTo(b)).toBe(true);
+    });
+
+    it('two scores are not equal when their components differ', () => {
+        const a = Score.of(10, 20);
+        const b = Score.of(99, 20);
+        const c = Score.of(10, 99);
+
+        expect(a.isEqualTo(b)).toBe(false);
+        expect(a.isEqualTo(c)).toBe(false);
+        expect(b.isEqualTo(c)).toBe(false);
     });
 
 });

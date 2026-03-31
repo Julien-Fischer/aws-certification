@@ -1,6 +1,5 @@
 import Score from "../../models/score";
-import Percentage from "../../../shared/percentage";
-import {AwsServiceId} from "../../../shared/AwsServiceId";
+import Percentage from "../../models/percentage";
 import Highscore from "../../models/highscore";
 
 export function aScore(): ScoreBuilder {
@@ -23,16 +22,10 @@ export class ScoreBuilder {
         return this;
     }
 
-    on(value: Date) {
-        this.date = value;
-        return this;
-    }
-
     build(): Score {
         return new Score(
             new Percentage(this.progress),
             new Percentage(this.accuracy),
-            this.date
         );
     }
 }
@@ -43,10 +36,8 @@ export function aHighscore(): HighscoreBuilder {
 
 export class HighscoreBuilder extends ScoreBuilder {
 
-    private serviceId: AwsServiceId = 'S3';
-
-    forService(serviceId: AwsServiceId): HighscoreBuilder {
-        this.serviceId = serviceId;
+    on(value: Date) {
+        this.date = value;
         return this;
     }
 
@@ -54,8 +45,7 @@ export class HighscoreBuilder extends ScoreBuilder {
         return new Highscore(
             new Percentage(this.progress),
             new Percentage(this.accuracy),
-            this.date,
-            this.serviceId
+            this.date
         );
     }
 }

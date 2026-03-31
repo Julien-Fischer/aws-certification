@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import Percentage from '../../../domain/shared/percentage';
+import Percentage from '../../../domain/scoring/models/percentage';
 import ProgressTracker from "./progress-tracker";
 
 describe('ProgressTracker', () => {
