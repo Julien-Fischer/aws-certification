@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import Ratio from "../Ratio";
-import Percentage from "../percentage";
+import Ratio from "../models/ratio";
+import Percentage from "../models/percentage";
 
 describe('Ratio', () => {
     it('constructs valid ratio', () => {

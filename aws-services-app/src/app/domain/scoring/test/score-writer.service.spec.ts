@@ -9,6 +9,9 @@ import {ScoreWriterService} from "../score-writer.service";
 import Score from "../models/score";
 import InMemoryStorage from "./utils/in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
+import {expectThat} from "./utils/score-assertions";
+
+const aurora = new AwsServiceId('aurora');
 
 describe('ScoreWriterService', () => {
     let storage = new InMemoryStorage();
@@ -38,37 +41,37 @@ describe('ScoreWriterService', () => {
 
     it('saves new score if it beats current highscore accuracy', () => {
        const newHighScore = aScore().withAccuracy(100).build();
-       whenService('aurora')
+       whenService(aurora)
            .hasHighScore(aScore().withAccuracy(35));
 
-       scoreWriter.score('aurora', newHighScore);
+       scoreWriter.score(aurora, newHighScore);
 
-       expect(leaderboard.getHighscore('aurora'))
-           .toStrictEqual(Highscore.from(newHighScore, 'aurora'))
+       expectThat(leaderboard.getHighscore(aurora))
+           .is(Highscore.from(newHighScore))
     });
 
     it('does not save new score has less accuracy than current highscore', () => {
         const lowerScore = aScore().withAccuracy(34).build();
-        const currentHighscore = aHighscore().withAccuracy(35).forService('aurora').build();
-        whenService('aurora')
+        const currentHighscore = aHighscore().withAccuracy(35).build();
+        whenService(aurora)
             .hasHighScore(currentHighscore);
 
-        scoreWriter.score('aurora', lowerScore);
+        scoreWriter.score(aurora, lowerScore);
 
-        expect(leaderboard.getHighscore('aurora'))
-            .toStrictEqual(currentHighscore)
+        expectThat(leaderboard.getHighscore(aurora))
+            .is(currentHighscore)
     });
 
     it('does not save new score if has same accuracy than current highscore', () => {
         const lowerScore = aScore().withAccuracy(35).build();
-        const currentHighscore = aHighscore().withAccuracy(35).forService('aurora').build();
-        whenService('aurora')
+        const currentHighscore = aHighscore().withAccuracy(35).build();
+        whenService(aurora)
             .hasHighScore(currentHighscore);
 
-        scoreWriter.score('aurora', lowerScore);
+        scoreWriter.score(aurora, lowerScore);
 
-        expect(leaderboard.getHighscore('aurora'))
-            .toStrictEqual(currentHighscore)
+        expectThat(leaderboard.getHighscore(aurora))
+            .is(currentHighscore)
     });
 
     it('saves new score if it has greater progress, regardless or accuracy', () => {
@@ -80,21 +83,21 @@ describe('ScoreWriterService', () => {
             .completed(50)
             .withAccuracy(50)
             .build();
-        whenService('aurora')
+        whenService(aurora)
             .hasHighScore(oldHighscore);
 
-        scoreWriter.score('aurora', newHighScore);
+        scoreWriter.score(aurora, newHighScore);
 
-        expect(leaderboard.getHighscore('aurora'))
-            .toStrictEqual(Highscore.from(newHighScore, 'aurora'))
+        expectThat(leaderboard.getHighscore(aurora))
+            .is(Highscore.from(newHighScore))
     });
 
 
-    function whenService(serviceId: AwsServiceId) {
+    function whenService(id: AwsServiceId) {
         return {
             hasHighScore(score: ScoreBuilder | Score)  {
                 const builtScore = ('build' in score) ? score.build() : score;
-                scoreWriter.score(serviceId, builtScore);
+                scoreWriter.score(id, builtScore);
             }
         }
     }
