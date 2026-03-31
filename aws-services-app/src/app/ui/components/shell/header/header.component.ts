@@ -2,6 +2,7 @@ import {Component, Inject, inject} from '@angular/core';
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -16,9 +17,14 @@ export class HeaderComponent {
   gamification: Gamification;
 
   constructor(
+      private router: Router,
       @Inject(gamificationInjectionToken) gamification: Gamification
   ) {
     this.gamification = gamification;
+  }
+
+  goBack(): void {
+    void this.router.navigate(['/']);
   }
 
 }

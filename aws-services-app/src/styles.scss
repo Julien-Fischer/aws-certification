@@ -32,14 +32,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.aws-header {
-  background: linear-gradient(135deg, #232f3e 0%, #4b9cd3 100%);
-  color: var(--header-text);
-  padding: 1rem 0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: none;
-}
-
 .theme-toggle-btn {
   background: transparent;
   border: none;
