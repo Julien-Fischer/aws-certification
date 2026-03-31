@@ -1,34 +1,34 @@
 <div class="aws-header ">
     <div class="container flex">
-        <!--        THE AWS LOGO   -->
-        <div class="flex align-items-center">
-            <h1 class="mb-0">
-                <i class="fab fa-aws fa-xl me-3"></i>
-            </h1>
 
-        </div>
+        <div (click)="goBack()" class="flex align-items-center cursor-pointer">
+            <!--        THE AWS LOGO   -->
+            <div class="flex align-items-center">
+                <h1 class="mb-0 text-xl">
+                    <i class="fab fa-aws fa-xl me-3"></i>
+                </h1>
+            </div>
 
-        <div class="flex items-center space-x-4">
-            <div>
-                <h1 class="text-xl font-bold ">My AWS Certification Study</h1>
-                <p class="text-sm">Master AWS concepts with interactive learning</p>
+            <div class="flex items-center space-x-4">
+                <div>
+                    <h1 class="text-md font-bold ">AWS Architect Study (SAA-C03)</h1>
+                </div>
             </div>
         </div>
+
         <div class="flex items-center ml-auto">
             <button (click)="gamification.toggle()"
                     class="theme-toggle-btn mr-4"
                     [class.active]="gamification.isEnabled()"
                     [title]="gamification.isEnabled() ? 'Disable Gamification' : 'Enable Gamification'">
-                <i class="fas fa-gamepad fa-xl w-5 h-5 block flex align-items-center justify-center"></i>
+                <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
             </button>
             <button (click)="themeService.toggleTheme()" class="theme-toggle-btn mr-4" [title]="themeService.isDark() ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
                 <i [class]="themeService.isDark() ? 'fas fa-sun fa-xl' : 'fas fa-moon fa-xl'"></i>
             </button>
-            <h1 class="mb-0" id="github_project">
                 <a href="https://github.com/ymougenel/aws-certification" alt="lien github">
                     <i class="fab fa-github fa-xl"></i>
                 </a>
-            </h1>
         </div>
     </div>
 </div>

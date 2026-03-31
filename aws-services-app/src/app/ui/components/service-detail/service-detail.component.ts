@@ -103,6 +103,6 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    void this.router.navigate(['/']);
   }
 }

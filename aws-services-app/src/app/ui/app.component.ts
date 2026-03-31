@@ -13,7 +13,7 @@ import {ThemeService} from "./services/theme.service";
     <div [class.dark]="themeService.isDark()">
       <div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <app-header></app-header>
-        <main>
+        <main class="pt-12"> 
           <router-outlet></router-outlet>
         </main>
         <app-footer></app-footer>
