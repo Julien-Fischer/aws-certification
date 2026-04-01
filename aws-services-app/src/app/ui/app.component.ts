@@ -17,7 +17,7 @@ import appConfig from '../../assets/app-config.json';
         <main class="pt-12"> 
           <router-outlet></router-outlet>
         </main>
-        <app-footer></app-footer>
+        <app-footer [authors]="authors"></app-footer>
       </div>
     </div>
   `,
@@ -30,5 +30,6 @@ import appConfig from '../../assets/app-config.json';
 export class AppComponent {
   title = appConfig.appName;
   logo = appConfig.appLogo;
+  authors = appConfig.authors;
   themeService = inject(ThemeService);
 }

@@ -1,4 +1,14 @@
 {
   "appName": "AWS Architect Certification (SAA-C03)",
-  "appLogo": "fab fa-aws fa-xl me-3"
+  "appLogo": "fab fa-aws fa-xl me-3",
+  "authors": [
+    {
+      "name": "ymougenel",
+      "url": "https://blog.ymougenel.com/about/"
+    },
+    {
+      "name": "Julien Fischer",
+      "url": "https://craft.coach/about/"
+    }
+  ]
 }
