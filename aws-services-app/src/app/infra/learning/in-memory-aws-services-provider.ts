@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {AwsService} from "../../domain/learning/models/aws-service.model";
-import {AWS_SERVICES} from "./services";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AwsServicesProvider} from "../../domain/learning/aws-service-provider";
@@ -18,11 +17,11 @@ export class InMemoryAwsServicesProvider implements AwsServicesProvider {
         private markdownParser: MarkdownParserService,
     ) { }
 
-    getAll(): AwsService[] {
-        return AWS_SERVICES;
+    getAll(): Observable<AwsService[]> {
+        return this.http.get<AwsService[]>('assets/cards-categories.json');
     }
 
-    getRevisionCards(id: AwsServiceId): Observable<RevisionCard> {
+    getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
         return this.http.get(`/assets/markdown/${id}.md`, { responseType: 'text' }).pipe(
             map(content => this.markdownParser.parse(content)
         ));
