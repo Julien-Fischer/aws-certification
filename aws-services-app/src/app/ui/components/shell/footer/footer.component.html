@@ -8,10 +8,20 @@
             </div>
             <div class="text-center"><p class="text-sm text-gray-600 dark:text-slate-400">Made in <span
                     class="font-semibold">{{ current_date | date:'yyyy' }}</span> by
-                <a class="font-semibold text-blue-600 dark:text-sky-400" href="https://blog.ymougenel.com/about/">ymougenel</a>
-                and
-                <a class="font-semibold text-blue-600 dark:text-sky-400" href="https://craft.coach/about/" target="_blank">Julien Fischer</a>,
-                with <span class="text-red-500">❤️</span>
+                @for (author of authors; track author) {
+                    <a
+                            [href]="author.url"
+                            class="underline hover:no-underline font-semibold text-blue-600 dark:text-sky-400"
+                            target="_blank"
+                    >{{ author.name }}</a>
+                    @if ($index < authors.length - 2) {
+                        <span>, </span>
+                    }
+                    @else if ($index < authors.length - 1) {
+                        <span> and </span>
+                    }
+                }
+                , with <span class="text-red-500">❤️</span>
                 and <span class="font-semibold text-purple-600 dark:text-purple-400">AI</span></p></div>
             <div>
                 <!--                <button class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200">-->
