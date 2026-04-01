@@ -1,5 +1,10 @@
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {DatePipe} from "@angular/common";
+
+interface Author {
+  name: string;
+  url: string;
+}
 
 @Component({
   selector: 'app-footer',
@@ -12,5 +17,8 @@ import {DatePipe} from "@angular/common";
 })
 export class FooterComponent {
 
+  @Input() authors: Author[] = [];
+
   current_date = new Date();
+
 }
