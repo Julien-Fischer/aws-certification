@@ -81,9 +81,26 @@
 
 ---
 
+### ⚙️ Amazon Bedrock
+- **Serverless foundation model (FM) service** for building **generative AI applications**.
+- Provides access to top foundation models (Anthropic Claude, Amazon Titan, etc.).
+- Integrates with other AWS tools (SageMaker, Kendra, etc.) for **customization, fine-tuning, and orchestration**.
+- Ideal for **text generation, summarization, chatbots, and knowledge assistants**.
+
+---
+
+### 🧩 Amazon Bedrock AgentCore
+- **Framework within Bedrock** for managing **AI agents** that take actions via APIs or data sources.
+- Lets developers define **reasoning, orchestration, and tool-use logic** for AI systems.
+- Supports **retrieval-augmented generation (RAG)** and **secure data access**.
+- Simplifies deployment of **autonomous or semi-autonomous AI agents** built on foundation models.
+
+---
+
 ## ❓ Exam Practice Quiz
 
 ### 🔹 Multiple Choice
+
 **Q1.** Which service is used for **image and video analysis**?  
 A. Comprehend  
 B. Rekognition  
@@ -120,15 +137,40 @@ D. Comprehend
 
 ---
 
+**Q5.** Which service provides **foundation models for generative AI apps**?  
+A. SageMaker  
+B. Bedrock  
+C. Polly  
+D. Kendra  
+✅ **Answer: B**
+
+---
+
+**Q6.** Which service helps developers **create and orchestrate generative AI agents**?  
+A. Bedrock AgentCore  
+B. Comprehend  
+C. Lex  
+D. Connect  
+✅ **Answer: A**
+
+---
+
 ### 🔹 True / False
-**Q5.** Amazon Polly is used to convert speech into text.  
+
+**Q7.** Amazon Polly is used to convert speech into text.  
 ❌ False (that’s **Transcribe**).
 
-**Q6.** Amazon Connect can integrate with Lex to provide intelligent customer support.  
+**Q8.** Amazon Connect can integrate with Lex to provide intelligent customer support.  
 ✅ True
 
-**Q7.** SageMaker is only for training ML models, not for deployment.  
+**Q9.** SageMaker is only for training ML models, not for deployment.  
 ❌ False (it covers **training + deployment**).
+
+**Q10.** Amazon Bedrock provides foundation models to build generative AI applications.  
+✅ True
+
+**Q11.** Amazon Bedrock AgentCore is used to train models from scratch.  
+❌ False (it orchestrates **agent behavior and tool use**, not training).
 
 ---
 
@@ -136,4 +178,6 @@ D. Comprehend
 - “Which service to build a **chatbot** → **Lex**.”
 - “Which service to analyze **customer sentiment in reviews** → **Comprehend**.”
 - “Which service to build a **recommendation system** → **Personalize**.”
-- “Which service for **enterprise document search** → **Kendra**.”  
+- “Which service for **enterprise document search** → **Kendra**.”
+- “Which service to build a **generative AI app using FMs** → **Bedrock**.”
+- “Which service to build **AI agents that invoke APIs** → **Bedrock AgentCore**.”
