@@ -12,7 +12,7 @@ import {ThemeService} from "./services/theme.service";
   template: `
     <div [class.dark]="themeService.isDark()">
       <div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-        <app-header></app-header>
+        <app-header [appName]="title"></app-header>
         <main class="pt-12"> 
           <router-outlet></router-outlet>
         </main>
@@ -27,6 +27,6 @@ import {ThemeService} from "./services/theme.service";
   `]
 })
 export class AppComponent {
-  title = 'AWS Services Dashboard';
+  title = 'AWS Architect Certification (SAA-C03)';
   themeService = inject(ThemeService);
 }

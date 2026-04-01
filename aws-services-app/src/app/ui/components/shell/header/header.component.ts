@@ -1,4 +1,4 @@
-import {Component, Inject, inject} from '@angular/core';
+import {Component, Inject, inject, Input} from '@angular/core';
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
@@ -12,6 +12,8 @@ import {Router} from "@angular/router";
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  @Input() appName: string = '';
+
   themeService = inject(ThemeService);
 
   gamification: Gamification;
