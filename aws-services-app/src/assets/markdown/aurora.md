@@ -4,9 +4,9 @@
 
 ## ✅ Aurora Principles (5 Keypoints)
 1. **AWS-native RDS engine**: Fully managed, compatible with MySQL & PostgreSQL.  
-2. **Performance**: Up to 5x faster than MySQL and 3x faster than PostgreSQL.  
+2. **Performance**: Up to 5x faster than MySQL and 3x faster than PostgreSQL via optimized storage.
 3. **Storage**: Auto-scaling up to 128 TB per cluster.  
-4. **Fault-tolerant**: Data replicated across 3 AZs, 6 copies total.  
+4. **Fault-tolerant**: Data replicated across 3 AZs, 6 copies total, quorum-based replication (4/6 write quorum)
 5. **Pay-per-use**: Only pay for what you consume (compute + storage).  
 
 ---
