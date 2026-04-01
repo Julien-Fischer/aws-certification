@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import {FooterComponent} from "./components/shell/footer/footer.component";
 import {HeaderComponent} from "./components/shell/header/header.component";
 import {ThemeService} from "./services/theme.service";
+import appConfig from '../../assets/app-config.json';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,6 @@ import {ThemeService} from "./services/theme.service";
   `]
 })
 export class AppComponent {
-  title = 'AWS Architect Certification (SAA-C03)';
+  title = appConfig.appName;
   themeService = inject(ThemeService);
 }
