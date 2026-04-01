@@ -1,5 +1,5 @@
 <div class="container mt-4">
-  @for (category of categories; track category) {
+  @for (category of (categories | async); track category.name) {
     <div class="row">
 
       <div class="col-12">

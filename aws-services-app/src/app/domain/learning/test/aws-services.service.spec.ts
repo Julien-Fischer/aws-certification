@@ -28,7 +28,7 @@ describe('AwsServicesService', () => {
       return this.services;
     }
 
-    getRevisionCards(id: AwsServiceId): Observable<RevisionCard> {
+    getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
       return of(this.revisionCards.get(id)!);
     }
   }

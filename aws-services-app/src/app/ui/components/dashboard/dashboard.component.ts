@@ -9,6 +9,7 @@ import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.com
 import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
 import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +19,7 @@ import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  categories: ServiceCategory[] = [];
+  categories!: Observable<ServiceCategory[]>;
 
   constructor(
     private awsServicesService: AwsServicesService,
@@ -27,9 +28,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.awsServicesService.getServiceCategories().subscribe(
-      categories => this.categories = categories
-    );
+    this.categories = this.awsServicesService.getServiceCategories();
   }
 
   navigateToService(serviceId: string): void {

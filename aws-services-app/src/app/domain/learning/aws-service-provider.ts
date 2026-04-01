@@ -8,7 +8,7 @@ export const awsServicesProviderInjectionToken = new InjectionToken<AwsServicesP
 
 export interface AwsServicesProvider {
 
-    getAll(): AwsService[];
+    getAll(): Observable<AwsService[]>;
 
-    getRevisionCards(id: AwsServiceId): Observable<RevisionCard>;
+    getRevisionCard(id: AwsServiceId): Observable<RevisionCard>;
 }

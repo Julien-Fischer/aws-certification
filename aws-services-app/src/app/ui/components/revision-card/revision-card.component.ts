@@ -65,7 +65,7 @@ export class RevisionCardComponent implements OnInit {
   }
 
   private loadMarkdownContent(id: AwsServiceId): void {
-    this.awsServicesService.getRevisionCards(id).subscribe({
+    this.awsServicesService.getRevisionCard(id).subscribe({
       next: (card: RevisionCard) => {
         const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
         this.markdownContent = marked(mainContent) as string;
