@@ -14,13 +14,13 @@ import ProgressTracker from './progress-tracker';
 import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
 
 @Component({
-  selector: 'app-service-detail',
+  selector: 'app-revision-card',
   standalone: true,
   imports: [CommonModule, QuizComponent],
-  templateUrl: './service-detail.component.html',
-  styleUrl: './service-detail.component.scss',
+  templateUrl: './revision-card.component.html',
+  styleUrl: './revision-card.component.scss',
 })
-export class ServiceDetailComponent implements OnInit {
+export class RevisionCardComponent implements OnInit {
   service: AwsService | undefined;
   markdownContent: string = '';
   trueFalseQuizzes: Quiz[] = [];
