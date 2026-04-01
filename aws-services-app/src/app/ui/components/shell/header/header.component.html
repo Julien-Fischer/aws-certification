@@ -2,17 +2,13 @@
     <div class="container flex">
 
         <div (click)="goBack()" class="flex align-items-center cursor-pointer">
-            <!--        THE AWS LOGO   -->
             <div class="flex align-items-center">
-                <h1 class="mb-0 text-xl">
-                    <i class="fab fa-aws fa-xl me-3"></i>
+                <h2>
+                    <i [class]="logo + ' text-3xl'"></i>
+                </h2>
+                <h1>
+                    <span class="text-md font-bold ">{{appName}}</span>
                 </h1>
-            </div>
-
-            <div class="flex items-center space-x-4">
-                <div>
-                    <h1 class="text-md font-bold ">{{appName}}</h1>
-                </div>
             </div>
         </div>
 
@@ -30,9 +26,10 @@
                    [class.fa-moon]="!themeService.isDark()">
                 </i>
             </button>
-                <a href="https://github.com/ymougenel/aws-certification" alt="lien github">
-                    <i class="fab fa-github fa-xl"></i>
-                </a>
+            <a href="https://github.com/ymougenel/aws-certification" alt="lien github">
+                <i class="fab fa-github fa-xl"></i>
+            </a>
         </div>
+
     </div>
 </div>
