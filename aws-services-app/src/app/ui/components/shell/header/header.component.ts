@@ -13,6 +13,7 @@ import {Router} from "@angular/router";
 })
 export class HeaderComponent {
   @Input() appName: string = '';
+  @Input() logo: string = '';
 
   themeService = inject(ThemeService);
 
