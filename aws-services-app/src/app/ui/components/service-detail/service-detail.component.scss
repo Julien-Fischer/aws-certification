@@ -11,6 +11,23 @@
     font-weight: bold;
 }
 
+.markdown-content ::ng-deep ul {
+    padding-left: 15px;
+}
+
+.markdown-content ::ng-deep ul li ul {
+    padding-left: 30px;
+}
+
+.markdown-content ::ng-deep ul li {
+    list-style: disc;
+    padding-left: 5px;
+}
+
+.markdown-content ::ng-deep ul li ul li {
+    list-style: square;
+}
+
 .card-header {
     border-radius: 15px 15px 0 0 !important;
 }
