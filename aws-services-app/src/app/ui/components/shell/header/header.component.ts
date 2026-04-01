@@ -14,6 +14,7 @@ import {Router} from "@angular/router";
 export class HeaderComponent {
   @Input() appName: string = '';
   @Input() logo: string = '';
+  @Input() repository: string = '';
 
   themeService = inject(ThemeService);
 

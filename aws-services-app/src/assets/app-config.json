@@ -1,6 +1,7 @@
 {
   "appName": "AWS Architect Certification (SAA-C03)",
   "appLogo": "fab fa-aws fa-xl me-3",
+  "repository": "https://github.com/ymougenel/aws-certification",
   "authors": [
     {
       "name": "ymougenel",

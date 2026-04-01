@@ -13,7 +13,7 @@ import appConfig from '../../assets/app-config.json';
   template: `
     <div [class.dark]="themeService.isDark()">
       <div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-        <app-header [appName]="title" [logo]="logo"></app-header>
+        <app-header [appName]="title" [logo]="logo" [repository]="repository"></app-header>
         <main class="pt-12"> 
           <router-outlet></router-outlet>
         </main>
@@ -30,6 +30,7 @@ import appConfig from '../../assets/app-config.json';
 export class AppComponent {
   title = appConfig.appName;
   logo = appConfig.appLogo;
+  repository = appConfig.repository;
   authors = appConfig.authors;
   themeService = inject(ThemeService);
 }
