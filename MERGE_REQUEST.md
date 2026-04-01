@@ -65,7 +65,7 @@ aws-services-app/
 │   │   │   ├── dashboard/           # Main service cards view
 │   │   │   │   └── dashboard.component.ts
 │   │   │   └── service-detail/      # Individual service pages
-│   │   │       └── service-detail.component.ts
+│   │   │       └── revision-card.component.ts
 │   │   ├── models/
 │   │   │   └── aws-service.model.ts # TypeScript interfaces
 │   │   ├── services/
