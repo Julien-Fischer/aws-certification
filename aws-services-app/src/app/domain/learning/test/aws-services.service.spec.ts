@@ -3,24 +3,24 @@ import {Observable, of} from 'rxjs';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
 import { AwsServicesService } from '../services/aws-services.service';
 import { awsServicesProviderInjectionToken, AwsServicesProvider } from '../aws-service-provider';
-import { AwsService } from '../models/aws-service.model';
+import { FlashCardMetadata } from '../models/aws-service.model';
 import { FlashCard } from '../models/flash-card';
 import {FlashCardId} from "../../shared/FlashCardId";
 
 class MockServiceProvider implements AwsServicesProvider {
 
-  private services: AwsService[] = [];
+  private services: FlashCardMetadata[] = [];
   private revisionCards: Map<FlashCardId, FlashCard> = new Map();
 
-  havingServices(...services: AwsService[]) {
+  havingServices(...services: FlashCardMetadata[]) {
     this.services.push(...services);
   }
 
-  havingRevisionCard(id: FlashCardId, card: FlashCard) {
+  havingFlashCard(id: FlashCardId, card: FlashCard) {
     this.revisionCards.set(id, card);
   }
 
-  getAll(): Observable<AwsService[]> {
+  getAll(): Observable<FlashCardMetadata[]> {
     return of(this.services);
   }
 

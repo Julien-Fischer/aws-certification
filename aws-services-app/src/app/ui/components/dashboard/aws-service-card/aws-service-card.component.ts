@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AwsService } from '../../../../domain/learning/models/aws-service.model';
+import { FlashCardMetadata } from '../../../../domain/learning/models/aws-service.model';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {HighscoreBarsComponent} from "./highscore-bars/highscore-bars.component";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
@@ -14,7 +14,7 @@ import {Gamification, gamificationInjectionToken} from "../../../services/gamifi
 })
 export class AwsServiceCardComponent {
 
-  @Input({ required: true }) service!: AwsService;
+  @Input({ required: true }) service!: FlashCardMetadata;
   @Input({ required: true }) highscore!: Highscore;
   @Output() serviceClick = new EventEmitter<string>();
 

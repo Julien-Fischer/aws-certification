@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AwsService} from "../../domain/learning/models/aws-service.model";
+import {FlashCardMetadata} from "../../domain/learning/models/aws-service.model";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AwsServicesProvider} from "../../domain/learning/aws-service-provider";
@@ -17,8 +17,8 @@ export class InMemoryAwsServicesProvider implements AwsServicesProvider {
         private markdownParser: MarkdownParserService,
     ) { }
 
-    getAll(): Observable<AwsService[]> {
-        return this.http.get<AwsService[]>('assets/cards-categories.json');
+    getAll(): Observable<FlashCardMetadata[]> {
+        return this.http.get<FlashCardMetadata[]>('assets/cards-categories.json');
     }
 
     getRevisionCard(id: FlashCardId): Observable<FlashCard> {

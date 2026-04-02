@@ -1,4 +1,4 @@
-export interface AwsService {
+export interface FlashCardMetadata {
   id: string;
   name: string;
   description: string;
@@ -8,6 +8,6 @@ export interface AwsService {
 
 export interface ServiceCategory {
   name: string;
-  services: AwsService[];
+  services: FlashCardMetadata[];
 }
 
