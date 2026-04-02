@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from "../../domain/learning/models/quiz";
-import {RevisionCard} from "../../domain/learning/models/revision-card";
+import {FlashCard} from "../../domain/learning/models/flash-card";
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +10,7 @@ export class MarkdownParserService {
   private multipleChoiceParser = new MultipleChoiceParser()
   private trueFalseParser = new TrueFalseParser();
 
-  parse(content: string): RevisionCard {
+  parse(content: string): FlashCard {
     const quizSection = this.extractQuizSection(content);
     const mainContent = this.extractMainContent(content, quizSection);
 

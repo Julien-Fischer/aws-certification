@@ -1,6 +1,6 @@
 import {MultipleChoiceQuiz, TrueFalseQuiz} from "./quiz";
 
-export type RevisionCard = {
+export type FlashCard = {
 
     mainContent: string;
     multipleChoiceQuizzes: MultipleChoiceQuiz[];
