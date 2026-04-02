@@ -10,5 +10,5 @@ export interface FlashCardProvider {
 
     getAll(): Observable<FlashCardMetadata[]>;
 
-    getRevisionCard(id: FlashCardId): Observable<FlashCard>;
+    getCard(id: FlashCardId): Observable<FlashCard>;
 }

@@ -24,7 +24,7 @@ class MockFlashCardProvider implements FlashCardProvider {
     return of(this.metadata);
   }
 
-  getRevisionCard(id: FlashCardId): Observable<FlashCard> {
+  getCard(id: FlashCardId): Observable<FlashCard> {
     return of(this.cards.get(id)!);
   }
 

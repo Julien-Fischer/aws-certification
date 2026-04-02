@@ -27,7 +27,7 @@ export class FlashCardService {
   }
 
   getFlashCard(id: FlashCardId): Observable<FlashCard> {
-    return this.flashCardProvider.getRevisionCard(id)
+    return this.flashCardProvider.getCard(id)
   }
 
   getCategories(): Observable<FlashCardCategory[]> {

@@ -21,7 +21,7 @@ export class MarkdownFlashCardProvider implements FlashCardProvider {
         return this.http.get<FlashCardMetadata[]>('assets/cards-categories.json');
     }
 
-    getRevisionCard(id: FlashCardId): Observable<FlashCard> {
+    getCard(id: FlashCardId): Observable<FlashCard> {
         return this.http.get(`/assets/markdown/${id}.md`, { responseType: 'text' }).pipe(
             map(content => this.markdownParser.parse(content)
         ));
