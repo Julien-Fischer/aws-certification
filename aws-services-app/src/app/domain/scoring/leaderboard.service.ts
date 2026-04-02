@@ -1,7 +1,7 @@
 import {Inject, Injectable} from "@angular/core";
 import {Leaderboard} from "./leaderboard";
 import Highscore from "./models/highscore";
-import {AwsServiceId} from "../shared/AwsServiceId";
+import {FlashCardId} from "../shared/FlashCardId";
 import {storageInjectionToken} from "./storage";
 import type {Storage} from "./storage";
 
@@ -11,10 +11,10 @@ import type {Storage} from "./storage";
 export class LeaderBoardService implements Leaderboard {
 
     constructor(
-        @Inject(storageInjectionToken) private storage: Storage<AwsServiceId, Highscore>
+        @Inject(storageInjectionToken) private storage: Storage<FlashCardId, Highscore>
     ) { }
 
-    getHighscore(serviceId: AwsServiceId): Highscore {
+    getHighscore(serviceId: FlashCardId): Highscore {
         return this.storage.getItem(serviceId, Highscore.NONE);
     }
 

@@ -1,10 +1,10 @@
-export class AwsServiceId {
+export class FlashCardId {
 
     readonly #brand = Symbol();
 
     constructor(public readonly value: string) {
         if (value == null || value.trim() === '') {
-            throw new Error(`Invalid AwsServiceId: ${value}`);
+            throw new Error(`Invalid FlashCardId: ${value}`);
         }
     }
 

@@ -1,4 +1,4 @@
-import {AwsServiceId} from "../../domain/shared/AwsServiceId";
+import {FlashCardId} from "../../domain/shared/FlashCardId";
 import Highscore from "../../domain/scoring/models/highscore";
 import type {Storage} from "../../domain/scoring/storage"
 import {Injectable} from "@angular/core";
@@ -7,7 +7,7 @@ import Percentage from "../../domain/scoring/models/percentage";
 @Injectable({
     providedIn: 'root',
 })
-export default class LocalStorageAccessor implements Storage<AwsServiceId, Highscore> {
+export default class LocalStorageAccessor implements Storage<FlashCardId, Highscore> {
 
     private static readonly PREFIX = "highscore:";
 
@@ -15,7 +15,7 @@ export default class LocalStorageAccessor implements Storage<AwsServiceId, Highs
         localStorage.removeItem(LocalStorageAccessor.PREFIX);
     }
 
-    getItem(key: AwsServiceId, defaultValue: Highscore): Highscore {
+    getItem(key: FlashCardId, defaultValue: Highscore): Highscore {
         const storeKey = this.keyFor(key);
         const item = localStorage.getItem(storeKey);
         if (item == null) {
@@ -24,7 +24,7 @@ export default class LocalStorageAccessor implements Storage<AwsServiceId, Highs
         return toHighscore(item);
     }
 
-    setItem(key: AwsServiceId, value: Highscore): void {
+    setItem(key: FlashCardId, value: Highscore): void {
         const storeKey = this.keyFor(key);
         const serialized = JSON.stringify(value);
         try {
@@ -34,7 +34,7 @@ export default class LocalStorageAccessor implements Storage<AwsServiceId, Highs
         }
     }
 
-    private keyFor(id: AwsServiceId): string {
+    private keyFor(id: FlashCardId): string {
         return `${LocalStorageAccessor.PREFIX}${id}`;
     }
 
