@@ -5,6 +5,7 @@
 
 .card {
     border-radius: 15px;
+    padding: 10px 30px 30px 30px;
 }
 
 .markdown-content ::ng-deep h2 {
@@ -33,6 +34,10 @@
 }
 
 @media (max-width: 768px) {
+    .card {
+        padding: 0;
+    }
+
     .service-icon {
         font-size: 3rem;
     }
