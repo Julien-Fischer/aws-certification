@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app/ui/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
-import {flashCardProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
+import {flashCardProviderInjectionToken} from "./app/domain/learning/flash-card-provider";
 import {MarkdownFlashCardProvider} from "./app/infra/learning/markdown-flash-card-provider.service";
 import {scoreWriterInjectionToken} from "./app/domain/scoring/score-writer";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";

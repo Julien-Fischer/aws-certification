@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {FlashCardMetadata} from "../../domain/learning/models/aws-service.model";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {FlashCardProvider} from "../../domain/learning/aws-service-provider";
+import {FlashCardProvider} from "../../domain/learning/flash-card-provider";
 import {MarkdownParserService} from "./markdown-parser.service";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 import {FlashCardId} from "../../domain/shared/FlashCardId";

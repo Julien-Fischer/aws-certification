@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, map, Observable, of} from 'rxjs';
 import { FlashCardMetadata, FlashCardCategory } from '../models/aws-service.model';
-import {FlashCardProvider, flashCardProviderInjectionToken} from "../aws-service-provider";
+import {FlashCardProvider, flashCardProviderInjectionToken} from "../flash-card-provider";
 import {FlashCard} from "../models/flash-card";
 import {FlashCardId} from "../../shared/FlashCardId";
 
