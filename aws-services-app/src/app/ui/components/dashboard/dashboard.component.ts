@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
-import { AwsServicesService } from '../../../domain/learning/services/aws-services.service';
+import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
 import {FlashCardMetadata, ServiceCategory} from '../../../domain/learning/models/aws-service.model';
 
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
@@ -22,13 +22,13 @@ export class DashboardComponent implements OnInit {
   categories!: Observable<ServiceCategory[]>;
 
   constructor(
-    private awsServicesService: AwsServicesService,
+    private flashCardService: FlashCardService,
     @Inject(leaderboardInjectionToken) private leaderBoard: Leaderboard,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.awsServicesService.getServiceCategories();
+    this.categories = this.flashCardService.getServiceCategories();
   }
 
   navigateToService(serviceId: string): void {
