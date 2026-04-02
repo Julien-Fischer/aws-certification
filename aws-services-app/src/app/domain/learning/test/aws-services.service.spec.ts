@@ -7,31 +7,33 @@ import { AwsService } from '../models/aws-service.model';
 import { RevisionCard } from '../models/revision-card';
 import {AwsServiceId} from "../../shared/AwsServiceId";
 
+class MockServiceProvider implements AwsServicesProvider {
+
+  private services: AwsService[] = [];
+  private revisionCards: Map<AwsServiceId, RevisionCard> = new Map();
+
+  havingServices(...services: AwsService[]) {
+    this.services.push(...services);
+  }
+
+  havingRevisionCard(id: AwsServiceId, card: RevisionCard) {
+    this.revisionCards.set(id, card);
+  }
+
+  getAll(): Observable<AwsService[]> {
+    return of(this.services);
+  }
+
+  getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
+    return of(this.revisionCards.get(id)!);
+  }
+
+}
+
+
 describe('AwsServicesService', () => {
   let service: AwsServicesService;
   let mockProvider: MockServiceProvider;
-
-  class MockServiceProvider implements AwsServicesProvider {
-
-    private services: AwsService[] = [];
-    private revisionCards: Map<AwsServiceId, RevisionCard> = new Map();
-
-    havingServices(...services: AwsService[]) {
-      this.services.push(...services);
-    }
-
-    havingRevisionCard(id: AwsServiceId, card: RevisionCard) {
-      this.revisionCards.set(id, card);
-    }
-
-    getAll(): AwsService[] {
-      return this.services;
-    }
-
-    getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
-      return of(this.revisionCards.get(id)!);
-    }
-  }
 
   beforeEach(() => {
     mockProvider = new MockServiceProvider();
