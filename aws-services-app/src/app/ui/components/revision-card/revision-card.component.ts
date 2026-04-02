@@ -7,7 +7,7 @@ import { AwsService } from '../../../domain/learning/models/aws-service.model';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
 import { Quiz } from '../../../domain/learning/models/quiz';
-import { RevisionCard } from '../../../domain/learning/models/revision-card';
+import { FlashCard } from '../../../domain/learning/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
 import ProgressTracker from './progress-tracker';
@@ -66,7 +66,7 @@ export class RevisionCardComponent implements OnInit {
 
   private loadMarkdownContent(id: AwsServiceId): void {
     this.awsServicesService.getRevisionCard(id).subscribe({
-      next: (card: RevisionCard) => {
+      next: (card: FlashCard) => {
         const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
         this.markdownContent = marked(mainContent) as string;
         this.trueFalseQuizzes = trueFalseQuizzes;

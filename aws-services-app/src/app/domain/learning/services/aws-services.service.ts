@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, map, Observable, of} from 'rxjs';
 import { AwsService, ServiceCategory } from '../models/aws-service.model';
 import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
-import {RevisionCard} from "../models/revision-card";
+import {FlashCard} from "../models/flash-card";
 import {AwsServiceId} from "../../shared/AwsServiceId";
 
 @Injectable({
@@ -26,7 +26,7 @@ export class AwsServicesService {
     ));
   }
 
-  getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
+  getRevisionCard(id: AwsServiceId): Observable<FlashCard> {
     return this.awsServicesProvider.getRevisionCard(id)
   }
 

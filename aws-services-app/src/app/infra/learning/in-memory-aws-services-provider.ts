@@ -4,7 +4,7 @@ import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AwsServicesProvider} from "../../domain/learning/aws-service-provider";
 import {MarkdownParserService} from "./markdown-parser.service";
-import {RevisionCard} from "../../domain/learning/models/revision-card";
+import {FlashCard} from "../../domain/learning/models/flash-card";
 import {AwsServiceId} from "../../domain/shared/AwsServiceId";
 
 @Injectable({
@@ -21,7 +21,7 @@ export class InMemoryAwsServicesProvider implements AwsServicesProvider {
         return this.http.get<AwsService[]>('assets/cards-categories.json');
     }
 
-    getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
+    getRevisionCard(id: AwsServiceId): Observable<FlashCard> {
         return this.http.get(`/assets/markdown/${id}.md`, { responseType: 'text' }).pipe(
             map(content => this.markdownParser.parse(content)
         ));

@@ -4,19 +4,19 @@ import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
 import { AwsServicesService } from '../services/aws-services.service';
 import { awsServicesProviderInjectionToken, AwsServicesProvider } from '../aws-service-provider';
 import { AwsService } from '../models/aws-service.model';
-import { RevisionCard } from '../models/revision-card';
+import { FlashCard } from '../models/flash-card';
 import {AwsServiceId} from "../../shared/AwsServiceId";
 
 class MockServiceProvider implements AwsServicesProvider {
 
   private services: AwsService[] = [];
-  private revisionCards: Map<AwsServiceId, RevisionCard> = new Map();
+  private revisionCards: Map<AwsServiceId, FlashCard> = new Map();
 
   havingServices(...services: AwsService[]) {
     this.services.push(...services);
   }
 
-  havingRevisionCard(id: AwsServiceId, card: RevisionCard) {
+  havingRevisionCard(id: AwsServiceId, card: FlashCard) {
     this.revisionCards.set(id, card);
   }
 
@@ -24,7 +24,7 @@ class MockServiceProvider implements AwsServicesProvider {
     return of(this.services);
   }
 
-  getRevisionCard(id: AwsServiceId): Observable<RevisionCard> {
+  getRevisionCard(id: AwsServiceId): Observable<FlashCard> {
     return of(this.revisionCards.get(id)!);
   }
 
