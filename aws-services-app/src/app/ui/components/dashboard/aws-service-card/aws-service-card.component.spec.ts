@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AwsServiceCardComponent } from './aws-service-card.component';
-import { AwsService } from '../../../../domain/learning/models/aws-service.model';
+import { FlashCardMetadata } from '../../../../domain/learning/models/aws-service.model';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {provideGamification, StubGamificationService} from "../../../test/stub-gamification";
 
@@ -9,7 +9,7 @@ describe('AwsServiceCardComponent', () => {
   let component: AwsServiceCardComponent;
   let fixture: ComponentFixture<AwsServiceCardComponent>;
 
-  const awsService: AwsService = {
+  const awsService: FlashCardMetadata = {
     id: 's3',
     name: 'S3',
     description: 'Scalable storage in the cloud',
@@ -47,7 +47,7 @@ describe('AwsServiceCardComponent', () => {
     const emitSpy = vi.spyOn(component.serviceClick, 'emit');
     const cardElement = fixture.nativeElement.querySelector('.card');
     cardElement.click();
-    
+
     expect(emitSpy).toHaveBeenCalledWith('s3');
   });
 });

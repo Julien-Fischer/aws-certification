@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
 import { AwsServicesService } from '../../../domain/learning/services/aws-services.service';
-import {AwsService, ServiceCategory} from '../../../domain/learning/models/aws-service.model';
+import {FlashCardMetadata, ServiceCategory} from '../../../domain/learning/models/aws-service.model';
 
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
 import Highscore from "../../../domain/scoring/models/highscore";
@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/service', serviceId]);
   }
 
-  protected getHighscore(service: AwsService): Highscore {
+  protected getHighscore(service: FlashCardMetadata): Highscore {
     return this.leaderBoard.getHighscore(new FlashCardId(service.id));
   }
 }

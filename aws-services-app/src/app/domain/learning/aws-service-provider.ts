@@ -1,5 +1,5 @@
 import {InjectionToken} from "@angular/core";
-import {AwsService} from "./models/aws-service.model";
+import {FlashCardMetadata} from "./models/aws-service.model";
 import {Observable} from "rxjs";
 import {FlashCard} from "./models/flash-card";
 import {FlashCardId} from "../shared/FlashCardId";
@@ -8,7 +8,7 @@ export const awsServicesProviderInjectionToken = new InjectionToken<AwsServicesP
 
 export interface AwsServicesProvider {
 
-    getAll(): Observable<AwsService[]>;
+    getAll(): Observable<FlashCardMetadata[]>;
 
     getRevisionCard(id: FlashCardId): Observable<FlashCard>;
 }
