@@ -5,4 +5,5 @@ export type FlashCard = {
     mainContent: string;
     multipleChoiceQuizzes: MultipleChoiceQuiz[];
     trueFalseQuizzes: TrueFalseQuiz[];
+
 };
