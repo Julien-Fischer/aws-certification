@@ -5,7 +5,7 @@
 This project provides a **comprehensive study companion** for the **AWS Certified Solutions Architect Associate (SAA-C03)** certification.  
 
 The website organizes **AWS services by thematic areas**, and for each service you will find:
-- A **revision card** with the **key concepts** and architectural principles.  
+- A **Flash Card** with the **key concepts** and architectural principles.  
 - **Exam tips** and best practices to remember.  
 - A **quiz** to validate your understanding of the core features.  
 

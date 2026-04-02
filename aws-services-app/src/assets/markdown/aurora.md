@@ -1,4 +1,4 @@
-# 🌟 Amazon Aurora – Revision Card
+# 🌟 Amazon Aurora – Flash Card
 
 ---
 

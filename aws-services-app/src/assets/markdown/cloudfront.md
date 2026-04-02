@@ -1,4 +1,4 @@
-# 🌍 Amazon CloudFront – Revision Card
+# 🌍 Amazon CloudFront – Flash Card
 
 ---
 

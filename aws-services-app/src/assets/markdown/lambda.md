@@ -1,4 +1,4 @@
-# 📌 AWS Lambda – Revision Card
+# 📌 AWS Lambda – Flash Card
 
 ## 📝 Introduction
 AWS Lambda is a **serverless compute service** that runs code without provisioning or managing servers.

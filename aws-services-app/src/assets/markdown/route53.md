@@ -1,4 +1,4 @@
-# 🌐 Amazon Route 53 – Revision Card
+# 🌐 Amazon Route 53 – Flash Card
 
 ---
 

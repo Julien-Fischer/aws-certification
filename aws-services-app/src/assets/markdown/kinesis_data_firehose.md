@@ -1,4 +1,4 @@
-# 🔥 Amazon Kinesis Data Firehose – Revision Card
+# 🔥 Amazon Kinesis Data Firehose – Flash Card
 
 ---
 

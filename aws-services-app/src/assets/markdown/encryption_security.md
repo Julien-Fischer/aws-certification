@@ -1,4 +1,4 @@
-# 🔐 AWS Security & Encryption – Revision Card
+# 🔐 AWS Security & Encryption – Flash Card
 
 ---
 

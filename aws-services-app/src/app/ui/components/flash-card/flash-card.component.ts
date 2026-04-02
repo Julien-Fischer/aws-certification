@@ -14,7 +14,7 @@ import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/FlashCardId";
 
 @Component({
-  selector: 'app-revision-card',
+  selector: 'app-flash-card',
   standalone: true,
   imports: [CommonModule, QuizComponent],
   templateUrl: './flash-card.component.html',

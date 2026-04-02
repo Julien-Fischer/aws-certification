@@ -1,4 +1,4 @@
-# 💾 Amazon EBS & EFS – Revision Card
+# 💾 Amazon EBS & EFS – Flash Card
 
 ---
 

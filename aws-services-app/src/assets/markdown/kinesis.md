@@ -1,4 +1,4 @@
-# 🔄 Amazon Kinesis – Revision Card
+# 🔄 Amazon Kinesis – Flash Card
 
 ---
 
