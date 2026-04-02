@@ -11,7 +11,7 @@ import { FlashCard } from '../../../domain/learning/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
 import ProgressTracker from './progress-tracker';
-import {AwsServiceId} from "../../../domain/shared/AwsServiceId";
+import {FlashCardId} from "../../../domain/shared/FlashCardId";
 
 @Component({
   selector: 'app-revision-card',
@@ -46,12 +46,12 @@ export class RevisionCardComponent implements OnInit {
     }
   }
 
-  private serviceId(): AwsServiceId {
+  private serviceId(): FlashCardId {
     const idParam = this.route.snapshot.paramMap.get('id')!;
-    return new AwsServiceId(idParam);
+    return new FlashCardId(idParam);
   }
 
-  private loadService(serviceId: AwsServiceId): void {
+  private loadService(serviceId: FlashCardId): void {
     this.awsServicesService.getServiceById(serviceId).subscribe(
         service => {
           this.service = service;
@@ -64,7 +64,7 @@ export class RevisionCardComponent implements OnInit {
     );
   }
 
-  private loadMarkdownContent(id: AwsServiceId): void {
+  private loadMarkdownContent(id: FlashCardId): void {
     this.awsServicesService.getRevisionCard(id).subscribe({
       next: (card: FlashCard) => {
         const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;

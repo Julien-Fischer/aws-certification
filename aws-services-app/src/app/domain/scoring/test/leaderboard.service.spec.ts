@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import {scoreWriterInjectionToken} from "../score-writer";
-import {AwsServiceId} from "../../shared/AwsServiceId";
+import {FlashCardId} from "../../shared/FlashCardId";
 import {aHighscore, aScore, ScoreBuilder} from "./utils/score-builder";
 import Highscore from "../models/highscore";
 import {storageInjectionToken} from "../storage";
@@ -10,7 +10,7 @@ import InMemoryStorage from "./utils/in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
 import {expectThat} from "./utils/score-assertions";
 
-const aurora = new AwsServiceId('aurora');
+const aurora = new FlashCardId('aurora');
 
 describe('LeaderboardService', () => {
     let storage = new InMemoryStorage();
@@ -57,7 +57,7 @@ describe('LeaderboardService', () => {
     });
 
 
-    function whenService(id: AwsServiceId) {
+    function whenService(id: FlashCardId) {
         return {
             hasHighScore(score: ScoreBuilder) {
                 scoreWriter.score(id, score.build());

@@ -3,7 +3,7 @@ import {BehaviorSubject, map, Observable, of} from 'rxjs';
 import { AwsService, ServiceCategory } from '../models/aws-service.model';
 import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
 import {FlashCard} from "../models/flash-card";
-import {AwsServiceId} from "../../shared/AwsServiceId";
+import {FlashCardId} from "../../shared/FlashCardId";
 
 @Injectable({
   providedIn: 'root'
@@ -20,13 +20,13 @@ export class AwsServicesService {
     });
   }
 
-  getServiceById(id: AwsServiceId): Observable<AwsService | undefined> {
+  getServiceById(id: FlashCardId): Observable<AwsService | undefined> {
     return this.servicesSubject.pipe(
         map(services => services.find(s => id.hasValue(s.id))
     ));
   }
 
-  getRevisionCard(id: AwsServiceId): Observable<FlashCard> {
+  getRevisionCard(id: FlashCardId): Observable<FlashCard> {
     return this.awsServicesProvider.getRevisionCard(id)
   }
 
