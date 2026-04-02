@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import {Observable, of} from 'rxjs';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
-import { AwsServicesService } from '../services/aws-services.service';
+import { FlashCardService } from '../services/flash-card.service';
 import { awsServicesProviderInjectionToken, AwsServicesProvider } from '../aws-service-provider';
 import { FlashCardMetadata } from '../models/aws-service.model';
 import { FlashCard } from '../models/flash-card';
@@ -31,8 +31,8 @@ class MockServiceProvider implements AwsServicesProvider {
 }
 
 
-describe('AwsServicesService', () => {
-  let service: AwsServicesService;
+describe('FlashCardService', () => {
+  let service: FlashCardService;
   let mockProvider: MockServiceProvider;
 
   beforeEach(() => {
@@ -40,11 +40,11 @@ describe('AwsServicesService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        AwsServicesService,
+        FlashCardService,
         { provide: awsServicesProviderInjectionToken, useValue: mockProvider }
       ]
     });
-    service = TestBed.inject(AwsServicesService);
+    service = TestBed.inject(FlashCardService);
   });
 
   it('should be created', () => {

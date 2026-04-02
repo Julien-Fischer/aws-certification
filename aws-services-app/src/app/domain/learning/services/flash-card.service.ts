@@ -8,7 +8,7 @@ import {FlashCardId} from "../../shared/FlashCardId";
 @Injectable({
   providedIn: 'root'
 })
-export class AwsServicesService {
+export class FlashCardService {
 
   private servicesSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
 

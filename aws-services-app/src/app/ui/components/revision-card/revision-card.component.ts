@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { AwsServicesService } from '../../../domain/learning/services/aws-services.service';
+import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
 import { FlashCardMetadata } from '../../../domain/learning/models/aws-service.model';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
@@ -33,7 +33,7 @@ export class RevisionCardComponent implements OnInit {
   constructor(
       private route: ActivatedRoute,
       private router: Router,
-      private awsServicesService: AwsServicesService,
+      private flashCardService: FlashCardService,
       @Inject(scoreWriterInjectionToken) private scoreWriter: ScoreWriter
   ) {}
 
@@ -52,7 +52,7 @@ export class RevisionCardComponent implements OnInit {
   }
 
   private loadService(serviceId: FlashCardId): void {
-    this.awsServicesService.getMetadata(serviceId).subscribe(
+    this.flashCardService.getMetadata(serviceId).subscribe(
         service => {
           this.service = service;
           if (service) {
@@ -65,7 +65,7 @@ export class RevisionCardComponent implements OnInit {
   }
 
   private loadMarkdownContent(id: FlashCardId): void {
-    this.awsServicesService.getFlashCard(id).subscribe({
+    this.flashCardService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
         const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
         this.markdownContent = marked(mainContent) as string;
