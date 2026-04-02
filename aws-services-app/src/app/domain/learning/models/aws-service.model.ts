@@ -6,7 +6,7 @@ export interface FlashCardMetadata {
   category: string;
 }
 
-export interface ServiceCategory {
+export interface FlashCardCategory {
   name: string;
   services: FlashCardMetadata[];
 }

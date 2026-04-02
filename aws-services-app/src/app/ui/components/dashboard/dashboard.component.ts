@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
 import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
-import {FlashCardMetadata, ServiceCategory} from '../../../domain/learning/models/aws-service.model';
+import {FlashCardMetadata, FlashCardCategory} from '../../../domain/learning/models/aws-service.model';
 
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
 import Highscore from "../../../domain/scoring/models/highscore";
@@ -19,7 +19,7 @@ import {Observable} from "rxjs";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  categories!: Observable<ServiceCategory[]>;
+  categories!: Observable<FlashCardCategory[]>;
 
   constructor(
     private flashCardService: FlashCardService,
@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.flashCardService.getServiceCategories();
+    this.categories = this.flashCardService.getCategories();
   }
 
   navigateToService(serviceId: string): void {
