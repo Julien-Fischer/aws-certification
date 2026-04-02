@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import {Observable, of} from 'rxjs';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
 import { FlashCardService } from '../services/flash-card.service';
-import { flashCardProviderInjectionToken, FlashCardProvider } from '../aws-service-provider';
+import { flashCardProviderInjectionToken, FlashCardProvider } from '../flash-card-provider';
 import { FlashCardMetadata } from '../models/aws-service.model';
 import { FlashCard } from '../models/flash-card';
 import {FlashCardId} from "../../shared/FlashCardId";
