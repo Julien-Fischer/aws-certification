@@ -1,6 +1,6 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, map, Observable, of} from 'rxjs';
-import { FlashCardMetadata, ServiceCategory } from '../models/aws-service.model';
+import { FlashCardMetadata, FlashCardCategory } from '../models/aws-service.model';
 import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
 import {FlashCard} from "../models/flash-card";
 import {FlashCardId} from "../../shared/FlashCardId";
@@ -30,7 +30,7 @@ export class FlashCardService {
     return this.awsServicesProvider.getRevisionCard(id)
   }
 
-  getServiceCategories(): Observable<ServiceCategory[]> {
+  getCategories(): Observable<FlashCardCategory[]> {
     return this.servicesSubject.pipe(
         map(services => {
           const categoryMap = services.reduce((map, service) => {
