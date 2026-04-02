@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {FlashCardMetadata} from "../../domain/learning/models/aws-service.model";
+import {FlashCardMetadata} from "../../domain/learning/models/metadata";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {FlashCardProvider} from "../../domain/learning/flash-card-provider";

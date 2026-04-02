@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
-import { FlashCardMetadata } from '../../../domain/learning/models/aws-service.model';
+import { FlashCardMetadata } from '../../../domain/learning/models/metadata';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
 import { Quiz } from '../../../domain/learning/models/quiz';

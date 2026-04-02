@@ -67,7 +67,7 @@ aws-services-app/
 │   │   │   └── service-detail/      # Individual service pages
 │   │   │       └── revision-card.component.ts
 │   │   ├── models/
-│   │   │   └── aws-service.model.ts # TypeScript interfaces
+│   │   │   └── metadata.ts # TypeScript interfaces
 │   │   ├── services/
 │   │   │   └── aws-services.service.ts # Data service
 │   │   ├── app.component.ts         # Root component
