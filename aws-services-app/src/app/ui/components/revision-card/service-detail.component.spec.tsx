@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
-import {RevisionCardComponent} from "./revision-card.component";
+import {FlashCardComponent} from "./flash-card.component";
 
 describe('ServiceDetailComponent', () => {
-    let component: RevisionCardComponent;
-    let fixture: ComponentFixture<RevisionCardComponent>;
+    let component: FlashCardComponent;
+    let fixture: ComponentFixture<FlashCardComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [RevisionCardComponent]
+            imports: [FlashCardComponent]
         })
             .compileComponents();
 
-        fixture = TestBed.createComponent(RevisionCardComponent);
+        fixture = TestBed.createComponent(FlashCardComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

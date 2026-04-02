@@ -17,10 +17,10 @@ import {FlashCardId} from "../../../domain/shared/FlashCardId";
   selector: 'app-revision-card',
   standalone: true,
   imports: [CommonModule, QuizComponent],
-  templateUrl: './revision-card.component.html',
-  styleUrl: './revision-card.component.scss',
+  templateUrl: './flash-card.component.html',
+  styleUrl: './flash-card.component.scss',
 })
-export class RevisionCardComponent implements OnInit {
+export class FlashCardComponent implements OnInit {
   service: FlashCardMetadata | undefined;
   markdownContent: string = '';
   trueFalseQuizzes: Quiz[] = [];
