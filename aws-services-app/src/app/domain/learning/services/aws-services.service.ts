@@ -20,13 +20,13 @@ export class AwsServicesService {
     });
   }
 
-  getServiceById(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
+  getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
     return this.servicesSubject.pipe(
         map(services => services.find(s => id.hasValue(s.id))
     ));
   }
 
-  getRevisionCard(id: FlashCardId): Observable<FlashCard> {
+  getFlashCard(id: FlashCardId): Observable<FlashCard> {
     return this.awsServicesProvider.getRevisionCard(id)
   }
 

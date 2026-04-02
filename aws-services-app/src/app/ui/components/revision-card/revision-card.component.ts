@@ -52,7 +52,7 @@ export class RevisionCardComponent implements OnInit {
   }
 
   private loadService(serviceId: FlashCardId): void {
-    this.awsServicesService.getServiceById(serviceId).subscribe(
+    this.awsServicesService.getMetadata(serviceId).subscribe(
         service => {
           this.service = service;
           if (service) {
@@ -65,7 +65,7 @@ export class RevisionCardComponent implements OnInit {
   }
 
   private loadMarkdownContent(id: FlashCardId): void {
-    this.awsServicesService.getRevisionCard(id).subscribe({
+    this.awsServicesService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
         const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
         this.markdownContent = marked(mainContent) as string;
