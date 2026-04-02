@@ -10,7 +10,7 @@ import {FlashCardId} from "../../domain/shared/FlashCardId";
 @Injectable({
     providedIn: 'root'
 })
-export class InMemoryAwsServicesProvider implements FlashCardProvider {
+export class MarkdownFlashCardProvider implements FlashCardProvider {
 
     constructor(
         private http: HttpClient,

@@ -10,28 +10,28 @@ import {FlashCardId} from "../../shared/FlashCardId";
 })
 export class FlashCardService {
 
-  private servicesSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
+  private metadataSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
 
   constructor(
-      @Inject(flashCardProviderInjectionToken) private awsServicesProvider: FlashCardProvider,
+      @Inject(flashCardProviderInjectionToken) private flashCardProvider: FlashCardProvider,
   ) {
-    this.awsServicesProvider.getAll().subscribe(services => {
-      this.servicesSubject.next(services);
+    this.flashCardProvider.getAll().subscribe(services => {
+      this.metadataSubject.next(services);
     });
   }
 
   getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
-    return this.servicesSubject.pipe(
+    return this.metadataSubject.pipe(
         map(services => services.find(s => id.hasValue(s.id))
     ));
   }
 
   getFlashCard(id: FlashCardId): Observable<FlashCard> {
-    return this.awsServicesProvider.getRevisionCard(id)
+    return this.flashCardProvider.getRevisionCard(id)
   }
 
   getCategories(): Observable<FlashCardCategory[]> {
-    return this.servicesSubject.pipe(
+    return this.metadataSubject.pipe(
         map(services => {
           const categoryMap = services.reduce((map, service) => {
             const category = service.category;
