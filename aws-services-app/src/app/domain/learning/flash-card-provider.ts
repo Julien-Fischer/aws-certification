@@ -2,7 +2,7 @@ import {InjectionToken} from "@angular/core";
 import {FlashCardMetadata} from "./models/metadata";
 import {Observable} from "rxjs";
 import {FlashCard} from "./models/flash-card";
-import {FlashCardId} from "../shared/FlashCardId";
+import {FlashCardId} from "../shared/flash-card-id";
 
 export const flashCardProviderInjectionToken = new InjectionToken<FlashCardProvider>('FlashCardProvider');
 

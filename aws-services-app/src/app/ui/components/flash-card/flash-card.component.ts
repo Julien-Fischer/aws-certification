@@ -11,7 +11,7 @@ import { FlashCard } from '../../../domain/learning/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
 import ProgressTracker from './progress-tracker';
-import {FlashCardId} from "../../../domain/shared/FlashCardId";
+import {FlashCardId} from "../../../domain/shared/flash-card-id";
 
 @Component({
   selector: 'app-flash-card',

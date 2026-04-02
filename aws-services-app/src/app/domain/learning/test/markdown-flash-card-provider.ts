@@ -5,7 +5,7 @@ import { FlashCardService } from '../services/flash-card.service';
 import { flashCardProviderInjectionToken, FlashCardProvider } from '../flash-card-provider';
 import { FlashCardMetadata } from '../models/metadata';
 import { FlashCard } from '../models/flash-card';
-import {FlashCardId} from "../../shared/FlashCardId";
+import {FlashCardId} from "../../shared/flash-card-id";
 
 class MockFlashCardProvider implements FlashCardProvider {
 

@@ -3,7 +3,7 @@ import {BehaviorSubject, map, Observable, of} from 'rxjs';
 import { FlashCardMetadata, FlashCardCategory } from '../models/metadata';
 import {FlashCardProvider, flashCardProviderInjectionToken} from "../flash-card-provider";
 import {FlashCard} from "../models/flash-card";
-import {FlashCardId} from "../../shared/FlashCardId";
+import {FlashCardId} from "../../shared/flash-card-id";
 
 @Injectable({
   providedIn: 'root'

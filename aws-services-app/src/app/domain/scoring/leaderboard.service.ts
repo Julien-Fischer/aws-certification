@@ -1,7 +1,7 @@
 import {Inject, Injectable} from "@angular/core";
 import {Leaderboard} from "./leaderboard";
 import Highscore from "./models/highscore";
-import {FlashCardId} from "../shared/FlashCardId";
+import {FlashCardId} from "../shared/flash-card-id";
 import {storageInjectionToken} from "./storage";
 import type {Storage} from "./storage";
 
