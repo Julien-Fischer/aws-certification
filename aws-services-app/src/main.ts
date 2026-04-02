@@ -5,7 +5,7 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app/ui/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
-import {awsServicesProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
+import {flashCardProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
 import {InMemoryAwsServicesProvider} from "./app/infra/learning/in-memory-aws-services-provider";
 import {scoreWriterInjectionToken} from "./app/domain/scoring/score-writer";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";
@@ -25,7 +25,7 @@ bootstrapApplication(AppComponent, {
       useClass: FisherYatesShuffler
     },
     {
-      provide: awsServicesProviderInjectionToken,
+      provide: flashCardProviderInjectionToken,
       useClass: InMemoryAwsServicesProvider
     },
     {

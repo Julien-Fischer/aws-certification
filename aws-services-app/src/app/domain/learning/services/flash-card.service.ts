@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {BehaviorSubject, map, Observable, of} from 'rxjs';
 import { FlashCardMetadata, FlashCardCategory } from '../models/aws-service.model';
-import {AwsServicesProvider, awsServicesProviderInjectionToken} from "../aws-service-provider";
+import {FlashCardProvider, flashCardProviderInjectionToken} from "../aws-service-provider";
 import {FlashCard} from "../models/flash-card";
 import {FlashCardId} from "../../shared/FlashCardId";
 
@@ -13,7 +13,7 @@ export class FlashCardService {
   private servicesSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
 
   constructor(
-      @Inject(awsServicesProviderInjectionToken) private awsServicesProvider: AwsServicesProvider,
+      @Inject(flashCardProviderInjectionToken) private awsServicesProvider: FlashCardProvider,
   ) {
     this.awsServicesProvider.getAll().subscribe(services => {
       this.servicesSubject.next(services);

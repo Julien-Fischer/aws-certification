@@ -4,9 +4,9 @@ import {Observable} from "rxjs";
 import {FlashCard} from "./models/flash-card";
 import {FlashCardId} from "../shared/FlashCardId";
 
-export const awsServicesProviderInjectionToken = new InjectionToken<AwsServicesProvider>('AwsServicesProvider');
+export const flashCardProviderInjectionToken = new InjectionToken<FlashCardProvider>('FlashCardProvider');
 
-export interface AwsServicesProvider {
+export interface FlashCardProvider {
 
     getAll(): Observable<FlashCardMetadata[]>;
 

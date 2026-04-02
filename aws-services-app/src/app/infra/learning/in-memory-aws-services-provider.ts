@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {FlashCardMetadata} from "../../domain/learning/models/aws-service.model";
 import {map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {AwsServicesProvider} from "../../domain/learning/aws-service-provider";
+import {FlashCardProvider} from "../../domain/learning/aws-service-provider";
 import {MarkdownParserService} from "./markdown-parser.service";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 import {FlashCardId} from "../../domain/shared/FlashCardId";
@@ -10,7 +10,7 @@ import {FlashCardId} from "../../domain/shared/FlashCardId";
 @Injectable({
     providedIn: 'root'
 })
-export class InMemoryAwsServicesProvider implements AwsServicesProvider {
+export class InMemoryAwsServicesProvider implements FlashCardProvider {
 
     constructor(
         private http: HttpClient,
