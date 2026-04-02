@@ -4,7 +4,7 @@ export class FlashCardId {
 
     constructor(public readonly value: string) {
         if (value == null || value.trim() === '') {
-            throw new Error(`Invalid FlashCardId: ${value}`);
+            throw new Error(`Invalid FlashCardId: '${value}'`);
         }
     }
 
