@@ -1,4 +1,4 @@
-# 🤖 AWS Machine Learning Services – Revision Card
+# 🤖 AWS Machine Learning Services – Flash Card
 
 ---
 

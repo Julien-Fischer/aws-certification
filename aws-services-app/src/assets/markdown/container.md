@@ -1,4 +1,4 @@
-# 📌 AWS Containers – Revision Card
+# 📌 AWS Containers – Flash Card
 
 ---
 

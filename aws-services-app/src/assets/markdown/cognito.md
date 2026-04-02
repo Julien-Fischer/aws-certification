@@ -1,4 +1,4 @@
-# 🔑 Amazon Cognito – Revision Card
+# 🔑 Amazon Cognito – Flash Card
 
 ---
 

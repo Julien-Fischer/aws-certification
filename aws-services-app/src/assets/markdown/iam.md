@@ -1,4 +1,4 @@
-# 🔐 AWS IAM (Identity and Access Management) – Revision Card
+# 🔐 AWS IAM (Identity and Access Management) – Flash Card
 
 ---
 AWS Identity and Access Management (IAM) enables you to manage access to AWS services and resources securely. 

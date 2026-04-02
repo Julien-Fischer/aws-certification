@@ -1,4 +1,4 @@
-# 🗄️ Amazon RDS – Revision Card
+# 🗄️ Amazon RDS – Flash Card
 
 ---
 

@@ -1,4 +1,4 @@
-# ⚖️ AWS Load Balancing – Revision Card
+# ⚖️ AWS Load Balancing – Flash Card
 
 ---
 

@@ -1,4 +1,4 @@
-# ⚡ Amazon DynamoDB – Revision Card
+# ⚡ Amazon DynamoDB – Flash Card
 
 ---
 

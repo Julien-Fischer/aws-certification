@@ -1,4 +1,4 @@
-# 📌 Amazon EC2 (Elastic Compute Cloud) – Revision Card
+# 📌 Amazon EC2 (Elastic Compute Cloud) – Flash Card
 
 ## 📝 Introduction
 Amazon EC2 (Elastic Compute Cloud) provides **resizable compute capacity** in the AWS cloud.

@@ -1,4 +1,4 @@
-# 📩 AWS Messaging – Revision Card
+# 📩 AWS Messaging – Flash Card
 
 ---
 

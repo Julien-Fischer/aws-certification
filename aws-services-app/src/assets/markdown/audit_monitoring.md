@@ -1,4 +1,4 @@
-# 📊 AWS Audit & Monitoring – Revision Card
+# 📊 AWS Audit & Monitoring – Flash Card
 
 ---
 

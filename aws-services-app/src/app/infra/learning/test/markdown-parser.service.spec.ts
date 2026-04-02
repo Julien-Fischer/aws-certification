@@ -5,7 +5,7 @@ import {MarkdownParserService} from '../markdown-parser.service';
 import {Answer, Option} from "../../../domain/learning/models/quiz";
 
 const mainContent = `
-# 📊 AWS Audit & Monitoring – Revision Card
+# 📊 AWS Audit & Monitoring – Flash Card
 
 ---
 
