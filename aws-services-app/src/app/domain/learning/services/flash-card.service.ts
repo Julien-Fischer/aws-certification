@@ -10,18 +10,18 @@ import {FlashCardId} from "../../shared/flash-card-id";
 })
 export class FlashCardService {
 
-  private metadataSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
+  private allMetadata = new BehaviorSubject<FlashCardMetadata[]>([]);
 
   constructor(
       @Inject(flashCardProviderInjectionToken) private flashCardProvider: FlashCardProvider,
   ) {
     this.flashCardProvider.getAll().subscribe(services => {
-      this.metadataSubject.next(services);
+      this.allMetadata.next(services);
     });
   }
 
   getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
-    return this.metadataSubject.pipe(
+    return this.allMetadata.pipe(
         map(services => services.find(s => id.hasValue(s.id))
     ));
   }
@@ -31,7 +31,7 @@ export class FlashCardService {
   }
 
   getCategories(): Observable<FlashCardCategory[]> {
-    return this.metadataSubject.pipe(
+    return this.allMetadata.pipe(
         map(services => {
           const categoryMap = services.reduce((map, service) => {
             const category = service.category;
