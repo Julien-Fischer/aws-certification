@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 import {leaderboardInjectionToken} from "../leaderboard";
-import {FlashCardId} from "../../shared/FlashCardId";
+import {FlashCardId} from "../../shared/flash-card-id";
 import {aHighscore, aScore, ScoreBuilder} from "./utils/score-builder";
 import Highscore from "../models/highscore";
 import {storageInjectionToken} from "../storage";

@@ -5,7 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {FlashCardProvider} from "../../domain/learning/flash-card-provider";
 import {MarkdownParserService} from "./markdown-parser.service";
 import {FlashCard} from "../../domain/learning/models/flash-card";
-import {FlashCardId} from "../../domain/shared/FlashCardId";
+import {FlashCardId} from "../../domain/shared/flash-card-id";
 
 @Injectable({
     providedIn: 'root'

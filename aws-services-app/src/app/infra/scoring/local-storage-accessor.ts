@@ -1,4 +1,4 @@
-import {FlashCardId} from "../../domain/shared/FlashCardId";
+import {FlashCardId} from "../../domain/shared/flash-card-id";
 import Highscore from "../../domain/scoring/models/highscore";
 import type {Storage} from "../../domain/scoring/storage"
 import {Injectable} from "@angular/core";

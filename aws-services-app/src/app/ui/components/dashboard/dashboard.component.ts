@@ -8,7 +8,7 @@ import {FlashCardMetadata, FlashCardCategory} from '../../../domain/learning/mod
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
 import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
-import {FlashCardId} from "../../../domain/shared/FlashCardId";
+import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Observable} from "rxjs";
 
 @Component({

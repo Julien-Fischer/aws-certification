@@ -1,4 +1,4 @@
-import {FlashCardId} from "../../../shared/FlashCardId";
+import {FlashCardId} from "../../../shared/flash-card-id";
 import Highscore from "../../models/highscore";
 import type {Storage} from "../../storage";
 
