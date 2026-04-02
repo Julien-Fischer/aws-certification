@@ -7,25 +7,25 @@ import { FlashCardMetadata } from '../models/aws-service.model';
 import { FlashCard } from '../models/flash-card';
 import {FlashCardId} from "../../shared/FlashCardId";
 
-class MockServiceProvider implements FlashCardProvider {
+class MockFlashCardProvider implements FlashCardProvider {
 
-  private services: FlashCardMetadata[] = [];
-  private revisionCards: Map<FlashCardId, FlashCard> = new Map();
+  private metadata: FlashCardMetadata[] = [];
+  private cards: Map<FlashCardId, FlashCard> = new Map();
 
   havingServices(...services: FlashCardMetadata[]) {
-    this.services.push(...services);
+    this.metadata.push(...services);
   }
 
   havingFlashCard(id: FlashCardId, card: FlashCard) {
-    this.revisionCards.set(id, card);
+    this.cards.set(id, card);
   }
 
   getAll(): Observable<FlashCardMetadata[]> {
-    return of(this.services);
+    return of(this.metadata);
   }
 
   getRevisionCard(id: FlashCardId): Observable<FlashCard> {
-    return of(this.revisionCards.get(id)!);
+    return of(this.cards.get(id)!);
   }
 
 }
@@ -33,10 +33,10 @@ class MockServiceProvider implements FlashCardProvider {
 
 describe('FlashCardService', () => {
   let service: FlashCardService;
-  let mockProvider: MockServiceProvider;
+  let mockProvider: MockFlashCardProvider;
 
   beforeEach(() => {
-    mockProvider = new MockServiceProvider();
+    mockProvider = new MockFlashCardProvider();
 
     TestBed.configureTestingModule({
       providers: [

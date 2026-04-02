@@ -6,7 +6,7 @@ import { routes } from './app/ui/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
 import {flashCardProviderInjectionToken} from "./app/domain/learning/aws-service-provider";
-import {InMemoryAwsServicesProvider} from "./app/infra/learning/in-memory-aws-services-provider";
+import {MarkdownFlashCardProvider} from "./app/infra/learning/markdown-flash-card-provider.service";
 import {scoreWriterInjectionToken} from "./app/domain/scoring/score-writer";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";
 import {storageInjectionToken} from "./app/domain/scoring/storage";
@@ -26,7 +26,7 @@ bootstrapApplication(AppComponent, {
     },
     {
       provide: flashCardProviderInjectionToken,
-      useClass: InMemoryAwsServicesProvider
+      useClass: MarkdownFlashCardProvider
     },
     {
       provide: leaderboardInjectionToken,
