@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {describe, it, expect, beforeEach} from 'vitest';
 
 import {MarkdownParserService} from '../markdown-parser.service';
-import {Answer, Option} from "../../../domain/learning/models/quiz";
+import {Answer, Option} from "../../../domain/learning/models/question";
 
 const mainContent = `
 # 📊 AWS Audit & Monitoring – Flash Card
@@ -48,14 +48,14 @@ D. GuardDuty
 
             expect(parsed).toStrictEqual({
                 mainContent,
-                multipleChoiceQuizzes: [
+                multipleChoiceQuestions: [
                     {
                         question: 'Which service provides **API activity history** for auditing?',
                         options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
                         answer: new Answer(new Option('B. CloudTrail'))
                     }
                 ],
-                trueFalseQuizzes: []
+                trueFalseQuestions: []
             });
         });
 
@@ -84,7 +84,7 @@ D. Unified Agent
 
             expect(parsed).toStrictEqual({
                 mainContent,
-                multipleChoiceQuizzes: [
+                multipleChoiceQuestions: [
                     {
                         question: 'Which service provides **API activity history** for auditing?',
                         options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
@@ -96,7 +96,7 @@ D. Unified Agent
                         answer: new Answer(new Option('B. Logs Insights'))
                     }
                 ],
-                trueFalseQuizzes: []
+                trueFalseQuestions: []
             });
         });
 
@@ -152,8 +152,8 @@ D. Madrid
 
             expect(parsed).toStrictEqual({
                 mainContent,
-                multipleChoiceQuizzes: [],
-                trueFalseQuizzes: [
+                multipleChoiceQuestions: [],
+                trueFalseQuestions: [
                     {
                         question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
                         answer: new Answer(true)
@@ -179,8 +179,8 @@ D. Madrid
 
             expect(parsed).toStrictEqual({
                 mainContent,
-                multipleChoiceQuizzes: [],
-                trueFalseQuizzes: [
+                multipleChoiceQuestions: [],
+                trueFalseQuestions: [
                     {
                         question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
                         answer: new Answer(true)

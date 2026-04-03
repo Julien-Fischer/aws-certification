@@ -1,18 +1,18 @@
 <div class="quiz-container mt-4 p-4 border rounded shadow-sm bg-light-theme">
-    @if (!quizCompleted && quizzes.length > 0) {
+    @if (!quizCompleted && questions.length > 0) {
         <div class="progress mb-4 bg-gray-200 dark:bg-gray-600" style="height: 10px;">
             <div class="progress-bar" role="progressbar"
                  [style.width]="progress + '%'"></div>
         </div>
 
         <div class="question-section mb-4">
-            <h5 class="mb-3 text-secondary-theme">Question {{ currentIndex + 1 }} of {{ quizzes.length }}</h5>
-            <p class="lead fw-bold">{{ currentQuiz.question }}</p>
+            <h5 class="mb-3 text-secondary-theme">Question {{ currentIndex + 1 }} of {{ questions.length }}</h5>
+            <p class="lead fw-bold">{{ currentQuestion.question }}</p>
         </div>
 
         <div class="options-section mb-4">
-            @if (currentQuiz && 'options' in currentQuiz && Array.isArray(currentQuiz.options)) {
-                @for (option of currentQuiz.options; track option) {
+            @if (currentQuestion && 'options' in currentQuestion && Array.isArray(currentQuestion.options)) {
+                @for (option of currentQuestion.options; track option) {
                     <div (click)="selectOption(option)"
                          [class.selected]="selectedOption === option"
                          [class.correct]="showFeedback && matchesAnswer(option)"
@@ -72,7 +72,7 @@
             } @else {
                 <button class="btn main-button"
                         (click)="nextQuestion()">
-                    {{ currentIndex === quizzes.length - 1 ? 'Finish Quiz' : 'Next Question' }}
+                    {{ currentIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question' }}
                 </button>
             }
         </div>
@@ -87,13 +87,13 @@
                     <i class="fas fa-thumbs-down fa-4x text-danger mb-3"></i>
                 }
                 <h3>Quiz Completed!</h3>
-                <p class="lead">Your score: <span class="fw-bold">{{ score }}</span> / {{ quizzes.length }}</p>
+                <p class="lead">Your score: <span class="fw-bold">{{ score }}</span> / {{ questions.length }}</p>
             </div>
             <button class="btn btn-primary" (click)="resetQuiz()">Try Again</button>
         </div>
     }
 
-    @if (quizzes.length === 0) {
+    @if (questions.length === 0) {
         <div class="text-center py-4">
             <p>No quiz questions available for this service.</p>
         </div>

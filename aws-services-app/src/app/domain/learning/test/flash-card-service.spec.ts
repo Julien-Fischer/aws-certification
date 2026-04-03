@@ -154,8 +154,8 @@ function aFlashCard() {
     about(content: string) {
       return {
         mainContent: content,
-        multipleChoiceQuizzes: [],
-        trueFalseQuizzes: []
+        multipleChoiceQuestions: [],
+        trueFalseQuestions: []
       }
     }
   }

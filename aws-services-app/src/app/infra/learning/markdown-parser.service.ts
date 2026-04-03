@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {Answer, MultipleChoiceQuiz, Option, TrueFalseQuiz} from "../../domain/learning/models/quiz";
+import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/learning/models/question";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 
 @Injectable({
@@ -15,16 +15,16 @@ export class MarkdownParserService {
     const mainContent = this.extractMainContent(content, quizSection);
 
     if (!quizSection) {
-      return { mainContent, multipleChoiceQuizzes: [], trueFalseQuizzes: [] };
+      return { mainContent, multipleChoiceQuestions: [], trueFalseQuestions: [] };
     }
 
-    const { multipleChoiceQuizzes, trueFalseQuizzes } = this.parseAllQuizzesFrom(quizSection);
+    const { multipleChoiceQuestions, trueFalseQuestions } = this.parseAllQuizzesFrom(quizSection);
 
-    if (this.hasNoQuizzes(multipleChoiceQuizzes, trueFalseQuizzes)) {
+    if (this.hasNoQuizzes(multipleChoiceQuestions, trueFalseQuestions)) {
       throw new Error('No valid questions found in this quiz');
     }
 
-    return { mainContent, multipleChoiceQuizzes, trueFalseQuizzes };
+    return { mainContent, multipleChoiceQuestions, trueFalseQuestions };
   }
 
   private extractQuizSection(content: string): string | null {
@@ -39,15 +39,15 @@ export class MarkdownParserService {
   }
 
   private parseAllQuizzesFrom(quizContent: string): {
-    multipleChoiceQuizzes: MultipleChoiceQuiz[];
-    trueFalseQuizzes: TrueFalseQuiz[];
+    multipleChoiceQuestions: MultipleChoiceQuestion[];
+    trueFalseQuestions: TrueFalseQuestion[];
   } {
     const { multipleChoiceContent, trueFalseContent } = this.splitQuizIntoMcAndTf(quizContent);
 
-    const multipleChoiceQuizzes = this.multipleChoiceParser.parse(multipleChoiceContent);
-    const trueFalseQuizzes = this.trueFalseParser.parse(trueFalseContent);
+    const multipleChoiceQuestions = this.multipleChoiceParser.parse(multipleChoiceContent);
+    const trueFalseQuestions = this.trueFalseParser.parse(trueFalseContent);
 
-    return { multipleChoiceQuizzes, trueFalseQuizzes };
+    return { multipleChoiceQuestions, trueFalseQuestions };
   }
 
   private splitQuizIntoMcAndTf(quizContent: string): {
@@ -71,17 +71,20 @@ export class MarkdownParserService {
   }
 
   private hasNoQuizzes(
-      mcQuizzes: MultipleChoiceQuiz[],
-      tfQuizzes: TrueFalseQuiz[]
+      multipleChoiceQuestions: MultipleChoiceQuestion[],
+      trueFalseQuestions: TrueFalseQuestion[]
   ): boolean {
-    return mcQuizzes.length === 0 && tfQuizzes.length === 0;
+    return (
+        multipleChoiceQuestions.length === 0 &&
+        trueFalseQuestions.length === 0
+    );
   }
 }
 
 
 class TrueFalseParser {
 
-  parse(tfContent: string): TrueFalseQuiz[] {
+  parse(tfContent: string): TrueFalseQuestion[] {
     if (!tfContent.trim()) return [];
 
     const rawQuestions = this.splitTrueFalseBlocks(tfContent);
@@ -92,7 +95,7 @@ class TrueFalseParser {
     return tfContent.split(/\*\*Q\d+\.\*\*/).slice(1);
   }
 
-  private parseTrueFalseBlock(block: string): TrueFalseQuiz {
+  private parseTrueFalseBlock(block: string): TrueFalseQuestion {
     const lines = trimLines(block);
     const questionLine = lines[0];
     const answerLine = lines[1];
@@ -118,7 +121,7 @@ class TrueFalseParser {
 
 class MultipleChoiceParser {
 
-  parse(mcContent: string): MultipleChoiceQuiz[] {
+  parse(mcContent: string): MultipleChoiceQuestion[] {
     if (!mcContent.trim()) return [];
 
     const rawQuestions = this.splitMultipleChoiceBlocks(mcContent);
@@ -129,7 +132,7 @@ class MultipleChoiceParser {
     return mcContent.split(/\*\*Q\d+\.\*\*/).slice(1);
   }
 
-  private parseMultipleChoiceBlock(block: string): MultipleChoiceQuiz {
+  private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion {
     const lines = trimLines(block);
     const questionLine = lines[0];
     const optionLines = lines.slice(1);
