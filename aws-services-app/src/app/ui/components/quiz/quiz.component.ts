@@ -1,7 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {MultipleChoiceQuiz, Option, Quiz} from "../../../domain/learning/models/quiz";
+import {MultipleChoiceQuestion, Option, Question} from "../../../domain/learning/models/question";
 import Ratio from "../../../domain/scoring/models/ratio";
 
 @Component({
@@ -15,7 +15,7 @@ export class QuizComponent implements OnInit {
 
   private static readonly SUCCESS_THRESHOLD = new Ratio(0.5);
 
-  private _quizzes: Quiz[] = [];
+  private _questions: Question[] = [];
 
   constructor(
       @Inject(shufflerInjectionToken) private shuffler: Shuffler
@@ -26,18 +26,18 @@ export class QuizComponent implements OnInit {
   @Input() onRetry: () => void = () => {};
 
   @Input()
-  set quizzes(value: Quiz[]) {
-    this._quizzes = this.shuffler.shuffle(value.map(quiz => {
-      if (this.hasMultipleChoice(quiz)) {
-        return this.suffleOptions(quiz as MultipleChoiceQuiz);
+  set questions(value: Question[]) {
+    this._questions = this.shuffler.shuffle(value.map(question => {
+      if (this.hasMultipleChoice(question)) {
+        return this.suffleOptions(question as MultipleChoiceQuestion);
       }
-      return quiz;
+      return question;
     }));
     this.resetQuiz();
   }
 
-  get quizzes(): Quiz[] {
-    return this._quizzes;
+  get questions(): Question[] {
+    return this._questions;
   }
 
   currentIndex: number = 0;
@@ -70,18 +70,18 @@ export class QuizComponent implements OnInit {
   checkAnswer(): void {
     if (!this.selectedOption) return;
 
-    const currentQuiz = this.quizzes[this.currentIndex];
-    this.isCorrect = this.selectedOption.toString() === currentQuiz.answer.toString();
+    const currentQuestion = this.questions[this.currentIndex];
+    this.isCorrect = this.selectedOption.toString() === currentQuestion.answer.toString();
     if (this.isCorrect) {
       this.score++;
     }
-    this.progress = Math.round((this.currentIndex + 1) / this.quizzes.length * 100);
+    this.progress = Math.round((this.currentIndex + 1) / this.questions.length * 100);
     this.showFeedback = true;
     this.onAnswer(this.isCorrect);
   }
 
   nextQuestion(): void {
-    if (this.currentIndex < this.quizzes.length - 1) {
+    if (this.currentIndex < this.questions.length - 1) {
       this.currentIndex++;
       this.selectedOption = null;
       this.showFeedback = false;
@@ -91,8 +91,8 @@ export class QuizComponent implements OnInit {
     }
   }
 
-  get currentQuiz(): Quiz {
-    return this.quizzes[this.currentIndex];
+  get currentQuestion(): Question {
+    return this.questions[this.currentIndex];
   }
 
   hasSucceeded(): boolean {
@@ -103,24 +103,24 @@ export class QuizComponent implements OnInit {
   matchesAnswer(candidate: Option): boolean;
   matchesAnswer(candidate: string | Option): boolean {
     if (typeof candidate === 'string') {
-      return this.currentQuiz.answer.toString() === candidate;
+      return this.currentQuestion.answer.toString() === candidate;
     }
-    return this.currentQuiz.answer.value.hasPrefix(candidate.prefix);
+    return this.currentQuestion.answer.value.hasPrefix(candidate.prefix);
   }
 
   private correctAnswersRatio(): Ratio {
-    return new Ratio(this.score / this.quizzes.length);
+    return new Ratio(this.score / this.questions.length);
   }
 
-  private hasMultipleChoice(quiz: Quiz | (Quiz & { options: unknown })) {
-    return 'options' in quiz && Array.isArray(quiz.options);
+  private hasMultipleChoice(question: Question | (Question & { options: unknown })) {
+    return 'options' in question && Array.isArray(question.options);
   }
 
-  private suffleOptions(quiz: MultipleChoiceQuiz) {
+  private suffleOptions(question: MultipleChoiceQuestion) {
     return {
-      ...quiz,
-      options: this.shuffler.shuffle([...quiz.options])
-    } as MultipleChoiceQuiz;
+      ...question,
+      options: this.shuffler.shuffle([...question.options])
+    } as MultipleChoiceQuestion;
   }
 
   protected readonly Array = Array;

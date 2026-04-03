@@ -1,14 +1,14 @@
-export interface Quiz {
+export interface Question {
     question: string;
     answer: Answer<any>;
 }
 
-export interface MultipleChoiceQuiz extends Quiz {
+export interface MultipleChoiceQuestion extends Question {
     options: Option[];
     answer: Answer<Option>;
 }
 
-export interface TrueFalseQuiz extends Quiz {
+export interface TrueFalseQuestion extends Question {
     answer: Answer<boolean>;
 }
 

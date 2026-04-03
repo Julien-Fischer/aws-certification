@@ -27,28 +27,28 @@
             </div>
 
             <div class="quizzes">
-                @if (trueFalseQuizzes.length > 0) {
+                @if (trueFalseQuestions.length > 0) {
                     <div class="mt-5">
                         <h3 class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                             <i class="fas fa-check-circle me-3 animate-pulse"></i>
                             True / False Quiz
                         </h3>
                         <app-quiz
-                                [quizzes]="trueFalseQuizzes"
+                                [questions]="trueFalseQuestions"
                                 [onRetry]="resetProgressTracker.bind(this)"
                                 [onAnswer]="onTrueFalseScoreChange.bind(this)"
                         />
                     </div>
                 }
 
-                @if (multipleChoiceQuizzes.length > 0) {
+                @if (multipleChoiceQuestions.length > 0) {
                     <div class="mt-5">
                         <h3 class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                             <i class="fas fa-list-ul me-2"></i>
                             Multiple Choice Quiz
                         </h3>
                         <app-quiz
-                                [quizzes]="multipleChoiceQuizzes"
+                                [questions]="multipleChoiceQuestions"
                                 [onRetry]="resetProgressTracker.bind(this)"
                                 [onAnswer]="onMultipleChoiceScoreChange.bind(this)"
                         />

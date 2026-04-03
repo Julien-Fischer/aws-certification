@@ -6,7 +6,7 @@ import { FlashCardService } from '../../../domain/learning/services/flash-card.s
 import { FlashCardMetadata } from '../../../domain/learning/models/metadata';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
-import { Quiz } from '../../../domain/learning/models/quiz';
+import { Question } from '../../../domain/learning/models/question';
 import { FlashCard } from '../../../domain/learning/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
@@ -23,9 +23,9 @@ import {FlashCardId} from "../../../domain/shared/flash-card-id";
 export class FlashCardComponent implements OnInit {
   service: FlashCardMetadata | undefined;
   markdownContent: string = '';
-  trueFalseQuizzes: Quiz[] = [];
-  multipleChoiceQuizzes: Quiz[] = [];
-  allQuizzes: Quiz[] = [];
+  trueFalseQuestions: Question[] = [];
+  multipleChoiceQuestions: Question[] = [];
+  allQuestions: Question[] = [];
   progressTracker = this.trackProgress();
 
   loading: boolean = true;
@@ -67,11 +67,11 @@ export class FlashCardComponent implements OnInit {
   private loadMarkdownContent(id: FlashCardId): void {
     this.flashCardService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
-        const { mainContent, trueFalseQuizzes, multipleChoiceQuizzes } = card;
+        const { mainContent, trueFalseQuestions, multipleChoiceQuestions } = card;
         this.markdownContent = marked(mainContent) as string;
-        this.trueFalseQuizzes = trueFalseQuizzes;
-        this.multipleChoiceQuizzes = multipleChoiceQuizzes;
-        this.allQuizzes = [...this.trueFalseQuizzes, ...this.multipleChoiceQuizzes];
+        this.trueFalseQuestions = trueFalseQuestions;
+        this.multipleChoiceQuestions = multipleChoiceQuestions;
+        this.allQuestions = [...this.trueFalseQuestions, ...this.multipleChoiceQuestions];
         this.loading = false;
       },
       error: (error) => {
@@ -105,7 +105,7 @@ export class FlashCardComponent implements OnInit {
   }
 
   private trackProgress() {
-    return new ProgressTracker(() => this.allQuizzes.length);
+    return new ProgressTracker(() => this.allQuestions.length);
   }
 
   goBack(): void {

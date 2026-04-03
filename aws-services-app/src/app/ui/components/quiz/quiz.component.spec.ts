@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 import {QuizComponent} from "./quiz.component";
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {Answer, Option, MultipleChoiceQuiz, Quiz, TrueFalseQuiz} from "../../../domain/learning/models/quiz";
+import {Answer, Option, MultipleChoiceQuestion, Question, TrueFalseQuestion} from "../../../domain/learning/models/question";
 import PageObject from "../../test/page-object";
 import Score from "../../../domain/scoring/models/score";
 
@@ -57,40 +57,40 @@ describe('QuizComponent', () => {
     })
 
     it('page has a quiz', async () => {
-        await having(aQuiz());
+        await havingAQuizWith(aQuestion());
 
         expect(page.hasNoQuiz()).toBe(false);
     })
 
     it('shows progress at 0%', async () => {
-        await having(aQuiz());
+        await havingAQuizWith(aQuestion());
 
         expect(page.progress).toBe('0%');
         expect(page.score).toBe(0);
     });
 
-    it('quizzes are shuffled', async () => {
-        await having(aQuiz(), aQuiz());
+    it('questions are shuffled', async () => {
+        await havingAQuizWith(aQuestion(), aQuestion());
 
         expect(mockShuffler.wasCalled()).toBe(true);
     })
 
     it('displays first question', async () => {
-        await having(aQuiz());
+        await havingAQuizWith(aQuestion());
 
         expect(page.questionHeader).toContain('Question 1 of 1');
-        expect(page.questionText).toBe(component.currentQuiz.question);
+        expect(page.questionText).toBe(component.currentQuestion.question);
     });
 
     it('displays first question', async () => {
-        await having(aQuiz(), aQuiz());
+        await havingAQuizWith(aQuestion(), aQuestion());
 
         expect(page.questionHeader).toContain('Question 1 of 2');
-        expect(page.questionText).toBe(component.currentQuiz.question);
+        expect(page.questionText).toBe(component.currentQuestion.question);
     });
 
     it('displays options for multiple choice quiz', async () => {
-        await having({
+        await havingAQuizWith({
             question: 'Which feature provides cross-Region disaster recovery for Aurora?',
             answer: new Answer(new Option('B. Aurora Global Database')),
             options: [
@@ -107,7 +107,7 @@ describe('QuizComponent', () => {
     })
 
     it('selects option and enable submit', async () => {
-        await having(aMultipleChoiceQuiz());
+        await havingAQuizWith(amultipleChoiceQuestion());
         expect(page.isSubmitButtonDisabled()).toBe(true);
 
         await page.clickOption(0);
@@ -117,7 +117,7 @@ describe('QuizComponent', () => {
     });
 
     it('unselects option and disable submit', async () => {
-        await having(aMultipleChoiceQuiz(), aQuiz());
+        await havingAQuizWith(amultipleChoiceQuestion(), aQuestion());
         expect(page.isSubmitButtonDisabled()).toBe(true);
 
         await page.clickOption(0);
@@ -133,7 +133,7 @@ describe('QuizComponent', () => {
     });
 
     it('increments score on correct answer', async () => {
-        await having(
+        await havingAQuizWith(
             {
                 question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
                 answer: new Answer(true)
@@ -154,7 +154,7 @@ describe('QuizComponent', () => {
     });
 
     it('shows incorrect feedback on submit', async () => {
-        await having({
+        await havingAQuizWith({
             question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
             answer: new Answer(true)
         });
@@ -168,7 +168,7 @@ describe('QuizComponent', () => {
     });
 
     it('marks incorrect option when submitting wrong answer', async () => {
-        await having(
+        await havingAQuizWith(
             {
                 question: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
@@ -192,7 +192,7 @@ describe('QuizComponent', () => {
     });
 
     it('does not mark incorrect option when submitting correct answer', async () => {
-        await having(
+        await havingAQuizWith(
             {
                 question: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
@@ -216,7 +216,7 @@ describe('QuizComponent', () => {
     });
 
     it('show incorrect feedback on submit (multiple choice)', async () => {
-        await having(
+        await havingAQuizWith(
             {
                 question: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
@@ -239,7 +239,7 @@ describe('QuizComponent', () => {
     });
 
     it('can select true and submit', async () => {
-        await having({
+        await havingAQuizWith({
             question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
             answer: new Answer(true)
         });
@@ -253,7 +253,7 @@ describe('QuizComponent', () => {
     });
 
     it('updates progress bar', async () => {
-        await having(
+        await havingAQuizWith(
             {
                 question: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
@@ -279,7 +279,7 @@ describe('QuizComponent', () => {
     });
 
     it('shows completion screen (success)', async () => {
-        await having(aQuiz(), aQuiz());
+        await havingAQuizWith(aQuestion(), aQuestion());
 
         component.quizCompleted = true;
         component.score = 2;
@@ -293,7 +293,7 @@ describe('QuizComponent', () => {
 
 
     it('shows completion screen (failure)', async () => {
-        await having(aQuiz(), aQuiz(), aQuiz());
+        await havingAQuizWith(aQuestion(), aQuestion(), aQuestion());
 
         component.quizCompleted = true;
         component.currentIndex = 3;
@@ -307,7 +307,7 @@ describe('QuizComponent', () => {
     });
 
     it('resets metrics', async () => {
-        await having(aQuiz(), aQuiz());
+        await havingAQuizWith(aQuestion(), aQuestion());
 
         component.quizCompleted = true;
         component.score = 2;
@@ -323,12 +323,12 @@ describe('QuizComponent', () => {
     });
 
 
-    async function having(...quizzes: (TrueFalseQuiz | MultipleChoiceQuiz)[]) {
-        fixture.componentRef.setInput('quizzes', [...quizzes]);
+    async function havingAQuizWith(...questions: (TrueFalseQuestion | MultipleChoiceQuestion)[]) {
+        fixture.componentRef.setInput('questions', [...questions]);
         await page.stabilize();
     }
 
-    function aMultipleChoiceQuiz(): MultipleChoiceQuiz {
+    function amultipleChoiceQuestion(): MultipleChoiceQuestion {
         return {
             question: 'Which feature provides cross-Region disaster recovery for Aurora?',
             answer: new Answer(new Option('B. Aurora Global Database')),
@@ -341,11 +341,11 @@ describe('QuizComponent', () => {
     }
 
     async function havingNoQuizzes() {
-        await having();
+        await havingAQuizWith();
     }
 
-    function aQuiz(): Quiz {
-        return aMultipleChoiceQuiz();
+    function aQuestion(): Question {
+        return amultipleChoiceQuestion();
     }
 
 });

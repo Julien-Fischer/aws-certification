@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Answer, Option } from "../models/quiz";
+import { Answer, Option } from "../models/question";
 
 describe('Answer', () => {
     it('constructs with string value', () => {
