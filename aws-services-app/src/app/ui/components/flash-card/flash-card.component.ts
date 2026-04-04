@@ -9,7 +9,9 @@ import { QuizComponent } from '../quiz/quiz.component';
 import { Question } from '../../../domain/learning/models/question';
 import { FlashCard } from '../../../domain/learning/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
+import Highscore from '../../../domain/scoring/models/highscore';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
+import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 
@@ -27,6 +29,7 @@ export class FlashCardComponent implements OnInit {
   multipleChoiceQuestions: Question[] = [];
   allQuestions: Question[] = [];
   progressTracker = this.trackProgress();
+  highscore: Highscore = Highscore.NONE;
 
   loading: boolean = true;
 
@@ -34,7 +37,8 @@ export class FlashCardComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private flashCardService: FlashCardService,
-      @Inject(scoreWriterInjectionToken) private scoreWriter: ScoreWriter
+      @Inject(scoreWriterInjectionToken) private scoreWriter: ScoreWriter,
+      @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +56,7 @@ export class FlashCardComponent implements OnInit {
   }
 
   private loadService(serviceId: FlashCardId): void {
+    this.highscore = this.scoreProvider.get(serviceId);
     this.flashCardService.getMetadata(serviceId).subscribe(
         service => {
           this.service = service;
@@ -98,6 +103,9 @@ export class FlashCardComponent implements OnInit {
 
   private notifyScore(score: Score) {
     this.scoreWriter.score(this.serviceId(), score);
+    if (score.beats(this.highscore)) {
+      this.highscore = Highscore.from(score);
+    }
   }
 
   resetProgressTracker() {
