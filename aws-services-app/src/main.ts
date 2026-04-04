@@ -7,11 +7,13 @@ import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
 import {flashCardProviderInjectionToken} from "./app/domain/learning/flash-card-provider";
 import {MarkdownFlashCardProvider} from "./app/infra/learning/markdown-flash-card-provider.service";
-import {scoreWriterInjectionToken} from "./app/domain/scoring/score-writer";
+import {ScoreWriter, scoreWriterInjectionToken} from "./app/domain/scoring/score-writer";
+import {scoreProviderInjectionToken} from "./app/domain/scoring/score-provider";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";
 import {storageInjectionToken} from "./app/domain/scoring/storage";
 import LocalStorageAccessor from "./app/infra/scoring/local-storage-accessor";
 import {ScoreWriterService} from "./app/domain/scoring/score-writer.service";
+import {ScoreProviderService} from "./app/domain/scoring/score-provider.service";
 import {LeaderBoardService} from "./app/domain/scoring/leaderboard.service";
 import {Gamification, gamificationInjectionToken} from "./app/ui/services/gamification";
 import {GamificationService} from "./app/ui/services/gamification.service";
@@ -35,6 +37,10 @@ bootstrapApplication(AppComponent, {
     {
       provide: scoreWriterInjectionToken,
       useClass: ScoreWriterService
+    },
+    {
+      provide: scoreProviderInjectionToken,
+      useClass: ScoreProviderService
     },
     {
       provide: storageInjectionToken,
