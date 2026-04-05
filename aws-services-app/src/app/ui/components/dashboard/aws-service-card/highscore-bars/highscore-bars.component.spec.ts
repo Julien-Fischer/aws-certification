@@ -92,35 +92,35 @@ export class HighscoreBarsPage extends PageObject<HighscoreBarsComponent> {
     super(fixture);
   }
 
-  get progressLabel() {
+  get progressLabel(): string {
     return this.lookupTextOfElement('.progress-label');
   }
 
-  get progressValue() {
+  get progressValue(): string {
     return this.lookupTextOfElement('.progress-value');
   }
 
-  get progressBar() {
+  get progressBar(): HTMLElement {
     return this.lookupElement('.progress-bar');
   }
 
-  get progressWidth() {
+  get progressWidth(): string {
     return this.progressBar.style.width;
   }
 
-  get accuracyLabel() {
+  get accuracyLabel(): string {
     return this.lookupTextOfElement('.accuracy-label');
   }
 
-  get accuracyValue() {
+  get accuracyValue(): string {
     return this.lookupTextOfElement('.accuracy-value');
   }
 
-  get accuracyBar() {
+  get accuracyBar(): HTMLElement {
     return this.lookupElement('.progress-bar.accuracy');
   }
 
-  get accuracyWidth() {
+  get accuracyWidth(): string {
     return this.accuracyBar.style.width;
   }
 
