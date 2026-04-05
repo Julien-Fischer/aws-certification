@@ -39,26 +39,39 @@
                         </h4>
                     </div>
 
-                    <div class="highscore-indicators d-flex gap-4">
-                        <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
-                            <div class="indicator-icon me-3 bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="fas fa-tasks"></i>
+                    @if (highscore !== highscoreNONE) {
+                        <div class="highscore-indicators d-flex gap-4">
+                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                                <div class="indicator-icon me-3 bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <div>
+                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Progress</div>
+                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.progress.toFixed(0) }}</div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="indicator-label text-secondary-theme small uppercase fw-bold">Progress</div>
-                                <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.progress.toFixed(0) }}</div>
+                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                                <div class="indicator-icon me-3 bg-success-light text-success rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                                <div>
+                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Accuracy</div>
+                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.accuracy.toFixed(0) }}</div>
+                                </div>
+                            </div>
+                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                                <div class="indicator-icon me-3 bg-info-light text-info rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Date</div>
+                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.date | date:'yyyy-MM-dd' }}</div>
+                                </div>
                             </div>
                         </div>
-                        <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
-                            <div class="indicator-icon me-3 bg-success-light text-success rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="fas fa-bullseye"></i>
-                            </div>
-                            <div>
-                                <div class="indicator-label text-secondary-theme small uppercase fw-bold">Accuracy</div>
-                                <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.accuracy.toFixed(0) }}</div>
-                            </div>
-                        </div>
-                    </div>
+                    } @else {
+                        <p class="text-secondary-theme font-italic">No highscore yet. Take a quiz to set one!</p>
+                    }
                 </div>
 
                 @if (trueFalseQuestions.length > 0) {
