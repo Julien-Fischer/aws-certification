@@ -30,6 +30,7 @@ export class FlashCardComponent implements OnInit {
   allQuestions: Question[] = [];
   progressTracker = this.trackProgress();
   highscore: Highscore = Highscore.NONE;
+  readonly highscoreNONE = Highscore.NONE;
 
   loading: boolean = true;
 
