@@ -20,11 +20,11 @@ export default abstract class PageObject<T> {
         await this.stabilize();
     }
 
-    protected lookupElement(searchString: string) {
+    protected lookupElement(searchString: string): HTMLElement {
         return this.fixture.nativeElement.querySelector(searchString);
     }
 
-    protected lookupTextOfElement(searchString: string) {
+    protected lookupTextOfElement(searchString: string): string {
         return this.lookupElement(searchString)?.textContent?.trim() || '';
     }
 
