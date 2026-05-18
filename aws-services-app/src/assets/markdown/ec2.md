@@ -15,14 +15,19 @@ Amazon EC2 (Elastic Compute Cloud) provides **resizable compute capacity** in th
 ## 💻 Instance Types
 Different families optimized for specific workloads:
 
-- **t (T3, T4g)** – Burstable general purpose (low-cost dev/test).
-- **m (M6i, M7g)** – General purpose (balanced CPU/Mem).
-- **c (C6g, C7i)** – Compute-optimized (high CPU).
-- **r (R6i)** – Memory-optimized (DBs, in-memory caches).
-- **i (I4i)** – Storage-optimized (high IOPS, NoSQL).
-- **g / p / inf** – GPU/ML/AI acceleration.
-- **x / z** – High memory for SAP HANA, analytics.
-- **d / h** – HDD-based, high storage throughput.
+| Family    | Instance Examples         | Optimization                       | Typical Use Cases                                                 |
+|-----------|---------------------------|------------------------------------|-------------------------------------------------------------------|
+| **t**     | T3, T3a, T4g              | Burstable general-purpose          | Dev/test, low-cost web servers, small databases                   |
+| **m**     | M6i, M6g, M7i, M7g        | General-purpose (balanced CPU/Mem) | Web apps, SaaS backends, moderate databases                       |
+| **c**     | C6g, C6i, C7g, C7i        | Compute-optimized (high CPU)       | Batch processing, HPC, high-performance web servers, ML inference |
+| **r**     | R6i, R6g, R7i, R7g        | Memory-optimized                   | Databases (PostgreSQL, MySQL), in-memory caches (Redis), SAP HANA |
+| **i**     | I4i, I4g                  | Storage-optimized (NVMe SSD)       | High IOPS NoSQL (MongoDB, Cassandra), transactional databases     |
+| **g**     | G5, G5g, G6               | GPU (graphics/ML inference)        | 3D rendering, gaming, ML inference, virtual workstations          |
+| **p**     | P4d, P5                   | GPU (ML/HPC training)              | ML training, deep learning, computational finance                 |
+| **inf**   | Inf1, Inf2                | AWS Inferentia (ML inference)      | Cost-effective ML inference (image/speech, NLP)                   |
+| **x**     | X1e, X2gd, X2iedn, X2iezn | High memory (enterprise)           | Large in-memory databases (SAP HANA, Oracle DB), big data         |
+| **z**     | z1d                       | High CPU + high memory             | EDA, relational DBs with high per-core licensing costs            |
+| **d / h** | D3, D3en, H1              | HDD storage-optimized              | Data warehousing, big data (Hadoop/Spark), high disk throughput   |
 
 ---
 
