@@ -22,7 +22,7 @@ export class MarkdownFlashCardProvider implements FlashCardProvider {
     }
 
     getCard(id: FlashCardId): Observable<FlashCard> {
-        return this.http.get(`/assets/markdown/${id}.md`, { responseType: 'text' }).pipe(
+        return this.http.get(`assets/markdown/${id}.md`, { responseType: 'text' }).pipe(
             map(content => this.markdownParser.parse(content)
         ));
     }
