@@ -340,7 +340,7 @@ describe('MarkdownParserService', () => {
                 ])
         })
 
-        it.skip('for true/false quiz (inline)', () => {
+        it('for true/false quiz (inline)', () => {
             const markdown = aFlashCard()
                 .with(
                     aTrueStatement()

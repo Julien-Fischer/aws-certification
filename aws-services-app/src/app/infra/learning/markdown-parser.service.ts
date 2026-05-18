@@ -131,9 +131,23 @@ class TrueFalseParser {
     }
 
     private parseTrueFalseAnswerLine(line: string, explanation?: string): Answer<boolean> {
-        if (line.includes('True')) return new Answer(true, explanation);
-        if (line.includes('False')) return new Answer(false, explanation);
-        throw new Error(`Invalid True/False answer format: ${line}`);
+        let value: boolean;
+        if (line.includes('True')) {
+            value = true;
+        } else if (line.includes('False')) {
+            value = false;
+        } else {
+            throw new Error(`Invalid True/False answer format: ${line}`);
+        }
+
+        if (!explanation) {
+            const inlineMatch = line.match(/\((.+)\)/);
+            if (inlineMatch) {
+                explanation = inlineMatch[1].trim();
+            }
+        }
+
+        return new Answer(value, explanation);
     }
 
 }
