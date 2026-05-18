@@ -156,6 +156,7 @@ body {
 }
 
 .markdown-content table {
+  margin-top: 10px;
   border-collapse: collapse;
   border-color: var(--aws-gray);
   margin-bottom: 20px;
@@ -164,7 +165,19 @@ body {
 .markdown-content td {
   border-width: 1px;
   border-style: solid;
+  border-color: var(--aws-gray);
   padding: 0.5rem;
+}
+
+.dark .markdown-content td {
+  border-color: #4a4a4a;
+}
+
+.markdown-content th {
+  background-color: var(--aws-gray);
+  color: white;
+  padding: 0.5rem;
+  border: 1px solid #4a4a4a;
 }
 
 .markdown-content hr {
