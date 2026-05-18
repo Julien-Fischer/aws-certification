@@ -20,6 +20,7 @@
                        [ngModel]="searchTerm()"
                        (ngModelChange)="searchTerm.set($event)"
                        (focus)="onSearchFocus()"
+                       (blur)="onSearchBlur()"
                        placeholder="Search... (ctrl+k)"
                        class="search-input w-full py-2 pl-10 pr-10 rounded-full border-none focus:outline-none transition-all shadow-inner"
                 />

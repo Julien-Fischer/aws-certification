@@ -58,6 +58,14 @@ export class HeaderComponent {
     this.isSearchFocused.set(true);
   }
 
+  onSearchBlur(): void {
+    // We use a small timeout to allow click events on the autocomplete results to fire
+    // before the menu is hidden by isSearchFocused being set to false
+    setTimeout(() => {
+      this.isSearchFocused.set(false);
+    }, 200);
+  }
+
   async onCardSelected(id: string): Promise<void> {
     this.searchTerm.set('');
     this.isSearchFocused.set(false);
@@ -91,6 +99,7 @@ export class HeaderComponent {
   private unfocusSearch(): void {
     if (this.searchInput) {
       this.searchInput.nativeElement.blur();
+      this.isSearchFocused.set(false);
     }
   }
 
