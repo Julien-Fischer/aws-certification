@@ -112,6 +112,15 @@ D. Failover Policy
 
 ---
 
+**Q4.** A microservice application is being hosted in the ap-southeast-1 and ap-northeast-1 regions. The ap-southeast-1 region accounts for 80% of traffic, with the rest from ap-northeast-1. As part of the company’s business continuity plan, all traffic must be rerouted to the other region if one of the regions’ servers fails. Which solution can comply with the requirement?
+A. Set up an 80/20 weighted routing in the application load balancer and enable health checks.
+B. Set up an 80/20 weighted routing in the network load balancer and enable health checks.
+C. Set up an 80/20 weighted routing policy in AWS Route 53 and enable health checks.
+D. Set up a failover routing policy in AWS Route 53 and enable health checks.
+✅ **Answer: C**
+
+---
+
 ### 🔹 True / False
 **Q4.** Alias records are free, while CNAME queries are billed.  
 ✅ True
