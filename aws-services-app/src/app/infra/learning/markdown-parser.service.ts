@@ -111,7 +111,8 @@ class TrueFalseParser {
     }
 
     private parseTrueFalseBlock(block: string): TrueFalseQuestion {
-        const lines = trimLines(block);
+        const allLines = block.split('\n').map(l => l.trim());
+        const lines = allLines.filter(line => line !== '');
         const questionLine = lines[0];
         const answerLine = lines[1];
 
@@ -120,14 +121,18 @@ class TrueFalseParser {
         }
 
         const questionText = extractQuestionText(questionLine);
-        const answer = this.parseTrueFalseAnswerLine(answerLine);
+
+        const answerLineIndex = allLines.indexOf(answerLine);
+        const explanation = findExplanation(allLines, answerLineIndex);
+
+        const answer = this.parseTrueFalseAnswerLine(answerLine, explanation);
 
         return {question: questionText, answer};
     }
 
-    private parseTrueFalseAnswerLine(line: string): Answer<boolean> {
-        if (line.includes('True')) return new Answer(true);
-        if (line.includes('False')) return new Answer(false);
+    private parseTrueFalseAnswerLine(line: string, explanation?: string): Answer<boolean> {
+        if (line.includes('True')) return new Answer(true, explanation);
+        if (line.includes('False')) return new Answer(false, explanation);
         throw new Error(`Invalid True/False answer format: ${line}`);
     }
 
@@ -175,24 +180,13 @@ class MultipleChoiceParser {
             } else if (line.includes('✅ **Answer:')) {
                 const letter = this.findLetter(line);
                 const answerOption = this.findAnswer(letter, options);
-                const explanation = this.findExplanation(lines, i);
+
+                const explanation = findExplanation(lines, i);
                 return {options, answer: new Answer(answerOption, explanation)};
             }
         }
 
         return {options, answer: null};
-    }
-
-    private findExplanation(lines: string[], i: number): string | undefined {
-        let explanation: string | undefined;
-        const remainingContent = lines.slice(i + 1).join('\n').trim();
-        if (remainingContent.startsWith('Explanation:')) {
-            const explanationMatch = remainingContent.match(/Explanation:\s*\n*```\n?([\s\S]*?)\n?```/);
-            if (explanationMatch) {
-                explanation = explanationMatch[1].trim();
-            }
-        }
-        return explanation;
     }
 
     private findLetter(line: string) {
@@ -237,4 +231,16 @@ function trimLines(multiLineString: string): string[] {
 
 function extractQuestionText(line: string): string {
     return line.replace(/^[ \t]*\d+\.[ \t]*/, '').trim();
+}
+
+function findExplanation(lines: string[], i: number): string | undefined {
+    let explanation: string | undefined;
+    const remainingContent = lines.slice(i + 1).join('\n').trim();
+    if (remainingContent.startsWith('Explanation:')) {
+        const explanationMatch = remainingContent.match(/Explanation:\s*\n*```\n?([\s\S]*?)\n?```/);
+        if (explanationMatch) {
+            explanation = explanationMatch[1].trim();
+        }
+    }
+    return explanation;
 }

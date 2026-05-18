@@ -305,7 +305,7 @@ describe('MarkdownParserService', () => {
     })
 
     describe('explanation', () => {
-        it('parses explanation if present', () => {
+        it('for multiple choice quiz', () => {
             const explanation = toMarkdown(`
                 First line.
 
@@ -338,6 +338,39 @@ describe('MarkdownParserService', () => {
                     }
                 ],
                 trueFalseQuestions: []
+            })
+        })
+
+        it('for true/false quiz', () => {
+            const explanation = toMarkdown(`
+                First line.
+
+                Second line
+                Third line
+                Fourth line
+
+                Fifth line.
+            `);
+
+            const markdown = aFlashCard()
+                .with(
+                    aBooleanStatement()
+                        .labelled('Alias records are free, while CNAME queries are billed.')
+                        .thatIs(true)
+                        .withExplanation(explanation)
+                )
+                .toMarkdown();
+
+            const parsed = service.parse(markdown);
+
+            expect(parsed).toStrictEqual({
+                mainContent,
+                multipleChoiceQuestions: [],
+                trueFalseQuestions: [
+                    {
+                        question: 'Alias records are free, while CNAME queries are billed.',
+                        answer: new Answer(true, explanation)
+                    }]
             })
         })
     })
