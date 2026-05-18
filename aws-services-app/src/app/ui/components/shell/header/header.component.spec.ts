@@ -68,4 +68,16 @@ describe('HeaderComponent', () => {
     expect(focusSpy).toHaveBeenCalled();
     expect(selectSpy).toHaveBeenCalled();
   });
+
+  it('should blur search input when Escape key is pressed', () => {
+    const blurSpy = vi.spyOn(component['searchInput'].nativeElement, 'blur');
+
+    const event = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      bubbles: true
+    });
+    window.dispatchEvent(event);
+
+    expect(blurSpy).toHaveBeenCalled();
+  });
 });

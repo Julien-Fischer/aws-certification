@@ -51,11 +51,22 @@ export class HeaderComponent {
     this.focusSearch();
   }
 
+  @HostListener('window:keydown.escape', ['$event'])
+  handleEscapeShortcut(event: any): void {
+    this.unfocusSearch();
+  }
+
   private focusSearch(): void {
     if (this.searchInput) {
       const nativeElement = this.searchInput.nativeElement;
       nativeElement.focus();
       nativeElement.select();
+    }
+  }
+
+  private unfocusSearch(): void {
+    if (this.searchInput) {
+      this.searchInput.nativeElement.blur();
     }
   }
 
