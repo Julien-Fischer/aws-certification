@@ -59,6 +59,11 @@
                     <i class="fas me-2" [class.fa-check-circle]="isCorrect" [class.fa-times-circle]="!isCorrect"></i>
                     <span class="fw-bold">{{ isCorrect ? 'Correct!' : 'Incorrect' }}</span>
                 </div>
+                @if (!isCorrect && currentQuestion.answer.explanation) {
+                    <div class="explanation-section mt-3 p-3 rounded">
+                        <div class="mb-0 explanation-text" [innerHTML]="renderedExplanation"></div>
+                    </div>
+                }
             </div>
         }
 

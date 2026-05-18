@@ -124,9 +124,9 @@ Explanation:
 ```
 The correct solution for this scenario is to use AWS Route 53's weighted routing policy with health checks. This setup allows the distribution of traffic across multiple AWS regions based on assigned weights (in this case, 80% to ap-southeast-1 and 20% to ap-northeast-1) and automatically reroutes traffic if one region becomes unavailable due to server failure.
 
-Option C is correct because AWS Route 53’s weighted routing policy allows you to assign weights to resource record sets (RRS) which correspond to different AWS regions. When combined with health checks, Route 53 can monitor the health of the application in each region. If a region becomes unhealthy, Route 53 will reroute traffic to the healthy region based on the configured weights.
-Option A and B are incorrect because application and network load balancers operate at the regional level, not the global level. Therefore, they cannot reroute traffic between regions.
-Option D, while involving Route 53, suggests a failover routing policy, which is not suitable for distributing traffic with a specific percentage split across regions. Failover routing is typically used for active-passive failover, not for load distribution, which doesn't align with the requirement to handle traffic in an 80/20 proportion.
+- Option C is correct because AWS Route 53’s weighted routing policy allows you to assign weights to resource record sets (RRS) which correspond to different AWS regions. When combined with health checks, Route 53 can monitor the health of the application in each region. If a region becomes unhealthy, Route 53 will reroute traffic to the healthy region based on the configured weights.
+- Option A and B are incorrect because application and network load balancers operate at the regional level, not the global level. Therefore, they cannot reroute traffic between regions.
+- Option D, while involving Route 53, suggests a failover routing policy, which is not suitable for distributing traffic with a specific percentage split across regions. Failover routing is typically used for active-passive failover, not for load distribution, which doesn't align with the requirement to handle traffic in an 80/20 proportion.
 
 The weighted routing policy of AWS Route 53, with appropriate health checks, satisfies the business requirement by distributing traffic in the specified ratio and ensuring business continuity by redirecting traffic in the event of a regional failure.
 ```

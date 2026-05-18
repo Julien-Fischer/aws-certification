@@ -1,5 +1,6 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { marked } from 'marked';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
 import {MultipleChoiceQuestion, Option, Question} from "../../../domain/learning/models/question";
 import Ratio from "../../../domain/scoring/models/ratio";
@@ -93,6 +94,11 @@ export class QuizComponent implements OnInit {
 
   get currentQuestion(): Question {
     return this.questions[this.currentIndex];
+  }
+
+  get renderedExplanation(): string {
+    const explanation = this.currentQuestion.answer.explanation;
+    return explanation ? (marked(explanation) as string) : '';
   }
 
   hasSucceeded(): boolean {

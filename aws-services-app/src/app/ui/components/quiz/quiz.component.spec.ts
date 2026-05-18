@@ -323,6 +323,43 @@ describe('QuizComponent', () => {
     });
 
 
+    it('shows explanation when answer is wrong and explanation exists', async () => {
+        const explanation = 'This is because **Aurora Global Database** provides low-latency global reads and fast disaster recovery.';
+        const question: MultipleChoiceQuestion = {
+            ...amultipleChoiceQuestion(),
+            answer: new Answer(new Option('B. Aurora Global Database'), explanation)
+        };
+        await havingAQuizWith(question);
+
+        await page.clickOption(0); // Wrong answer
+        await page.clickSubmit();
+
+        expect(page.explanationText).toContain('<strong>Aurora Global Database</strong>');
+    });
+
+    it('does not show explanation when answer is correct', async () => {
+        const explanation = 'Some explanation';
+        const question: MultipleChoiceQuestion = {
+            ...amultipleChoiceQuestion(),
+            answer: new Answer(new Option('B. Aurora Global Database'), explanation)
+        };
+        await havingAQuizWith(question);
+
+        await page.clickOption(1); // Correct answer
+        await page.clickSubmit();
+
+        expect(page.explanationText).toBe('');
+    });
+
+    it('does not show explanation when it does not exist', async () => {
+        await havingAQuizWith(amultipleChoiceQuestion());
+
+        await page.clickOption(0); // Wrong answer
+        await page.clickSubmit();
+
+        expect(page.explanationText).toBe('');
+    });
+
     async function havingAQuizWith(...questions: (TrueFalseQuestion | MultipleChoiceQuestion)[]) {
         fixture.componentRef.setInput('questions', [...questions]);
         await page.stabilize();
@@ -415,6 +452,10 @@ export class QuizComponentPage extends PageObject<QuizComponent> {
 
     get feedbackText() {
         return this.lookupTextOfElement('.feedback-section .fw-bold');
+    }
+
+    get explanationText() {
+        return this.lookupElement('.explanation-text')?.innerHTML || '';
     }
 
     isFeedbackSuccess() {

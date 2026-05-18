@@ -30,6 +30,23 @@
   }
 }
 
+.explanation-section {
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--aws-light-blue);
+    font-family: 'Arial', sans-serif;
+}
+
+.explanation-section ::ng-deep ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+.explanation-section ::ng-deep p,
+.explanation-section ::ng-deep ul li {
+    margin-bottom: 1rem;
+}
+
+
 .progress-bar {
   background-color: var(--aws-orange);
 }
