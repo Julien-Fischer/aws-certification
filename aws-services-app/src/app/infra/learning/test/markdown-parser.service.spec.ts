@@ -3,25 +3,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 
 import {Letter, MarkdownParserService} from '../markdown-parser.service';
 import {Answer, Option} from "../../../domain/learning/models/question";
-
-const title = toMarkdown(`
-    # 📊 AWS Audit & Monitoring – Flash Card
-
-    ---
-
-    `);
-
-const mainContent = toMarkdown(`
-    ## ☁️ Amazon CloudWatch
-
-    ### ✅ Keypoints Summary
-    1. **Monitoring & observability** service for AWS resources & applications.
-    2. Collects **metrics, logs, and events** for real-time visibility.
-    3. Integrates with alarms, dashboards, and automation.
-
-    ---
-
-    `);
+import {FlashCard} from "../../../domain/learning/models/flash-card";
 
 describe('MarkdownParserService', () => {
 
@@ -48,7 +30,6 @@ describe('MarkdownParserService', () => {
                     2. Collects **metrics, logs, and events** for real-time visibility.
                     3. Integrates with alarms, dashboards, and automation.
                 `)
-                .with(aMultiChoiceQuestion())
                 .toMarkdown();
 
             const parsed = service.parse(markdown);
@@ -63,9 +44,7 @@ describe('MarkdownParserService', () => {
                     1. **Monitoring & observability** service for AWS resources & applications.
                     2. Collects **metrics, logs, and events** for real-time visibility.
                     3. Integrates with alarms, dashboards, and automation.
-
-                    ---`
-                ))
+                `))
         })
 
         it('returns content if title is absent', () => {
@@ -85,41 +64,53 @@ describe('MarkdownParserService', () => {
         })
 
         it('removes quizzes from mainContent', () => {
-            const markdown = title + '\n' + mainContent + '\n' + toMarkdown(`
-                ## ❓ Exam Practice Quiz
+            const markdown = aFlashCard()
+                .withContent(`
+                    ## ☁️ Amazon CloudWatch
 
-                ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?
-                A. CloudWatch
-                B. CloudTrail
-                C. Config
-                D. GuardDuty
-                ✅ **Answer: B**
-                `);
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
+                `)
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
-            expect(parsed.mainContent).toBe(mainContent);
+            expectFlashCard(parsed).toHaveContent(`
+                    ## ☁️ Amazon CloudWatch
+
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
+                `);
         });
 
         it('removes content after quizzes from mainContent', () => {
-            const quiz = toMarkdown(`
-                ## ❓ Exam Practice Quiz
+            const markdown = aFlashCard()
+                .withContent(`
+                    ## ☁️ Amazon CloudWatch
 
-                ### 🔹 Multiple Choice
-                **Q1.** Question?
-                A. Yes
-                ✅ **Answer: A**
-                `);
-            const afterQuiz = toMarkdown(`
-                ---
-                ✅ **Exam Tip**: Some tip.
-                `);
-            const markdown = title + '\n' + mainContent + '\n' + quiz + '\n' + afterQuiz;
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
+                `)
+                .with(aMultiChoiceQuestion())
+                .withAdditionalInfo(` ✅ **Exam Tip**: Some tip. `)
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
-            expect(parsed.mainContent).toBe(mainContent);
+            expectFlashCard(parsed).toHaveContent(`
+                    ## ☁️ Amazon CloudWatch
+
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
+                `);
         });
     })
 
@@ -136,17 +127,14 @@ describe('MarkdownParserService', () => {
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [
+            expectFlashCard(parsed)
+                .toHaveMultipleChoiceQuestions([
                     {
                         question: 'Which service provides **API activity history** for auditing?',
                         options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
                         answer: new Answer(new Option('B. CloudTrail'))
                     }
-                ],
-                trueFalseQuestions: []
-            });
+                ])
         });
 
         it('parses multiple questions', () => {
@@ -165,9 +153,8 @@ describe('MarkdownParserService', () => {
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [
+            expectFlashCard(parsed)
+                .toHaveMultipleChoiceQuestions([
                     {
                         question: 'Which service provides **API activity history** for auditing?',
                         options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
@@ -178,23 +165,21 @@ describe('MarkdownParserService', () => {
                         options: toOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent'),
                         answer: new Answer(new Option('B. Logs Insights'))
                     }
-                ],
-                trueFalseQuestions: []
-            });
+                ])
         });
 
         describe('Incomplete quizzes', () => {
             it('throws error for missing answer', () => {
                 const questionWithMissingAnswer = toMarkdown(`
-                ## ❓ Exam Practice Quiz
+                    ## ❓ Exam Practice Quiz
 
-                ### 🔹 Multiple Choice
-                **Q1.** What is the capital of France?
-                A. Paris
-                B. London
-                C. Berlin
-                D. Madrid
-            `);
+                    ### 🔹 Multiple Choice
+                    **Q1.** What is the capital of France?
+                    A. Paris
+                    B. London
+                    C. Berlin
+                    D. Madrid
+                `);
 
                 expect(() => service.parse(questionWithMissingAnswer))
                     .toThrow(/Invalid Multiple Choice question format \(missing answer\)/);
@@ -202,15 +187,15 @@ describe('MarkdownParserService', () => {
 
             it('throws error for missing options', () => {
                 const questionWithMisingQuestionText = toMarkdown(`
-                ## ❓ Exam Practice Quiz
+                    ## ❓ Exam Practice Quiz
 
-                ### 🔹 Multiple Choice
-                A. Paris
-                B. London
-                C. Berlin
-                D. Madrid
-                ✅ **Answer: B**
-            `);
+                    ### 🔹 Multiple Choice
+                    A. Paris
+                    B. London
+                    C. Berlin
+                    D. Madrid
+                    ✅ **Answer: B**
+                `);
 
                 expect(() => service.parse(questionWithMisingQuestionText))
                     .toThrow('No valid questions found in this quiz');
@@ -218,11 +203,11 @@ describe('MarkdownParserService', () => {
 
             it('throws error for missing question text', () => {
                 const questionWithMissingOptions = toMarkdown(`
-                ## ❓ Exam Practice Quiz
+                    ## ❓ Exam Practice Quiz
 
-                ### 🔹 Multiple Choice
-                **Q1.** What is the capital of France?
-            `);
+                    ### 🔹 Multiple Choice
+                    **Q1.** What is the capital of France?
+                `);
 
                 expect(() => service.parse(questionWithMissingOptions))
                     .toThrow(/Invalid Multiple Choice question format \(missing options\)/);
@@ -234,46 +219,32 @@ describe('MarkdownParserService', () => {
     describe('true/false questions', () => {
 
         it('parses one question', () => {
-            const markdown = aFlashCard()
-                .with(aBooleanStatement()
-                    .labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.')
-                    .thatIs(true)
-                ).toMarkdown();
+            const markdown = aFlashCard().with(
+                aTrueStatement().labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.')
+            ).toMarkdown();
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [],
-                trueFalseQuestions: [
+            expectFlashCard(parsed)
+                .toHaveTrueFalseQuestions([
                     {
                         question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
                         answer: new Answer(true)
                     }
-                ]
-            });
+                ])
         });
 
         it('parses multiple questions', () => {
-            const markdown = restOfTheFile() + toMarkdown(`
-                ### 🔹 True / False
-
-                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
-                ✅ True
-
-                **Q5.** CloudTrail Insights automatically fixes misconfigurations.
-                ❌ False (that’s **Config Remediation**).
-
-                **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.
-                ✅ True
-            `);
+            const markdown = aFlashCard().with(
+                aTrueStatement().labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.'),
+                aFalseStatement().labelled('CloudTrail Insights automatically fixes misconfigurations.'),
+                aTrueStatement().labelled('CloudWatch Alarms can trigger Auto Scaling policies.'),
+            ).toMarkdown();
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [],
-                trueFalseQuestions: [
+            expectFlashCard(parsed)
+                .toHaveTrueFalseQuestions([
                     {
                         question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
                         answer: new Answer(true)
@@ -286,19 +257,20 @@ describe('MarkdownParserService', () => {
                         question: 'CloudWatch Alarms can trigger Auto Scaling policies.',
                         answer: new Answer(true)
                     }
-                ]
-            });
+                ])
         });
 
         it('throws error for missing answer', () => {
-            const markdown = restOfTheFile() + toMarkdown(`
+            const markdownWithMissingAnswer = toMarkdown(`
+                ## ❓ Exam Practice Quiz
+
                 ### 🔹 True / False
                 **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
                 ✅ True
                 **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.
             `);
 
-            expect(() => service.parse(markdown))
+            expect(() => service.parse(markdownWithMissingAnswer))
                 .toThrow(/Invalid True\/False question format \(missing answer\):/);
         });
 
@@ -328,17 +300,14 @@ describe('MarkdownParserService', () => {
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [
+            expectFlashCard(parsed)
+                .toHaveMultipleChoiceQuestions([
                     {
                         question: 'Which solution can comply with the requirement?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                         answer: new Answer(new Option('C. Option C'), explanation)
                     }
-                ],
-                trueFalseQuestions: []
-            })
+                ])
         })
 
         it('for true/false quiz', () => {
@@ -354,35 +323,27 @@ describe('MarkdownParserService', () => {
 
             const markdown = aFlashCard()
                 .with(
-                    aBooleanStatement()
+                    aTrueStatement()
                         .labelled('Alias records are free, while CNAME queries are billed.')
-                        .thatIs(true)
                         .withExplanation(explanation)
                 )
                 .toMarkdown();
 
             const parsed = service.parse(markdown);
 
-            expect(parsed).toStrictEqual({
-                mainContent,
-                multipleChoiceQuestions: [],
-                trueFalseQuestions: [
+            expectFlashCard(parsed)
+                .toHaveTrueFalseQuestions([
                     {
                         question: 'Alias records are free, while CNAME queries are billed.',
                         answer: new Answer(true, explanation)
-                    }]
-            })
+                    }
+                ])
         })
     })
 
 });
 
 // helpers
-
-function restOfTheFile(): string {
-    return mainContent + `## ❓ Exam Practice Quiz
-`
-}
 
 function toOptions(...options: string[]): Option[] {
     return options.map(option => new Option(option));
@@ -494,6 +455,8 @@ class FlashCardStringBuilder {
 
     private multiChoiceQuiz: string[] = [];
 
+    private additionalInfo = '';
+
     withTitle(title: string): this {
         this.title = title;
         return this;
@@ -509,17 +472,30 @@ class FlashCardStringBuilder {
         return this;
     }
 
+    withAdditionalInfo(additionalInfo: string): this {
+        this.additionalInfo += `\n---\n\n${additionalInfo}`;
+        return this;
+    }
+
     toMarkdown(): string {
         const quiz = this.multiChoiceQuiz.length === 0
             ? ''
-            : `\n---\n## ❓ Exam Practice Quiz\n${this.multiChoiceQuiz.join('\n\n---\n\n')}`;
+            : `\n\n## ❓ Exam Practice Quiz\n${this.multiChoiceQuiz.join('\n\n---\n\n')}`;
         return toMarkdown(`
             # ${this.title}
 
             ---
             ${this.content}${quiz}
+            ${this.additionalInfo}
         `);
     }
+}
+
+function aTrueStatement(): TrueFalseQuestionStringBuilder {
+    return aBooleanStatement().thatIs(true);
+}
+function aFalseStatement(): TrueFalseQuestionStringBuilder {
+    return aBooleanStatement().thatIs(false);
 }
 
 function aBooleanStatement(): TrueFalseQuestionStringBuilder {
@@ -530,7 +506,44 @@ function aMultiChoiceQuestion(): MultiChoiceQuestionStringBuilder {
     return new MultiChoiceQuestionStringBuilder();
 }
 
-
 function aFlashCard(): FlashCardStringBuilder {
     return new FlashCardStringBuilder();
+}
+
+interface ExpectedMultipleChoiceQuestion {
+    question: string;
+    options: Option[];
+    answer: Answer<Option>;
+}
+
+interface ExpectedTrueFalseQuestion {
+    question: string;
+    answer: Answer<boolean>;
+}
+
+class FlashCardExpectation {
+
+    constructor(private readonly flashCard: FlashCard) {
+    }
+
+    toHaveContent(content: string): this {
+        expect(this.flashCard.mainContent).toBe(toMarkdown(content));
+        return this;
+    }
+
+    toHaveMultipleChoiceQuestions(expected: ExpectedMultipleChoiceQuestion[]): this {
+        expect(this.flashCard.multipleChoiceQuestions)
+            .toStrictEqual(expected)
+        return this;
+    }
+
+    toHaveTrueFalseQuestions(expected: ExpectedTrueFalseQuestion[]): this {
+        expect(this.flashCard.trueFalseQuestions)
+            .toStrictEqual(expected)
+        return this;
+    }
+}
+
+function expectFlashCard(flashCard: FlashCard): FlashCardExpectation {
+    return new FlashCardExpectation(flashCard);
 }

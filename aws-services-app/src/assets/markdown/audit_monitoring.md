@@ -129,7 +129,11 @@ D. Config Aggregator
 ✅ True  
 
 **Q5.** CloudTrail Insights automatically fixes misconfigurations.  
-❌ False (that’s **Config Remediation**).  
+❌ False 
+Explanation:
+```
+That's **Config Remediation**.  
+```
 
 **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.  
 ✅ True  
