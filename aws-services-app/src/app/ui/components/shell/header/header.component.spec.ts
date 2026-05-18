@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { HeaderComponent } from './header.component';
 import {GamificationService} from "../../../services/gamification.service";
@@ -47,5 +47,20 @@ describe('HeaderComponent', () => {
   it('should update search term when signal is updated', () => {
     component.searchTerm.set('aws');
     expect(component.searchTerm()).toBe('aws');
+  });
+
+  it('should focus and select search input when CTRL+/ is pressed', () => {
+    const focusSpy = vi.spyOn(component['searchInput'].nativeElement, 'focus');
+    const selectSpy = vi.spyOn(component['searchInput'].nativeElement, 'select');
+
+    const event = new KeyboardEvent('keydown', {
+      key: 'k',
+      ctrlKey: true,
+      bubbles: true
+    });
+    window.dispatchEvent(event);
+
+    expect(focusSpy).toHaveBeenCalled();
+    expect(selectSpy).toHaveBeenCalled();
   });
 });

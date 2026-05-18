@@ -1,4 +1,4 @@
-import {Component, Inject, inject, Input, signal} from '@angular/core';
+import {Component, ElementRef, HostListener, Inject, inject, Input, signal, ViewChild} from '@angular/core';
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -16,6 +16,7 @@ export class HeaderComponent {
   @Input() appName: string = '';
   @Input() logo: string = '';
   @Input() repository: string = '';
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   searchTerm = signal('');
 
@@ -36,6 +37,21 @@ export class HeaderComponent {
 
   clearSearch(): void {
     this.searchTerm.set('');
+  }
+
+  @HostListener('window:keydown.control.k', ['$event'])
+  handleKeyboardShortcut(event: any): void {
+    const keyboardEvent = event as KeyboardEvent;
+    keyboardEvent.preventDefault();
+    this.focusSearch();
+  }
+
+  private focusSearch(): void {
+    if (this.searchInput) {
+      const nativeElement = this.searchInput.nativeElement;
+      nativeElement.focus();
+      nativeElement.select();
+    }
   }
 
 }

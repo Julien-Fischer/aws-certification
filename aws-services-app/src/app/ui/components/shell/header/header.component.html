@@ -15,10 +15,11 @@
         <div class="search-container flex items-center mx-4 flex-grow">
             <div class="search-wrapper w-full max-w-md mx-auto relative">
                 <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                <input type="text"
+                <input #searchInput
+                       type="text"
                        [ngModel]="searchTerm()"
                        (ngModelChange)="searchTerm.set($event)"
-                       placeholder="Search services..."
+                       placeholder="Search... (ctrl+k)"
                        class="search-input w-full py-2 pl-10 pr-10 rounded-full border-none focus:outline-none transition-all shadow-inner"
                 />
                 @if (searchTerm()) {
