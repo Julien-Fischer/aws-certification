@@ -17,3 +17,14 @@
     padding-right: 10px;
   }
 }
+
+.empty-state {
+  padding: 3rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  border: 2px dashed #cbd5e0;
+}
+
+:host-context(.dark) .empty-state {
+  border-color: #2d3748;
+}
