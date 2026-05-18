@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {describe, it, expect, beforeEach} from 'vitest';
 
-import {MarkdownParserService} from '../markdown-parser.service';
+import {Letter, MarkdownParserService} from '../markdown-parser.service';
 import {Answer, Option} from "../../../domain/learning/models/question";
 
 const title = toMarkdown(`
@@ -36,36 +36,36 @@ describe('MarkdownParserService', () => {
         expect(service).toBeTruthy();
     });
 
-    describe('title', () => {
+    describe('main content', () => {
         it('removes title if present', () => {
-            const markdown = toMarkdown(`
-                # 📊 AWS Audit & Monitoring – Flash Card
+            const markdown = aFlashCard()
+                .withTitle('📊 AWS Audit & Monitoring – Flash Card')
+                .withContent(`
+                    ## ☁️ Amazon CloudWatch
 
-                ---
-
-                ## ☁️ Amazon CloudWatch
-
-                ### ✅ Keypoints Summary
-                1. **Monitoring & observability** service for AWS resources & applications.
-                2. Collects **metrics, logs, and events** for real-time visibility.
-                3. Integrates with alarms, dashboards, and automation.
-
-                ---`);
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
+                `)
+                .with(aMultiChoiceQuestion())
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
             expect(parsed.mainContent)
-                .not.toContain('# 📊 AWS Audit & Monitoring – Flash Card')
+                .not.toContain('📊 AWS Audit & Monitoring – Flash Card')
             expect(parsed.mainContent)
                 .toBe(toMarkdown(`
-                ## ☁️ Amazon CloudWatch
+                    ## ☁️ Amazon CloudWatch
 
-                ### ✅ Keypoints Summary
-                1. **Monitoring & observability** service for AWS resources & applications.
-                2. Collects **metrics, logs, and events** for real-time visibility.
-                3. Integrates with alarms, dashboards, and automation.
+                    ### ✅ Keypoints Summary
+                    1. **Monitoring & observability** service for AWS resources & applications.
+                    2. Collects **metrics, logs, and events** for real-time visibility.
+                    3. Integrates with alarms, dashboards, and automation.
 
-                ---`))
+                    ---`
+                ))
         })
 
         it('returns content if title is absent', () => {
@@ -125,17 +125,14 @@ describe('MarkdownParserService', () => {
 
     describe('multiple choice questions', () => {
         it('parses one question', () => {
-            const markdown = title + '\n' + mainContent + '\n' + toMarkdown(`
-                ## ❓ Exam Practice Quiz
-
-                ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?
-                A. CloudWatch
-                B. CloudTrail
-                C. Config
-                D. GuardDuty
-                ✅ **Answer: B**
-                `);
+            const markdown = aFlashCard()
+                .with(
+                    aMultiChoiceQuestion()
+                        .labelled('Which service provides **API activity history** for auditing?')
+                        .withOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty')
+                        .withAnswer('B'),
+                )
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
@@ -153,26 +150,18 @@ describe('MarkdownParserService', () => {
         });
 
         it('parses multiple questions', () => {
-            const markdown = title + '\n' + mainContent + toMarkdown(`
-                ## ❓ Exam Practice Quiz
-
-                ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?
-                A. CloudWatch
-                B. CloudTrail
-                C. Config
-                D. GuardDuty
-                ✅ **Answer: B**
-
-                ---
-
-                **Q2.** Which CloudWatch feature allows analyzing logs with SQL-like queries?
-                A. Contributor Insights
-                B. Logs Insights
-                C. Metrics Explorer
-                D. Unified Agent
-                ✅ **Answer: B**
-            `);
+            const markdown = aFlashCard()
+                .with(
+                    aMultiChoiceQuestion()
+                        .labelled('Which service provides **API activity history** for auditing?')
+                        .withOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty')
+                        .withAnswer('B'),
+                    aMultiChoiceQuestion()
+                        .labelled('Which CloudWatch feature allows analyzing logs with SQL-like queries?')
+                        .withOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent')
+                        .withAnswer('B')
+                )
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
@@ -194,8 +183,9 @@ describe('MarkdownParserService', () => {
             });
         });
 
-        it('throws error for missing answer', () => {
-            const questionWithMissingAnswer = toMarkdown(`
+        describe('Incomplete quizzes', () => {
+            it('throws error for missing answer', () => {
+                const questionWithMissingAnswer = toMarkdown(`
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
@@ -206,12 +196,12 @@ describe('MarkdownParserService', () => {
                 D. Madrid
             `);
 
-            expect(() => service.parse(questionWithMissingAnswer))
-                .toThrow(/Invalid Multiple Choice question format \(missing answer\)/);
-        })
+                expect(() => service.parse(questionWithMissingAnswer))
+                    .toThrow(/Invalid Multiple Choice question format \(missing answer\)/);
+            })
 
-        it('throws error for missing options', () => {
-            const questionWithMisingQuestionText = toMarkdown(`
+            it('throws error for missing options', () => {
+                const questionWithMisingQuestionText = toMarkdown(`
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
@@ -222,20 +212,21 @@ describe('MarkdownParserService', () => {
                 ✅ **Answer: B**
             `);
 
-            expect(() => service.parse(questionWithMisingQuestionText))
-                .toThrow('No valid questions found in this quiz');
-        })
+                expect(() => service.parse(questionWithMisingQuestionText))
+                    .toThrow('No valid questions found in this quiz');
+            })
 
-        it('throws error for missing question text', () => {
-            const questionWithMissingOptions = toMarkdown(`
+            it('throws error for missing question text', () => {
+                const questionWithMissingOptions = toMarkdown(`
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
                 **Q1.** What is the capital of France?
             `);
 
-            expect(() => service.parse(questionWithMissingOptions))
-                .toThrow(/Invalid Multiple Choice question format \(missing options\)/);
+                expect(() => service.parse(questionWithMissingOptions))
+                    .toThrow(/Invalid Multiple Choice question format \(missing options\)/);
+            })
         })
 
     });
@@ -243,11 +234,11 @@ describe('MarkdownParserService', () => {
     describe('true/false questions', () => {
 
         it('parses one question', () => {
-            const markdown = restOfTheFile() + toMarkdown(`
-                ### 🔹 True / False
-                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
-                ✅ True
-            `);
+            const markdown = aFlashCard()
+                .with(aBooleanStatement()
+                    .labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.')
+                    .thatIs(true)
+                ).toMarkdown();
 
             const parsed = service.parse(markdown);
 
@@ -324,24 +315,16 @@ describe('MarkdownParserService', () => {
 
                 Fifth line.
             `);
-            const question = toMarkdown(`
-                ---
 
-                **Q1.** Which solution can comply with the requirement?
-                A. Option A
-                B. Option B
-                C. Option C
-                D. Option D
-                ✅ **Answer: C**
-
-                Explanation:
-
-                \`\`\`
-                ${explanation}
-                \`\`\`
-            `);
-
-            const markdown = title + '\n' + mainContent + '\n' + '## ❓ Exam Practice Quiz\n' + question;
+            const markdown = aFlashCard()
+                .with(
+                    aMultiChoiceQuestion()
+                        .labelled('Which solution can comply with the requirement?')
+                        .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                        .withAnswer('C')
+                        .withExplanation(explanation)
+                )
+                .toMarkdown();
 
             const parsed = service.parse(markdown);
 
@@ -361,6 +344,8 @@ describe('MarkdownParserService', () => {
 
 });
 
+// helpers
+
 function restOfTheFile(): string {
     return mainContent + `## ❓ Exam Practice Quiz
 `
@@ -376,4 +361,143 @@ function toMarkdown(markdown: string): string {
         .split('\n')
         .map(line => line.trim())
         .join('\n');
+}
+
+// builders
+
+interface QuestionStringBuilder {
+    build(): string;
+}
+
+class TrueFalseQuestionStringBuilder implements QuestionStringBuilder {
+    private questionText = 'The question text';
+    private answer: boolean = false;
+    private explanation = '';
+
+    labelled(questionText: string): this {
+        this.questionText = questionText;
+        return this;
+    }
+    thatIs(answer: boolean): this {
+        this.answer = answer;
+        return this;
+    }
+    withExplanation(explanation: string): this {
+        this.explanation = explanation;
+        return this;
+    }
+    build(): string {
+        const explanation = this.explanation.trim().length === 0
+            ? ''
+            : `Explanation:\n\`\`\`\n${this.explanation}\n\`\`\``;
+        const answer = this.answer
+            ? '✅ True'
+            : '❌ False'
+        return toMarkdown(`
+            ---
+
+            ### 🔹 True / False
+
+            **Q1.** ${this.questionText}
+            ${answer}
+
+            ${explanation}
+        `);
+    }
+}
+
+class MultiChoiceQuestionStringBuilder implements QuestionStringBuilder {
+    private questionText = 'The question text';
+    private options: string[] = ['A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'];
+    private answer: Letter = 'A';
+    private explanation = '';
+
+    labelled(questionText: string): this {
+        this.questionText = questionText;
+        return this;
+    }
+    withOptions(...options: string[]): this {
+        this.options = options;
+        return this;
+    }
+    withAnswer(answer: Letter): this {
+        this.answer = answer;
+        return this;
+    }
+    withExplanation(explanation: string): this {
+        this.explanation = explanation;
+        return this;
+    }
+    build(): string {
+        const options = this.options.join('\n');
+        const explanation = this.explanation.trim().length === 0
+            ? ''
+            : `Explanation:\n\`\`\`\n${this.explanation}\n\`\`\``
+        return toMarkdown(`
+            ---
+
+            ### 🔹 Multiple Choice
+
+            **Q1.** ${this.questionText}
+            ${options}
+            ✅ **Answer: ${this.answer}**
+
+            ${explanation}
+        `);
+    }
+}
+
+class FlashCardStringBuilder {
+    private title = '📊 AWS Audit & Monitoring – Flash Card';
+
+    private content = `
+        ## ☁️ Amazon CloudWatch
+
+        ### ✅ Keypoints Summary
+        1. **Monitoring & observability** service for AWS resources & applications.
+        2. Collects **metrics, logs, and events** for real-time visibility.
+        3. Integrates with alarms, dashboards, and automation.
+    `;
+
+    private multiChoiceQuiz: string[] = [];
+
+    withTitle(title: string): this {
+        this.title = title;
+        return this;
+    }
+
+    with(...multiChoiceQuiz: QuestionStringBuilder[]): this {
+        this.multiChoiceQuiz = multiChoiceQuiz.map(quiz => quiz.build());
+        return this;
+    }
+
+    withContent(content: string): this {
+        this.content = content;
+        return this;
+    }
+
+    toMarkdown(): string {
+        const quiz = this.multiChoiceQuiz.length === 0
+            ? ''
+            : `\n---\n## ❓ Exam Practice Quiz\n${this.multiChoiceQuiz.join('\n\n---\n\n')}`;
+        return toMarkdown(`
+            # ${this.title}
+
+            ---
+            ${this.content}${quiz}
+        `);
+    }
+}
+
+function aBooleanStatement(): TrueFalseQuestionStringBuilder {
+    return new TrueFalseQuestionStringBuilder();
+}
+
+function aMultiChoiceQuestion(): MultiChoiceQuestionStringBuilder {
+    return new MultiChoiceQuestionStringBuilder();
+}
+
+
+function aFlashCard(): FlashCardStringBuilder {
+    return new FlashCardStringBuilder();
 }

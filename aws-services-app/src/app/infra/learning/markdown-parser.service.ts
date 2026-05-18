@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/learning/models/question";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 
-type Letter = 'A' | 'B' | 'C' | 'D';
+export type Letter = 'A' | 'B' | 'C' | 'D';
 const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];
 
 @Injectable({

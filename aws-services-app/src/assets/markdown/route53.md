@@ -137,11 +137,26 @@ The weighted routing policy of AWS Route 53, with appropriate health checks, sat
 **Q4.** Alias records are free, while CNAME queries are billed.  
 ✅ True
 
+Explanation:
+```
+In Route 53, alias records do not incur separate DNS query charges, while CNAME lookups are billed like normal DNS queries. Alias records are often preferred when you want to map a domain directly to AWS resources such as CloudFront, ELB, or S3 website endpoints.
+```
+
 **Q5.** Alias records can point to EC2 public DNS names.  
 ❌ False
 
+Explanation:
+```
+Alias records are limited to supported AWS targets and cannot point directly to an EC2 instance’s public DNS name. If you want to route to an EC2-hosted service, you usually use an A record to the public IP or place the instance behind a supported load balancer.
+```
+
 **Q6.** Multi-Value Answer is a full replacement for load balancers.  
 ❌ False
+
+Explanation:
+```
+Multi-Value Answer routing can return several healthy IP addresses for a record and works as a simple DNS-level way to distribute traffic, but it is not a replacement for a load balancer. It does not provide the same features as a load balancer, such as advanced health-based traffic management, connection handling, SSL offload, or application-aware routing.
+```
 
 ---
 
