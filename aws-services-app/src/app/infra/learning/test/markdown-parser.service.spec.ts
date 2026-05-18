@@ -372,7 +372,7 @@ describe('MarkdownParserService', () => {
                 .with(
                     aTrueStatement()
                         .labelled('Alias records are free, while CNAME queries are billed.')
-                        .withExplanation(explanation)
+                        .withMultilineExplanation(explanation)
                 )
                 .toMarkdown();
 
@@ -403,6 +403,33 @@ describe('MarkdownParserService', () => {
                         {
                             question: 'Alias records are free, while CNAME queries are billed.',
                             answer: new Answer(true, 'explanation')
+                        }
+                    ])
+            })
+
+            it('multiple explanations', () => {
+                const markdown = aFlashCard()
+                    .with(
+                        aTrueStatement()
+                            .labelled('A true statement')
+                            .withInlineExplanation('inline explanation'),
+                        aFalseStatement()
+                            .labelled('A false statement')
+                            .withMultilineExplanation('multiline explanation')
+                    )
+                    .toMarkdown();
+
+                const parsed = service.parse(markdown);
+
+                expectFlashCard(parsed)
+                    .toHaveTrueFalseQuestions([
+                        {
+                            question: 'A true statement',
+                            answer: new Answer(true, 'inline explanation')
+                        },
+                        {
+                            question: 'A false statement',
+                            answer: new Answer(false, 'multiline explanation')
                         }
                     ])
             })
@@ -444,7 +471,7 @@ class TrueFalseQuestionStringBuilder implements QuestionStringBuilder {
         this.answer = answer;
         return this;
     }
-    withExplanation(explanation: string): this {
+    withMultilineExplanation(explanation: string): this {
         this.explanation = explanation.trim().length === 0
             ? ''
             : `\n\nExplanation:\n\`\`\`\n${explanation}\n\`\`\``;
