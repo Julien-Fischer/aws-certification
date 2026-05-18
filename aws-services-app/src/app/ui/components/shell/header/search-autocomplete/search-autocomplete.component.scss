@@ -1,0 +1,23 @@
+:host {
+    display: block;
+    width: 100%;
+}
+.autocomplete-dropdown {
+    overflow-y: auto;
+    background: #ffffff;
+    min-width: 400px;
+    width: 100%;
+    left: 0;
+
+    @media (max-width: 500px) {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100vw - 20px);
+        min-width: unset;
+        max-width: calc(100vw - 20px);
+    }
+}
+::ng-deep .dark .autocomplete-dropdown {
+    background: #1f2937;
+}

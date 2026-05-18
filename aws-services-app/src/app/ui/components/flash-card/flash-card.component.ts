@@ -43,16 +43,23 @@ export class FlashCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const serviceId = this.serviceId();
-    if (serviceId) {
-      this.loadService(serviceId);
-    } else {
-      this.loading = false;
-    }
+    this.route.paramMap.subscribe(params => {
+      const id = params.get('id');
+      if (id) {
+        this.loading = true;
+        this.resetProgressTracker();
+        this.loadService(new FlashCardId(id));
+      } else {
+        this.loading = false;
+      }
+    });
   }
 
   private serviceId(): FlashCardId {
-    const idParam = this.route.snapshot.paramMap.get('id')!;
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (!idParam) {
+      throw new Error('ID parameter is missing');
+    }
     return new FlashCardId(idParam);
   }
 

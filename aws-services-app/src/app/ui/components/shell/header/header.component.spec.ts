@@ -6,6 +6,9 @@ import {GamificationService} from "../../../services/gamification.service";
 import {provideGamification} from "../../../test/stub-gamification";
 import {flashCardProviderInjectionToken} from "../../../../domain/search/flash-card-provider";
 import {MockFlashCardProvider} from "../../../../domain/search/test/mock-flashcard-provider";
+import { provideRouter } from '@angular/router';
+import { of } from 'rxjs';
+import { SearchService } from '../../../../domain/search/services/search.service';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -25,14 +28,16 @@ describe('HeaderComponent', () => {
       }),
     });
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [HeaderComponent],
       providers: [
+          provideRouter([]),
           provideGamification(),
           { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider }
       ]
-    })
-    .compileComponents();
+    });
+    // Use compileComponents to resolve external templates/styles
+    await TestBed.compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
