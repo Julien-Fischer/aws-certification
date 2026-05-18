@@ -36,7 +36,9 @@ jobs:
 
       - name: Build Angular app
         working-directory: aws-services-app
-        run: npm run build -- --configuration production --base-href /aws-certification/
+        run: |
+          npm run build -- --configuration production --base-href /aws-certification/
+          cp dist/aws-services-app/browser/index.html dist/aws-services-app/browser/404.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -44,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: aws-services-app/dist
+          path: aws-services-app/dist/aws-services-app/browser
 
   deploy:
     needs: build
