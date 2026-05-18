@@ -119,9 +119,9 @@ describe('MarkdownParserService', () => {
             const markdown = aFlashCard()
                 .with(
                     aMultiChoiceQuestion()
-                        .labelled('Which service provides **API activity history** for auditing?')
-                        .withOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty')
-                        .withAnswer('B'),
+                        .labelled('Some question?')
+                        .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                        .withAnswer('C'),
                 )
                 .toMarkdown();
 
@@ -130,9 +130,9 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveMultipleChoiceQuestions([
                     {
-                        question: 'Which service provides **API activity history** for auditing?',
-                        options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
-                        answer: new Answer(new Option('B. CloudTrail'))
+                        question: 'Some question?',
+                        options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                        answer: new Answer(new Option('C. Option C'))
                     }
                 ])
         });
@@ -141,12 +141,12 @@ describe('MarkdownParserService', () => {
             const markdown = aFlashCard()
                 .with(
                     aMultiChoiceQuestion()
-                        .labelled('Which service provides **API activity history** for auditing?')
-                        .withOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty')
-                        .withAnswer('B'),
+                        .labelled('Some question?')
+                        .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                        .withAnswer('C'),
                     aMultiChoiceQuestion()
-                        .labelled('Which CloudWatch feature allows analyzing logs with SQL-like queries?')
-                        .withOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent')
+                        .labelled('Some other question?')
+                        .withOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
                         .withAnswer('B')
                 )
                 .toMarkdown();
@@ -156,14 +156,14 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveMultipleChoiceQuestions([
                     {
-                        question: 'Which service provides **API activity history** for auditing?',
-                        options: toOptions('A. CloudWatch', 'B. CloudTrail', 'C. Config', 'D. GuardDuty'),
-                        answer: new Answer(new Option('B. CloudTrail'))
+                        question: 'Some question?',
+                        options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                        answer: new Answer(new Option('C. Option C'))
                     },
                     {
-                        question: 'Which CloudWatch feature allows analyzing logs with SQL-like queries?',
-                        options: toOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent'),
-                        answer: new Answer(new Option('B. Logs Insights'))
+                        question: 'Some other question?',
+                        options: toOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'),
+                        answer: new Answer(new Option('B. Option 2'))
                     }
                 ])
         });
@@ -220,7 +220,7 @@ describe('MarkdownParserService', () => {
 
         it('parses one question', () => {
             const markdown = aFlashCard().with(
-                aTrueStatement().labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.')
+                aTrueStatement().labelled('A true statement.')
             ).toMarkdown();
 
             const parsed = service.parse(markdown);
@@ -228,7 +228,7 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveTrueFalseQuestions([
                     {
-                        question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
+                        question: 'A true statement.',
                         answer: new Answer(true)
                     }
                 ])
@@ -236,9 +236,9 @@ describe('MarkdownParserService', () => {
 
         it('parses multiple questions', () => {
             const markdown = aFlashCard().with(
-                aTrueStatement().labelled('CloudWatch Unified Agent collects both logs and OS-level metrics.'),
-                aFalseStatement().labelled('CloudTrail Insights automatically fixes misconfigurations.'),
-                aTrueStatement().labelled('CloudWatch Alarms can trigger Auto Scaling policies.'),
+                aTrueStatement().labelled('A true statement.'),
+                aFalseStatement().labelled('A false statement.'),
+                aTrueStatement().labelled('Another true statement.'),
             ).toMarkdown();
 
             const parsed = service.parse(markdown);
@@ -246,15 +246,15 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveTrueFalseQuestions([
                     {
-                        question: 'CloudWatch Unified Agent collects both logs and OS-level metrics.',
+                        question: 'A true statement.',
                         answer: new Answer(true)
                     },
                     {
-                        question: 'CloudTrail Insights automatically fixes misconfigurations.',
+                        question: 'A false statement.',
                         answer: new Answer(false)
                     },
                     {
-                        question: 'CloudWatch Alarms can trigger Auto Scaling policies.',
+                        question: 'Another true statement.',
                         answer: new Answer(true)
                     }
                 ])
@@ -293,7 +293,7 @@ describe('MarkdownParserService', () => {
                 const markdown = aFlashCard()
                     .with(
                         aMultiChoiceQuestion()
-                            .labelled('Which solution can comply with the requirement?')
+                            .labelled('Some question?')
                             .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                             .withAnswer('C')
                             .withExplanation(explanation)
@@ -305,7 +305,7 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveMultipleChoiceQuestions([
                         {
-                            question: 'Which solution can comply with the requirement?',
+                            question: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                             answer: new Answer(new Option('C. Option C'), explanation)
                         }
@@ -326,13 +326,13 @@ describe('MarkdownParserService', () => {
                 const markdown = aFlashCard()
                     .with(
                         aMultiChoiceQuestion()
-                            .labelled('Which solution can comply with the requirement?')
+                            .labelled('Some question?')
                             .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                             .withAnswer('C')
                             .withExplanation(explanation1),
                         aMultiChoiceQuestion()
-                            .labelled('Which CloudWatch feature allows analyzing logs with SQL-like queries?')
-                            .withOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent')
+                            .labelled('Some other question?')
+                            .withOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
                             .withAnswer('B')
                             .withExplanation('explanation2')
                     )
@@ -343,14 +343,14 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveMultipleChoiceQuestions([
                         {
-                            question: 'Which solution can comply with the requirement?',
+                            question: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                             answer: new Answer(new Option('C. Option C'), explanation1)
                         },
                         {
-                            question: 'Which CloudWatch feature allows analyzing logs with SQL-like queries?',
-                            options: toOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent'),
-                            answer: new Answer(new Option('B. Logs Insights'), 'explanation2')
+                            question: 'Some other question?',
+                            options: toOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'),
+                            answer: new Answer(new Option('B. Option 2'), 'explanation2')
                         }
                     ])
             })
@@ -371,7 +371,7 @@ describe('MarkdownParserService', () => {
             const markdown = aFlashCard()
                 .with(
                     aTrueStatement()
-                        .labelled('Alias records are free, while CNAME queries are billed.')
+                        .labelled('A true statement')
                         .withMultilineExplanation(explanation)
                 )
                 .toMarkdown();
@@ -381,7 +381,7 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveTrueFalseQuestions([
                     {
-                        question: 'Alias records are free, while CNAME queries are billed.',
+                        question: 'A true statement',
                         answer: new Answer(true, explanation)
                     }
                 ])
@@ -391,7 +391,7 @@ describe('MarkdownParserService', () => {
                 const markdown = aFlashCard()
                     .with(
                         aTrueStatement()
-                            .labelled('Alias records are free, while CNAME queries are billed.')
+                            .labelled('A true statement')
                             .withInlineExplanation('explanation')
                     )
                     .toMarkdown();
@@ -401,7 +401,7 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveTrueFalseQuestions([
                         {
-                            question: 'Alias records are free, while CNAME queries are billed.',
+                            question: 'A true statement',
                             answer: new Answer(true, 'explanation')
                         }
                     ])
