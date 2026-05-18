@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.flashCardService.getCategories();
+    this.categories = this.flashCardService.getFilteredCategories();
   }
 
   navigateToService(serviceId: string): void {

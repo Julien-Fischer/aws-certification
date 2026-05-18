@@ -4,6 +4,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { HeaderComponent } from './header.component';
 import {GamificationService} from "../../../services/gamification.service";
 import {provideGamification} from "../../../test/stub-gamification";
+import {flashCardProviderInjectionToken} from "../../../../domain/search/flash-card-provider";
+import {MockFlashCardProvider} from "../../../../domain/search/test/mock-flashcard-provider";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -25,7 +27,10 @@ describe('HeaderComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [HeaderComponent],
-      providers: [provideGamification()]
+      providers: [
+          provideGamification(),
+          { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider }
+      ]
     })
     .compileComponents();
 

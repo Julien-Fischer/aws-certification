@@ -1,9 +1,10 @@
-import {Component, ElementRef, HostListener, Inject, inject, Input, signal, ViewChild} from '@angular/core';
+import {Component, ElementRef, HostListener, Inject, inject, Input, signal, ViewChild, effect} from '@angular/core';
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
 import {Router} from "@angular/router";
+import {SearchService} from "../../../../domain/search/services/search.service";
 
 @Component({
   selector: 'app-header',
@@ -26,9 +27,13 @@ export class HeaderComponent {
 
   constructor(
       private router: Router,
+      private searchService: SearchService,
       @Inject(gamificationInjectionToken) gamification: Gamification
   ) {
     this.gamification = gamification;
+    effect(() => {
+      this.searchService.setSearchTerm(this.searchTerm());
+    });
   }
 
   goBack(): void {

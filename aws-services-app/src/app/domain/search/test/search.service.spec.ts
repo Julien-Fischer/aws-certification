@@ -6,34 +6,11 @@ import { flashCardProviderInjectionToken, FlashCardProvider } from '../flash-car
 import {FlashCardCategory, FlashCardMetadata} from '../models/metadata';
 import { FlashCard } from '../models/flash-card';
 import {FlashCardId} from "../../shared/flash-card-id";
-
-class MockFlashCardProvider implements FlashCardProvider {
-
-  private metadata: FlashCardMetadata[] = [];
-  private cards: Map<FlashCardId, FlashCard> = new Map();
-
-  havingServices(...services: FlashCardMetadata[]) {
-    this.metadata.push(...services);
-  }
-
-  havingFlashCard(id: FlashCardId, card: FlashCard) {
-    this.cards.set(id, card);
-  }
-
-  getAll(): Observable<FlashCardMetadata[]> {
-    return of(this.metadata);
-  }
-
-  getCard(id: FlashCardId): Observable<FlashCard> {
-    return of(this.cards.get(id)!);
-  }
-
-}
+import {MockFlashCardProvider} from "./mock-flashcard-provider";
 
 const aurora = new FlashCardId('aurora');
 const cloudtrail = new FlashCardId('cloudtrail');
 const dynamoDB = new FlashCardId('dynamoDB');
-
 
 describe('SearchService', () => {
   let service: SearchService;
@@ -96,6 +73,48 @@ describe('SearchService', () => {
       category: 'Database',
       lastUpdated: '2026-01-31'
     });
+  });
+
+  it('filters categories based on search term', async () => {
+    flashCardProvider.havingServices(
+      {
+        id: 'ec2',
+        name: 'Amazon EC2',
+        description: 'Virtual servers',
+        icon: 'server',
+        category: 'Compute',
+        lastUpdated: '2026-01-30'
+      },
+      {
+        id: 's3',
+        name: 'Amazon S3',
+        description: 'Object storage',
+        icon: 'storage',
+        category: 'Storage',
+        lastUpdated: '2026-01-30'
+      }
+    );
+
+    // Initial state: both categories returned
+    let categories = await firstValueFrom(service.getFilteredCategories());
+    expect(categories.length).toBe(2);
+
+    // Search for "Compute": only Compute category returned
+    service.setSearchTerm('Compute');
+    categories = await firstValueFrom(service.getFilteredCategories());
+    expect(categories.length).toBe(1);
+    expect(categories[0].name).toBe('Compute');
+
+    // Search for "Amazon": both categories returned (matches name)
+    service.setSearchTerm('Amazon');
+    categories = await firstValueFrom(service.getFilteredCategories());
+    expect(categories.length).toBe(2);
+
+    // Search for "object": only Storage category returned (matches description)
+    service.setSearchTerm('object');
+    categories = await firstValueFrom(service.getFilteredCategories());
+    expect(categories.length).toBe(1);
+    expect(categories[0].name).toBe('Storage');
   });
 
   it('returns flashcard for specified id', async () => {

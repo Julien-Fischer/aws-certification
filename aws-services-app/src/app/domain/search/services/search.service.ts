@@ -11,6 +11,7 @@ import {FlashCardId} from "../../shared/flash-card-id";
 export class SearchService {
 
   private allMetadata = new BehaviorSubject<FlashCardMetadata[]>([]);
+  private _searchTerm = new BehaviorSubject<string>('');
 
   constructor(
       @Inject(flashCardProviderInjectionToken) private flashCardProvider: FlashCardProvider,
@@ -18,6 +19,14 @@ export class SearchService {
     this.flashCardProvider.getAll().subscribe(services => {
       this.allMetadata.next(services);
     });
+  }
+
+  setSearchTerm(term: string): void {
+    this._searchTerm.next(term);
+  }
+
+  getSearchTerm(): Observable<string> {
+    return this._searchTerm.asObservable();
   }
 
   getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
@@ -32,19 +41,35 @@ export class SearchService {
 
   getCategories(): Observable<FlashCardCategory[]> {
     return this.allMetadata.pipe(
-        map(services => {
-          const categoryMap = services.reduce((map, service) => {
-            const category = service.category;
-            const list = map.get(category) ?? [];
-            map.set(category, [...list, service]);
-            return map;
-          }, new Map<string, FlashCardMetadata[]>());
-          return Array.from(categoryMap.entries()).map(([name, services]) => ({
-            name,
-            services
-          }));
-        })
+        map(services => this.toCategories(services))
     );
+  }
+
+  getFilteredCategories(): Observable<FlashCardCategory[]> {
+    return this._searchTerm.pipe(
+      map(query => query.toLowerCase()),
+      map(lowerQuery => {
+        return this.allMetadata.value.filter(card =>
+          card.name.toLowerCase().includes(lowerQuery) ||
+          card.description.toLowerCase().includes(lowerQuery) ||
+          card.category.toLowerCase().includes(lowerQuery)
+        );
+      }),
+      map(filteredServices => this.toCategories(filteredServices))
+    );
+  }
+
+  private toCategories(services: FlashCardMetadata[]): FlashCardCategory[] {
+    const categoryMap = services.reduce((map, service) => {
+      const category = service.category;
+      const list = map.get(category) ?? [];
+      map.set(category, [...list, service]);
+      return map;
+    }, new Map<string, FlashCardMetadata[]>());
+    return Array.from(categoryMap.entries()).map(([name, services]) => ({
+      name,
+      services
+    }));
   }
 
   getCardsMatching(query: string): Observable<FlashCardMetadata[]> {
