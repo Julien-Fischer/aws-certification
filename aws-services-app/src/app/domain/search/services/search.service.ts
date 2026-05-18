@@ -47,4 +47,15 @@ export class SearchService {
     );
   }
 
+  getCardsMatching(query: string): Observable<FlashCardMetadata[]> {
+    const lowerQuery = query.toLowerCase();
+    return this.flashCardProvider.getAll().pipe(
+      map(cards => cards.filter(card =>
+        card.name.toLowerCase().includes(lowerQuery) ||
+        card.description.toLowerCase().includes(lowerQuery) ||
+        card.category.toLowerCase().includes(lowerQuery)
+      ))
+    );
+  }
+
 }

@@ -35,7 +35,7 @@ const cloudtrail = new FlashCardId('cloudtrail');
 const dynamoDB = new FlashCardId('dynamoDB');
 
 
-describe('FlashCardService', () => {
+describe('SearchService', () => {
   let service: SearchService;
   let flashCardProvider: MockFlashCardProvider;
 
@@ -154,6 +154,80 @@ describe('FlashCardService', () => {
 
     expectCategories(categories).toBe(['Cloud', 'Database']);
   });
+
+  describe('fuzzy search', () => {
+      it('returns an empty list when no match', async () => {
+          flashCardProvider.havingServices(
+              {
+                  id: 'cloudtrail',
+                  name: 'CloudTrail',
+                  description: 'CloudTrail description.',
+                  icon: 'cloud',
+                  category: 'Cloud',
+                  lastUpdated: '2026-01-30'
+              },
+              {
+                  id: 'aurora',
+                  name: 'Aurora',
+                  description: 'Aurora description.',
+                  icon: 'database',
+                  category: 'Database',
+                  lastUpdated: '2026-01-30'
+              },
+              {
+                  id: 'dynamoDB',
+                  name: 'DynamoDB',
+                  description: 'DynamoDB description.',
+                  icon: 'database',
+                  category: 'Database',
+                  lastUpdated: '2026-01-30'
+              }
+          );
+          flashCardProvider.havingFlashCard(aurora, aFlashCard().about('aurora'));
+          flashCardProvider.havingFlashCard(cloudtrail, aFlashCard().about('cloudtrail'));
+          flashCardProvider.havingFlashCard(dynamoDB, aFlashCard().about('dynamoDB'));
+
+          const categories = await firstValueFrom(service.getCardsMatching('no match'));
+
+          expectMetadata(categories).toBeEmpty();
+      })
+
+      it('finds cards by query', async () => {
+          flashCardProvider.havingServices(
+              {
+                  id: 'cloudtrail',
+                  name: 'CloudTrail',
+                  description: 'CloudTrail description.',
+                  icon: 'cloud',
+                  category: 'Cloud',
+                  lastUpdated: '2026-01-30'
+              },
+              {
+                  id: 'aurora',
+                  name: 'Aurora',
+                  description: 'Aurora description.',
+                  icon: 'database',
+                  category: 'Database',
+                  lastUpdated: '2026-01-30'
+              },
+              {
+                  id: 'dynamoDB',
+                  name: 'DynamoDB',
+                  description: 'DynamoDB description.',
+                  icon: 'database',
+                  category: 'Database',
+                  lastUpdated: '2026-01-30'
+              }
+          );
+          flashCardProvider.havingFlashCard(aurora, aFlashCard().about('aurora'));
+          flashCardProvider.havingFlashCard(cloudtrail, aFlashCard().about('cloudtrail'));
+          flashCardProvider.havingFlashCard(dynamoDB, aFlashCard().about('dynamoDB'));
+
+          const categories = await firstValueFrom(service.getCardsMatching('ra'));
+
+          expectMetadata(categories).toBe(['Aurora', 'CloudTrail']);
+      })
+  })
 });
 
 
@@ -185,4 +259,16 @@ function expectCategories(categories: FlashCardCategory[]) {
       expect(categoryNames).toEqual(expected.sort());
     }
   };
+}
+
+function expectMetadata(metadata: FlashCardMetadata[]) {
+    return {
+        toBe(expected: string[]) {
+            const metadataNames = metadata.map(metadata => metadata.name).sort();
+            expect(metadataNames).toEqual(expected.sort());
+        },
+        toBeEmpty() {
+            expect(metadata).toHaveLength(0);
+        }
+    }
 }
