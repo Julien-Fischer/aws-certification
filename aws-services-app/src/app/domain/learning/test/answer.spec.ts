@@ -36,4 +36,12 @@ describe('Answer', () => {
         expect(answer.toString()).toBe('A. Answer');
     });
 
+    it('has an optional explanation', () => {
+        const answer = new Answer(new Option('A. Answer'));
+        const answerWithExplanation = new Answer(new Option('A. Answer'), 'explanation');
+
+        expect(answer.isExplained()).toBe(false);
+        expect(answerWithExplanation.isExplained()).toBe(true);
+    })
+
 });
