@@ -277,6 +277,7 @@ describe('MarkdownParserService', () => {
     })
 
     describe('explanation', () => {
+
         describe('multiple choice quiz', () => {
             it('one explanation', () => {
                 const explanation = toMarkdown(`
@@ -355,8 +356,9 @@ describe('MarkdownParserService', () => {
             })
         })
 
-        it('for true/false quiz (multiline)', () => {
-            const explanation = toMarkdown(`
+        describe('true/false quiz', () => {
+            it('multiline', () => {
+                const explanation = toMarkdown(`
                 First line.
 
                 Second line
@@ -383,26 +385,27 @@ describe('MarkdownParserService', () => {
                         answer: new Answer(true, explanation)
                     }
                 ])
-        })
+            })
 
-        it('for true/false quiz (inline)', () => {
-            const markdown = aFlashCard()
-                .with(
-                    aTrueStatement()
-                        .labelled('Alias records are free, while CNAME queries are billed.')
-                        .withInlineExplanation('explanation')
-                )
-                .toMarkdown();
+            it('inline', () => {
+                const markdown = aFlashCard()
+                    .with(
+                        aTrueStatement()
+                            .labelled('Alias records are free, while CNAME queries are billed.')
+                            .withInlineExplanation('explanation')
+                    )
+                    .toMarkdown();
 
-            const parsed = service.parse(markdown);
+                const parsed = service.parse(markdown);
 
-            expectFlashCard(parsed)
-                .toHaveTrueFalseQuestions([
-                    {
-                        question: 'Alias records are free, while CNAME queries are billed.',
-                        answer: new Answer(true, 'explanation')
-                    }
-                ])
+                expectFlashCard(parsed)
+                    .toHaveTrueFalseQuestions([
+                        {
+                            question: 'Alias records are free, while CNAME queries are billed.',
+                            answer: new Answer(true, 'explanation')
+                        }
+                    ])
+            })
         })
     })
 
