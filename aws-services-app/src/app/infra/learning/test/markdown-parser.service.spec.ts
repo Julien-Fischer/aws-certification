@@ -277,37 +277,82 @@ describe('MarkdownParserService', () => {
     })
 
     describe('explanation', () => {
-        it('for multiple choice quiz', () => {
-            const explanation = toMarkdown(`
-                First line.
+        describe('multiple choice quiz', () => {
+            it('one explanation', () => {
+                const explanation = toMarkdown(`
+                    First line.
 
-                Second line
-                Third line
-                Fourth line
+                    Second line
+                    Third line
+                    Fourth line
 
-                Fifth line.
-            `);
+                    Fifth line.
+                `);
 
-            const markdown = aFlashCard()
-                .with(
-                    aMultiChoiceQuestion()
-                        .labelled('Which solution can comply with the requirement?')
-                        .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
-                        .withAnswer('C')
-                        .withExplanation(explanation)
-                )
-                .toMarkdown();
+                const markdown = aFlashCard()
+                    .with(
+                        aMultiChoiceQuestion()
+                            .labelled('Which solution can comply with the requirement?')
+                            .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                            .withAnswer('C')
+                            .withExplanation(explanation)
+                    )
+                    .toMarkdown();
 
-            const parsed = service.parse(markdown);
+                const parsed = service.parse(markdown);
 
-            expectFlashCard(parsed)
-                .toHaveMultipleChoiceQuestions([
-                    {
-                        question: 'Which solution can comply with the requirement?',
-                        options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
-                        answer: new Answer(new Option('C. Option C'), explanation)
-                    }
-                ])
+                expectFlashCard(parsed)
+                    .toHaveMultipleChoiceQuestions([
+                        {
+                            question: 'Which solution can comply with the requirement?',
+                            options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                            answer: new Answer(new Option('C. Option C'), explanation)
+                        }
+                    ])
+            })
+
+            it('multiple explanations', () => {
+                const explanation1 = toMarkdown(`
+                    First line.
+
+                    Second line
+                    Third line
+                    Fourth line
+
+                    Fifth line.
+                `);
+
+                const markdown = aFlashCard()
+                    .with(
+                        aMultiChoiceQuestion()
+                            .labelled('Which solution can comply with the requirement?')
+                            .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                            .withAnswer('C')
+                            .withExplanation(explanation1),
+                        aMultiChoiceQuestion()
+                            .labelled('Which CloudWatch feature allows analyzing logs with SQL-like queries?')
+                            .withOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent')
+                            .withAnswer('B')
+                            .withExplanation('explanation2')
+                    )
+                    .toMarkdown();
+
+                const parsed = service.parse(markdown);
+
+                expectFlashCard(parsed)
+                    .toHaveMultipleChoiceQuestions([
+                        {
+                            question: 'Which solution can comply with the requirement?',
+                            options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                            answer: new Answer(new Option('C. Option C'), explanation1)
+                        },
+                        {
+                            question: 'Which CloudWatch feature allows analyzing logs with SQL-like queries?',
+                            options: toOptions('A. Contributor Insights', 'B. Logs Insights', 'C. Metrics Explorer', 'D. Unified Agent'),
+                            answer: new Answer(new Option('B. Logs Insights'), 'explanation2')
+                        }
+                    ])
+            })
         })
 
         it('for true/false quiz (multiline)', () => {
