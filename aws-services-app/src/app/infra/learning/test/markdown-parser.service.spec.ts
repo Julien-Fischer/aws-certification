@@ -310,7 +310,7 @@ describe('MarkdownParserService', () => {
                 ])
         })
 
-        it('for true/false quiz', () => {
+        it('for true/false quiz (multiline)', () => {
             const explanation = toMarkdown(`
                 First line.
 
@@ -336,6 +336,26 @@ describe('MarkdownParserService', () => {
                     {
                         question: 'Alias records are free, while CNAME queries are billed.',
                         answer: new Answer(true, explanation)
+                    }
+                ])
+        })
+
+        it.skip('for true/false quiz (inline)', () => {
+            const markdown = aFlashCard()
+                .with(
+                    aTrueStatement()
+                        .labelled('Alias records are free, while CNAME queries are billed.')
+                        .withInlineExplanation('explanation')
+                )
+                .toMarkdown();
+
+            const parsed = service.parse(markdown);
+
+            expectFlashCard(parsed)
+                .toHaveTrueFalseQuestions([
+                    {
+                        question: 'Alias records are free, while CNAME queries are billed.',
+                        answer: new Answer(true, 'explanation')
                     }
                 ])
         })
@@ -377,13 +397,12 @@ class TrueFalseQuestionStringBuilder implements QuestionStringBuilder {
         return this;
     }
     withExplanation(explanation: string): this {
-        this.explanation = explanation;
+        this.explanation = explanation.trim().length === 0
+            ? ''
+            : `\n\nExplanation:\n\`\`\`\n${explanation}\n\`\`\``;
         return this;
     }
     build(): string {
-        const explanation = this.explanation.trim().length === 0
-            ? ''
-            : `Explanation:\n\`\`\`\n${this.explanation}\n\`\`\``;
         const answer = this.answer
             ? '✅ True'
             : '❌ False'
@@ -393,10 +412,13 @@ class TrueFalseQuestionStringBuilder implements QuestionStringBuilder {
             ### 🔹 True / False
 
             **Q1.** ${this.questionText}
-            ${answer}
-
-            ${explanation}
+            ${answer}${this.explanation}
         `);
+    }
+
+    withInlineExplanation(explanation: string): this {
+        this.explanation = ` (${explanation})`;
+        return this;
     }
 }
 
