@@ -1,33 +1,42 @@
 <footer id="footer-component"
         class="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800 mt-auto transition-colors duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex justify-between items-center">
-            <div id="licence" class="flex items-center space-x-2">
-                <span class="text-sm text-gray-600 dark:text-slate-400 font-medium"><a
-                        href="https://github.com/ymougenel/aws-certification/blob/main/LICENSE">MIT License</a></span>
+    <div class="xl:max-w-7xl xl:mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="flex flex-col md:flex-row md:justify-between items-center gap-4">
+
+            <div class="flex flex-col min-[500px]:flex-row min-[500px]:gap-2 items-center md:items-center">
+                <span class="font-semibold text-gray-900 dark:text-slate-100">
+                    2025 - {{ current_date | date:'yyyy' }}
+                </span>
+                <div id="licence" class="flex items-center">
+                    <span class="text-xs sm:text-sm text-gray-600 dark:text-slate-400 font-medium">
+                        <a
+                            href="https://github.com/Julien-Fischer/aws-certification/blob/main/LICENSE"
+                            class="hover:text-blue-600 dark:hover:text-sky-400 transition-colors"
+                            target="_blank"
+                        >
+                            MIT License
+                        </a>
+                    </span>
+                </div>
             </div>
-            <div class="text-center"><p class="text-sm text-gray-600 dark:text-slate-400">Made in <span
-                    class="font-semibold">{{ current_date | date:'yyyy' }}</span> by
-                @for (author of authors; track author) {
-                    <a
+
+            <div class="text-center md:text-right">
+                <p class="text-sm text-gray-600 dark:text-slate-400">
+                    @for (author of authors; track author) {
+                        <a
                             [href]="author.url"
                             class="underline hover:no-underline font-semibold text-blue-600 dark:text-sky-400"
                             target="_blank"
-                    >{{ author.name }}</a>
-                    @if ($index < authors.length - 2) {
-                        <span>, </span>
+                        >{{ author.name }}</a>
+                        @if ($index < authors.length - 2) {
+                            <span>, </span>
+                        } @else if ($index < authors.length - 1) {
+                            <span> — </span>
+                        }
                     }
-                    @else if ($index < authors.length - 1) {
-                        <span> and </span>
-                    }
-                }
-                , with <span class="text-red-500">❤️</span>
-                and <span class="font-semibold text-purple-600 dark:text-purple-400">AI</span></p></div>
-            <div>
-                <!--                <button class="text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200">-->
-                <!--                    About Project-->
-                <!--                </button>-->
+                </p>
             </div>
+
         </div>
     </div>
 </footer>
