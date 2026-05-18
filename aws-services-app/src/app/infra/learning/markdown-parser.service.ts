@@ -34,8 +34,19 @@ export class MarkdownParserService {
   }
 
   private extractMainContent(content: string, quizSection: string | null): string {
-    if (!quizSection) return content;
-    return content.substring(0, content.indexOf(quizSection));
+    const removeTitle = (text: string): string => {
+      return text
+        .replace(/^# .*\n/, '')
+        .replace(/^\n*---\n*/, '')
+        .trim();
+    };
+
+    if (quizSection) {
+      const quizIndex = content.indexOf(quizSection);
+      return removeTitle(content.substring(0, quizIndex));
+    }
+
+    return removeTitle(content);
   }
 
   private parseAllQuizzesFrom(quizContent: string): {
