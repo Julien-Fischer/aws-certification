@@ -44,6 +44,43 @@ button {
   }
 }
 
+.search-container {
+  min-width: 150px;
+}
+
+.search-wrapper {
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    .search-input {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.95);
+    }
+    .search-icon {
+      color: var(--aws-orange);
+    }
+  }
+}
+
+.search-input {
+  background-color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  color: #333;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.clear-button {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+
+}
+
 @keyframes pulse-glow {
   0% {
     box-shadow: 0 0 10px rgba(255, 153, 0, 0.6);

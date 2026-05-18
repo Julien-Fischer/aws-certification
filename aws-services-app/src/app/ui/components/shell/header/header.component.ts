@@ -1,13 +1,14 @@
-import {Component, Inject, inject, Input} from '@angular/core';
+import {Component, Inject, inject, Input, signal} from '@angular/core';
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
 import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -15,6 +16,8 @@ export class HeaderComponent {
   @Input() appName: string = '';
   @Input() logo: string = '';
   @Input() repository: string = '';
+
+  searchTerm = signal('');
 
   themeService = inject(ThemeService);
 
@@ -29,6 +32,10 @@ export class HeaderComponent {
 
   goBack(): void {
     void this.router.navigate(['/']);
+  }
+
+  clearSearch(): void {
+    this.searchTerm.set('');
   }
 
 }

@@ -37,4 +37,15 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should clear search term when clearSearch is called', () => {
+    component.searchTerm.set('test');
+    component.clearSearch();
+    expect(component.searchTerm()).toBe('');
+  });
+
+  it('should update search term when signal is updated', () => {
+    component.searchTerm.set('aws');
+    expect(component.searchTerm()).toBe('aws');
+  });
 });

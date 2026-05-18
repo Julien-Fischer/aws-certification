@@ -6,9 +6,26 @@
                 <h2>
                     <i [class]="logo + ' text-3xl'"></i>
                 </h2>
-                <h1>
-                    <span class="text-md font-bold ">{{appName}}</span>
+                <h1 class="hidden md:block">
+                    <span class="text-md font-bold ml-2">{{appName}}</span>
                 </h1>
+            </div>
+        </div>
+
+        <div class="search-container flex items-center mx-4 flex-grow">
+            <div class="search-wrapper w-full max-w-md mx-auto relative">
+                <i class="fas fa-search search-icon absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text"
+                       [ngModel]="searchTerm()"
+                       (ngModelChange)="searchTerm.set($event)"
+                       placeholder="Search services..."
+                       class="search-input w-full py-2 pl-10 pr-10 rounded-full border-none focus:outline-none transition-all shadow-inner"
+                />
+                @if (searchTerm()) {
+                    <button (click)="clearSearch()" class="clear-button absolute right-3 top-1/2 -translate-y-1/2 border-none bg-transparent cursor-pointer p-0 flex items-center justify-center">
+                        <i class="fas fa-times-circle text-gray-400 hover:text-gray-600 transition-colors"></i>
+                    </button>
+                }
             </div>
         </div>
 
