@@ -1,5 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
-import {BehaviorSubject, map, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, map, Observable} from 'rxjs';
 import { FlashCardMetadata, FlashCardCategory } from '../models/metadata';
 import {FlashCardProvider, flashCardProviderInjectionToken} from "../flash-card-provider";
 import {FlashCard} from "../models/flash-card";
@@ -46,10 +46,10 @@ export class SearchService {
   }
 
   getFilteredCategories(): Observable<FlashCardCategory[]> {
-    return this._searchTerm.pipe(
-      map(query => query.toLowerCase()),
-      map(lowerQuery => {
-        return this.allMetadata.value.filter(card =>
+    return combineLatest([this.allMetadata, this._searchTerm]).pipe(
+      map(([allMetadata, query]) => {
+        const lowerQuery = query.toLowerCase();
+        return allMetadata.filter(card =>
           card.name.toLowerCase().includes(lowerQuery) ||
           card.description.toLowerCase().includes(lowerQuery) ||
           card.category.toLowerCase().includes(lowerQuery)

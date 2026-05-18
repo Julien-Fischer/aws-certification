@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import {firstValueFrom, Observable, of} from 'rxjs';
-import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
+import {BehaviorSubject, filter, firstValueFrom} from 'rxjs';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { SearchService } from '../services/search.service';
-import { flashCardProviderInjectionToken, FlashCardProvider } from '../flash-card-provider';
+import { flashCardProviderInjectionToken } from '../flash-card-provider';
 import {FlashCardCategory, FlashCardMetadata} from '../models/metadata';
 import { FlashCard } from '../models/flash-card';
 import {FlashCardId} from "../../shared/flash-card-id";
@@ -73,6 +73,38 @@ describe('SearchService', () => {
       category: 'Database',
       lastUpdated: '2026-01-31'
     });
+  });
+
+  it('returns all categories when search term is empty even if metadata loads later', async () => {
+    // Reset service to control timing
+    const provider = new MockFlashCardProvider();
+    const mockServices = [
+      {
+        id: 'ec2',
+        name: 'Amazon EC2',
+        description: 'Virtual servers',
+        icon: 'server',
+        category: 'Compute',
+        lastUpdated: '2026-01-30'
+      }
+    ];
+
+    // Create service, but don't resolve getAll immediately
+    const getAllSubject = new BehaviorSubject<FlashCardMetadata[]>([]);
+    vi.spyOn(provider, 'getAll').mockReturnValue(getAllSubject.asObservable());
+
+    const testService = new SearchService(provider);
+
+    const categoriesPromise = firstValueFrom(testService.getFilteredCategories().pipe(
+      filter(cats => cats.length > 0)
+    ));
+
+    // Resolve services
+    getAllSubject.next(mockServices);
+
+    const categories = await categoriesPromise;
+    expect(categories.length).toBe(1);
+    expect(categories[0].name).toBe('Compute');
   });
 
   it('filters categories based on search term', async () => {
