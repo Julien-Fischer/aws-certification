@@ -62,35 +62,39 @@ describe('FlashCardService', () => {
           name: 'CloudTrail',
           description: 'CloudTrail description.',
           icon: 'cloud',
-          category: 'Cloud'
+          category: 'Cloud',
+          lastUpdated: '2026-01-30'
         },
         {
           id: 'aurora',
           name: 'Aurora',
           description: 'Aurora description.',
           icon: 'database',
-          category: 'Database'
+          category: 'Database',
+          lastUpdated: '2026-01-31'
         }
     );
     flashCardProvider.havingFlashCard(cloudtrail, aFlashCard().about('cloudtrail'));
     flashCardProvider.havingFlashCard(aurora, aFlashCard().about('aurora'));
 
-    const auroraMetadata = await firstValueFrom(service.getMetadata(aurora));
     const cloudtrailMetadata = await firstValueFrom(service.getMetadata(cloudtrail));
+    const auroraMetadata = await firstValueFrom(service.getMetadata(aurora));
 
-    expect(auroraMetadata).toEqual({
-      id: 'aurora',
-      name: 'Aurora',
-      description: 'Aurora description.',
-      icon: 'database',
-      category: 'Database'
-    });
     expect(cloudtrailMetadata).toEqual({
       id: 'cloudtrail',
       name: 'CloudTrail',
       description: 'CloudTrail description.',
       icon: 'cloud',
-      category: 'Cloud'
+      category: 'Cloud',
+      lastUpdated: '2026-01-30'
+    });
+    expect(auroraMetadata).toEqual({
+      id: 'aurora',
+      name: 'Aurora',
+      description: 'Aurora description.',
+      icon: 'database',
+      category: 'Database',
+      lastUpdated: '2026-01-31'
     });
   });
 
@@ -101,7 +105,8 @@ describe('FlashCardService', () => {
           name: 'CloudTrail',
           description: 'CloudTrail description.',
           icon: 'cloud',
-          category: 'Cloud'
+          category: 'Cloud',
+          lastUpdated: '2026-01-30'
         }
     );
     flashCardProvider.havingFlashCard(aurora, aFlashCard().about('aurora'));
@@ -121,21 +126,24 @@ describe('FlashCardService', () => {
           name: 'CloudTrail',
           description: 'CloudTrail description.',
           icon: 'cloud',
-          category: 'Cloud'
+          category: 'Cloud',
+          lastUpdated: '2026-01-30'
         },
         {
           id: 'aurora',
           name: 'Aurora',
           description: 'Aurora description.',
           icon: 'database',
-          category: 'Database'
+          category: 'Database',
+          lastUpdated: '2026-01-30'
         },
         {
           id: 'dynamoDB',
           name: 'DynamoDB',
           description: 'DynamoDB description.',
           icon: 'database',
-          category: 'Database'
+          category: 'Database',
+          lastUpdated: '2026-01-30'
         }
     );
     flashCardProvider.havingFlashCard(aurora, aFlashCard().about('aurora'));

@@ -14,7 +14,8 @@ describe('AwsServiceCardComponent', () => {
     name: 'S3',
     description: 'Scalable storage in the cloud',
     icon: 'fa-bucket',
-    category: 'Storage'
+    category: 'Storage',
+    lastUpdated: '2026-01-30'
   };
 
   const highscore = Highscore.NONE;
