@@ -99,7 +99,7 @@ button {
   }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 430px) {
   .aws-header h1 {
     font-size: 1rem;
   }
@@ -112,5 +112,9 @@ button {
   }
   #github_project i {
     margin-right: 0rem !important;
+  }
+
+  .github-link {
+    display: none;
   }
 }
