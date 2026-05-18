@@ -8,7 +8,7 @@ import {FlashCardId} from "../../shared/flash-card-id";
 @Injectable({
   providedIn: 'root'
 })
-export class FlashCardService {
+export class SearchService {
 
   private allMetadata = new BehaviorSubject<FlashCardMetadata[]>([]);
 

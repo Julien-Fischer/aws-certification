@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { FlashCardService } from '../../../domain/search/services/flash-card.service';
+import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
@@ -37,7 +37,7 @@ export class FlashCardComponent implements OnInit {
   constructor(
       private route: ActivatedRoute,
       private router: Router,
-      private flashCardService: FlashCardService,
+      private flashCardService: SearchService,
       @Inject(scoreWriterInjectionToken) private scoreWriter: ScoreWriter,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider
   ) {}

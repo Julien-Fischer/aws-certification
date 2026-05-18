@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import {firstValueFrom, Observable, of} from 'rxjs';
 import { describe, it, expect, beforeEach, vi, type Mocked } from 'vitest';
-import { FlashCardService } from '../services/flash-card.service';
+import { SearchService } from '../services/search.service';
 import { flashCardProviderInjectionToken, FlashCardProvider } from '../flash-card-provider';
 import {FlashCardCategory, FlashCardMetadata} from '../models/metadata';
 import { FlashCard } from '../models/flash-card';
@@ -36,7 +36,7 @@ const dynamoDB = new FlashCardId('dynamoDB');
 
 
 describe('FlashCardService', () => {
-  let service: FlashCardService;
+  let service: SearchService;
   let flashCardProvider: MockFlashCardProvider;
 
   beforeEach(() => {
@@ -44,11 +44,11 @@ describe('FlashCardService', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        FlashCardService,
+        SearchService,
         { provide: flashCardProviderInjectionToken, useValue: flashCardProvider }
       ]
     });
-    service = TestBed.inject(FlashCardService);
+    service = TestBed.inject(SearchService);
   });
 
   it('should be created', () => {

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {FlashCardComponent} from "./flash-card.component";
 import {ActivatedRoute} from "@angular/router";
-import {FlashCardService} from "../../../domain/search/services/flash-card.service";
+import {SearchService} from "../../../domain/search/services/search.service";
 import {scoreWriterInjectionToken} from "../../../domain/scoring/score-writer";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
 import {of} from "rxjs";
@@ -33,7 +33,7 @@ describe('FlashCardComponent', () => {
                         snapshot: { paramMap: { get: () => 'test' } }
                     }
                 },
-                { provide: FlashCardService, useValue: mockFlashCardService },
+                { provide: SearchService, useValue: mockFlashCardService },
                 { provide: scoreProviderInjectionToken, useValue: mockScoreProvider },
                 { provide: scoreWriterInjectionToken, useValue: mockScoreWriter }
             ]
