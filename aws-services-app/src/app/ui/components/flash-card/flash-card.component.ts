@@ -2,12 +2,12 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
-import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
-import { FlashCardMetadata } from '../../../domain/learning/models/metadata';
+import { FlashCardService } from '../../../domain/search/services/flash-card.service';
+import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
 import { QuizComponent } from '../quiz/quiz.component';
-import { Question } from '../../../domain/learning/models/question';
-import { FlashCard } from '../../../domain/learning/models/flash-card';
+import { Question } from '../../../domain/search/models/question';
+import { FlashCard } from '../../../domain/search/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import Highscore from '../../../domain/scoring/models/highscore';
 import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';

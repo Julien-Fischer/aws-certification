@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 import {QuizComponent} from "./quiz.component";
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {Answer, Option, MultipleChoiceQuestion, Question, TrueFalseQuestion} from "../../../domain/learning/models/question";
+import {Answer, Option, MultipleChoiceQuestion, Question, TrueFalseQuestion} from "../../../domain/search/models/question";
 import PageObject from "../../test/page-object";
 import Score from "../../../domain/scoring/models/score";
 

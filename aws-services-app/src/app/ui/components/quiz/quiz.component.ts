@@ -2,7 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {MultipleChoiceQuestion, Option, Question} from "../../../domain/learning/models/question";
+import {MultipleChoiceQuestion, Option, Question} from "../../../domain/search/models/question";
 import Ratio from "../../../domain/scoring/models/ratio";
 
 @Component({

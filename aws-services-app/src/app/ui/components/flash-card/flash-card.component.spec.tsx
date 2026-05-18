@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {FlashCardComponent} from "./flash-card.component";
 import {ActivatedRoute} from "@angular/router";
-import {FlashCardService} from "../../../domain/learning/services/flash-card.service";
+import {FlashCardService} from "../../../domain/search/services/flash-card.service";
 import {scoreWriterInjectionToken} from "../../../domain/scoring/score-writer";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
 import {of} from "rxjs";

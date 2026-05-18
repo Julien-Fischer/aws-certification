@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AwsServiceCardComponent } from './aws-service-card.component';
-import { FlashCardMetadata } from '../../../../domain/learning/models/metadata';
+import { FlashCardMetadata } from '../../../../domain/search/models/metadata';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {provideGamification, StubGamificationService} from "../../../test/stub-gamification";
 

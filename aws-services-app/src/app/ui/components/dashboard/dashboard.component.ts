@@ -2,8 +2,8 @@ import {Component, Inject, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { Router } from '@angular/router';
-import { FlashCardService } from '../../../domain/learning/services/flash-card.service';
-import {FlashCardMetadata, FlashCardCategory} from '../../../domain/learning/models/metadata';
+import { FlashCardService } from '../../../domain/search/services/flash-card.service';
+import {FlashCardMetadata, FlashCardCategory} from '../../../domain/search/models/metadata';
 
 import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.component';
 import Highscore from "../../../domain/scoring/models/highscore";

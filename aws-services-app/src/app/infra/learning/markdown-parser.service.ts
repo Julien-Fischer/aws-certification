@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/learning/models/question";
-import {FlashCard} from "../../domain/learning/models/flash-card";
+import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/search/models/question";
+import {FlashCard} from "../../domain/search/models/flash-card";
 
 export type Letter = 'A' | 'B' | 'C' | 'D';
 const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];

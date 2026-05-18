@@ -2,8 +2,8 @@ import {TestBed} from '@angular/core/testing';
 import {describe, it, expect, beforeEach} from 'vitest';
 
 import {Letter, MarkdownParserService} from '../markdown-parser.service';
-import {Answer, Option} from "../../../domain/learning/models/question";
-import {FlashCard} from "../../../domain/learning/models/flash-card";
+import {Answer, Option} from "../../../domain/search/models/question";
+import {FlashCard} from "../../../domain/search/models/flash-card";
 
 describe('MarkdownParserService', () => {
 
