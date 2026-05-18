@@ -1,206 +1,206 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/learning/models/question";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class MarkdownParserService {
 
-  private multipleChoiceParser = new MultipleChoiceParser()
-  private trueFalseParser = new TrueFalseParser();
+    private multipleChoiceParser = new MultipleChoiceParser()
+    private trueFalseParser = new TrueFalseParser();
 
-  parse(content: string): FlashCard {
-    const quizSection = this.extractQuizSection(content);
-    const mainContent = this.extractMainContent(content, quizSection);
+    parse(content: string): FlashCard {
+        const quizSection = this.extractQuizSection(content);
+        const mainContent = this.extractMainContent(content, quizSection);
 
-    if (!quizSection) {
-      return { mainContent, multipleChoiceQuestions: [], trueFalseQuestions: [] };
+        if (!quizSection) {
+            return {mainContent, multipleChoiceQuestions: [], trueFalseQuestions: []};
+        }
+
+        const {multipleChoiceQuestions, trueFalseQuestions} = this.parseAllQuizzesFrom(quizSection);
+
+        if (this.hasNoQuizzes(multipleChoiceQuestions, trueFalseQuestions)) {
+            throw new Error('No valid questions found in this quiz');
+        }
+
+        return {mainContent, multipleChoiceQuestions, trueFalseQuestions};
     }
 
-    const { multipleChoiceQuestions, trueFalseQuestions } = this.parseAllQuizzesFrom(quizSection);
-
-    if (this.hasNoQuizzes(multipleChoiceQuestions, trueFalseQuestions)) {
-      throw new Error('No valid questions found in this quiz');
+    private extractQuizSection(content: string): string | null {
+        const quizHeader = /## *.+ *Exam Practice Quiz/;
+        const quizIndex = content.search(quizHeader);
+        return quizIndex === -1 ? null : content.substring(quizIndex);
     }
 
-    return { mainContent, multipleChoiceQuestions, trueFalseQuestions };
-  }
+    private extractMainContent(content: string, quizSection: string | null): string {
+        const removeTitle = (text: string): string => {
+            return text
+                .replace(/^# .*\n/, '')
+                .replace(/^\n*---\n*/, '')
+                .trim();
+        };
 
-  private extractQuizSection(content: string): string | null {
-    const quizHeader = /## *.+ *Exam Practice Quiz/;
-    const quizIndex = content.search(quizHeader);
-    return quizIndex === -1 ? null : content.substring(quizIndex);
-  }
+        if (quizSection) {
+            const quizIndex = content.indexOf(quizSection);
+            return removeTitle(content.substring(0, quizIndex));
+        }
 
-  private extractMainContent(content: string, quizSection: string | null): string {
-    const removeTitle = (text: string): string => {
-      return text
-        .replace(/^# .*\n/, '')
-        .replace(/^\n*---\n*/, '')
-        .trim();
-    };
-
-    if (quizSection) {
-      const quizIndex = content.indexOf(quizSection);
-      return removeTitle(content.substring(0, quizIndex));
+        return removeTitle(content);
     }
 
-    return removeTitle(content);
-  }
+    private parseAllQuizzesFrom(quizContent: string): {
+        multipleChoiceQuestions: MultipleChoiceQuestion[];
+        trueFalseQuestions: TrueFalseQuestion[];
+    } {
+        const {multipleChoiceContent, trueFalseContent} = this.splitQuizIntoMcAndTf(quizContent);
 
-  private parseAllQuizzesFrom(quizContent: string): {
-    multipleChoiceQuestions: MultipleChoiceQuestion[];
-    trueFalseQuestions: TrueFalseQuestion[];
-  } {
-    const { multipleChoiceContent, trueFalseContent } = this.splitQuizIntoMcAndTf(quizContent);
+        const multipleChoiceQuestions = this.multipleChoiceParser.parse(multipleChoiceContent);
+        const trueFalseQuestions = this.trueFalseParser.parse(trueFalseContent);
 
-    const multipleChoiceQuestions = this.multipleChoiceParser.parse(multipleChoiceContent);
-    const trueFalseQuestions = this.trueFalseParser.parse(trueFalseContent);
-
-    return { multipleChoiceQuestions, trueFalseQuestions };
-  }
-
-  private splitQuizIntoMcAndTf(quizContent: string): {
-    multipleChoiceContent: string;
-    trueFalseContent: string;
-  } {
-    const trueFalseHeader = '### 🔹 True / False';
-    const tfIndex = quizContent.indexOf(trueFalseHeader);
-
-    if (tfIndex === -1) {
-      return {
-        multipleChoiceContent: quizContent,
-        trueFalseContent: '',
-      };
+        return {multipleChoiceQuestions, trueFalseQuestions};
     }
 
-    return {
-      multipleChoiceContent: quizContent.substring(0, tfIndex),
-      trueFalseContent: quizContent.substring(tfIndex),
-    };
-  }
+    private splitQuizIntoMcAndTf(quizContent: string): {
+        multipleChoiceContent: string;
+        trueFalseContent: string;
+    } {
+        const trueFalseHeader = '### 🔹 True / False';
+        const tfIndex = quizContent.indexOf(trueFalseHeader);
 
-  private hasNoQuizzes(
-      multipleChoiceQuestions: MultipleChoiceQuestion[],
-      trueFalseQuestions: TrueFalseQuestion[]
-  ): boolean {
-    return (
-        multipleChoiceQuestions.length === 0 &&
-        trueFalseQuestions.length === 0
-    );
-  }
+        if (tfIndex === -1) {
+            return {
+                multipleChoiceContent: quizContent,
+                trueFalseContent: '',
+            };
+        }
+
+        return {
+            multipleChoiceContent: quizContent.substring(0, tfIndex),
+            trueFalseContent: quizContent.substring(tfIndex),
+        };
+    }
+
+    private hasNoQuizzes(
+        multipleChoiceQuestions: MultipleChoiceQuestion[],
+        trueFalseQuestions: TrueFalseQuestion[]
+    ): boolean {
+        return (
+            multipleChoiceQuestions.length === 0 &&
+            trueFalseQuestions.length === 0
+        );
+    }
 }
 
 
 class TrueFalseParser {
 
-  parse(tfContent: string): TrueFalseQuestion[] {
-    if (!tfContent.trim()) return [];
+    parse(tfContent: string): TrueFalseQuestion[] {
+        if (!tfContent.trim()) return [];
 
-    const rawQuestions = this.splitTrueFalseBlocks(tfContent);
-    return rawQuestions.map((q) => this.parseTrueFalseBlock(q));
-  }
-
-  private splitTrueFalseBlocks(tfContent: string): string[] {
-    return tfContent.split(/\*\*Q\d+\.\*\*/).slice(1);
-  }
-
-  private parseTrueFalseBlock(block: string): TrueFalseQuestion {
-    const lines = trimLines(block);
-    const questionLine = lines[0];
-    const answerLine = lines[1];
-
-    if (!questionLine || !answerLine) {
-      throw new Error(`Invalid True/False question format (missing answer): ${block}`);
+        const rawQuestions = this.splitTrueFalseBlocks(tfContent);
+        return rawQuestions.map((q) => this.parseTrueFalseBlock(q));
     }
 
-    const questionText = extractQuestionText(questionLine);
-    const answer = this.parseTrueFalseAnswerLine(answerLine);
+    private splitTrueFalseBlocks(tfContent: string): string[] {
+        return tfContent.split(/\*\*Q\d+\.\*\*/).slice(1);
+    }
 
-    return { question: questionText, answer };
-  }
+    private parseTrueFalseBlock(block: string): TrueFalseQuestion {
+        const lines = trimLines(block);
+        const questionLine = lines[0];
+        const answerLine = lines[1];
 
-  private parseTrueFalseAnswerLine(line: string): Answer<boolean> {
-    if (line.includes('True')) return new Answer(true);
-    if (line.includes('False')) return new Answer(false);
-    throw new Error(`Invalid True/False answer format: ${line}`);
-  }
+        if (!questionLine || !answerLine) {
+            throw new Error(`Invalid True/False question format (missing answer): ${block}`);
+        }
+
+        const questionText = extractQuestionText(questionLine);
+        const answer = this.parseTrueFalseAnswerLine(answerLine);
+
+        return {question: questionText, answer};
+    }
+
+    private parseTrueFalseAnswerLine(line: string): Answer<boolean> {
+        if (line.includes('True')) return new Answer(true);
+        if (line.includes('False')) return new Answer(false);
+        throw new Error(`Invalid True/False answer format: ${line}`);
+    }
 
 }
 
 
 class MultipleChoiceParser {
 
-  parse(mcContent: string): MultipleChoiceQuestion[] {
-    if (!mcContent.trim()) return [];
+    parse(mcContent: string): MultipleChoiceQuestion[] {
+        if (!mcContent.trim()) return [];
 
-    const rawQuestions = this.splitMultipleChoiceBlocks(mcContent);
-    return rawQuestions.map((q) => this.parseMultipleChoiceBlock(q));
-  }
-
-  private splitMultipleChoiceBlocks(mcContent: string): string[] {
-    return mcContent.split(/\*\*Q\d+\.\*\*/).slice(1);
-  }
-
-  private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion {
-    const lines = trimLines(block);
-    const questionLine = lines[0];
-    const optionLines = lines.slice(1);
-
-    if (!questionLine || optionLines.length === 0) {
-      throw new Error(`Invalid Multiple Choice question format (missing options): ${block}`);
+        const rawQuestions = this.splitMultipleChoiceBlocks(mcContent);
+        return rawQuestions.map((q) => this.parseMultipleChoiceBlock(q));
     }
 
-    const questionText = extractQuestionText(questionLine);
-    const {options, answer} = this.parseMultipleChoiceAnswerLines(optionLines);
-
-    if (!questionText || options.length === 0 || !answer) {
-      throw new Error(`Invalid Multiple Choice question format (missing answer): ${block}`);
+    private splitMultipleChoiceBlocks(mcContent: string): string[] {
+        return mcContent.split(/\*\*Q\d+\.\*\*/).slice(1);
     }
 
-    return { question: questionText, options, answer };
-  }
+    private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion {
+        const lines = trimLines(block);
+        const questionLine = lines[0];
+        const optionLines = lines.slice(1);
 
-  private parseMultipleChoiceAnswerLines(lines: string[]): {options: Option[], answer: Answer<Option> | null} {
-    const options: Option[] = [];
-    for (const line of lines) {
-      if (this.isOptionLine(line)) {
-        options.push(new Option(line.trim()));
-      } else if (line.includes('✅ **Answer:')) {
-        const match = line.match(/Answer:\s*([A-D])/);
-        if (!match) {
-          throw new Error(`Invalid Multiple Choice answer format: ${line}`);
+        if (!questionLine || optionLines.length === 0) {
+            throw new Error(`Invalid Multiple Choice question format (missing options): ${block}`);
         }
 
-        const letter = match[1];
-        const matchingOption = options.find((o) => o.hasPrefix(letter));
-        if (!matchingOption) {
-          throw new Error(`Answer letter "${letter}" does not match any option`);
+        const questionText = extractQuestionText(questionLine);
+        const {options, answer} = this.parseMultipleChoiceAnswerLines(optionLines);
+
+        if (!questionText || options.length === 0 || !answer) {
+            throw new Error(`Invalid Multiple Choice question format (missing answer): ${block}`);
         }
 
-        return {options, answer: new Answer(matchingOption)};
-      }
+        return {question: questionText, options, answer};
     }
 
-    return {options, answer: null};
-  }
+    private parseMultipleChoiceAnswerLines(lines: string[]): { options: Option[], answer: Answer<Option> | null } {
+        const options: Option[] = [];
+        for (const line of lines) {
+            if (this.isOptionLine(line)) {
+                options.push(new Option(line.trim()));
+            } else if (line.includes('✅ **Answer:')) {
+                const match = line.match(/Answer:\s*([A-D])/);
+                if (!match) {
+                    throw new Error(`Invalid Multiple Choice answer format: ${line}`);
+                }
 
-  private isOptionLine(line: string): boolean {
-    return ['A.', 'B.', 'C.', 'D.'].some((prefix) => line.startsWith(prefix));
-  }
+                const letter = match[1];
+                const matchingOption = options.find((o) => o.hasPrefix(letter));
+                if (!matchingOption) {
+                    throw new Error(`Answer letter "${letter}" does not match any option`);
+                }
+
+                return {options, answer: new Answer(matchingOption)};
+            }
+        }
+
+        return {options, answer: null};
+    }
+
+    private isOptionLine(line: string): boolean {
+        return ['A.', 'B.', 'C.', 'D.'].some((prefix) => line.startsWith(prefix));
+    }
 
 }
 
 
 function trimLines(text: string): string[] {
-  return text
-      .trim()
-      .split('\n')
-      .map((l) => l.trim())
-      .filter(Boolean);
+    return text
+        .trim()
+        .split('\n')
+        .map((l) => l.trim())
+        .filter(Boolean);
 }
 
 function extractQuestionText(line: string): string {
-  return line.replace(/^[ \t]*\d+\.[ \t]*/, '').trim();
+    return line.replace(/^[ \t]*\d+\.[ \t]*/, '').trim();
 }
