@@ -26,6 +26,7 @@ export class HeaderComponent {
 
   searchTerm = signal('');
   isSearchFocused = signal(false);
+  selectedIndex = signal(-1);
 
   private router = inject(Router);
   private searchService = inject(SearchService);
@@ -46,7 +47,12 @@ export class HeaderComponent {
 
   constructor() {
     effect(() => {
-      this.searchService.setSearchTerm(this.searchTerm());
+      const term = this.searchTerm();
+      this.searchService.setSearchTerm(term);
+      this.selectedIndex.set(-1);
+      if (term) {
+        this.isSearchFocused.set(true);
+      }
     });
   }
 
@@ -56,6 +62,7 @@ export class HeaderComponent {
 
   onSearchFocus(): void {
     this.isSearchFocused.set(true);
+    this.selectedIndex.set(-1);
   }
 
   onSearchBlur(): void {
@@ -100,6 +107,30 @@ export class HeaderComponent {
     if (this.searchInput) {
       this.searchInput.nativeElement.blur();
       this.isSearchFocused.set(false);
+      this.selectedIndex.set(-1);
+    }
+  }
+
+  onKeyDown(event: KeyboardEvent): void {
+    const results = this.filteredResults();
+    if (results.length === 0) return;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.selectedIndex.update(i => (i + 1) % results.length);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.selectedIndex.update(i => (i - 1 + results.length) % results.length);
+        break;
+      case 'Enter':
+      case ' ':
+        if (this.selectedIndex() >= 0) {
+          event.preventDefault();
+          void this.onCardSelected(results[this.selectedIndex()].id);
+        }
+        break;
     }
   }
 

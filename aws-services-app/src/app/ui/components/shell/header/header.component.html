@@ -21,6 +21,7 @@
                        (ngModelChange)="searchTerm.set($event)"
                        (focus)="onSearchFocus()"
                        (blur)="onSearchBlur()"
+                       (keydown)="onKeyDown($event)"
                        placeholder="Search... (ctrl+k)"
                        class="search-input w-full py-2 pl-10 pr-10 rounded-full border-none focus:outline-none transition-all shadow-inner"
                 />
@@ -33,6 +34,7 @@
                 @if (isSearchFocused() && searchTerm()) {
                     <app-search-autocomplete
                         [results]="filteredResults()"
+                        [selectedIndex]="selectedIndex()"
                         (selected)="onCardSelected($event)">
                     </app-search-autocomplete>
                 }

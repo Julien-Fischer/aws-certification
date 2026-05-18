@@ -7,13 +7,15 @@
     [style.max-height.px]="maxHeight"
 >
     <ul class="list-none p-0 m-0">
-        @for (card of results; track card.id) {
+        @for (card of results(); track card.id; let i = $index) {
             <li
+                #resultItem
                 (click)="selectCard(card)"
                 class="
               p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer flex items-center
               border-b last:border-b-0 border-gray-100 dark:border-gray-600
             "
+                [class.selected]="i === selectedIndex()"
             >
                 <i [class]="card.icon + ' text-xl mr-3 text-blue-500'"></i>
                 <div class="flex flex-col">

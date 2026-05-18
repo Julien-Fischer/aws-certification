@@ -2,6 +2,7 @@
     display: block;
     width: 100%;
 }
+
 .autocomplete-dropdown {
     overflow-y: auto;
     background: #ffffff;
@@ -18,6 +19,19 @@
         max-width: calc(100vw - 20px);
     }
 }
+
+.selected {
+    background-color: #f3f4f6;
+}
+
+::ng-deep .dark .selected {
+    background-color: #374151 !important;
+}
+
 ::ng-deep .dark .autocomplete-dropdown {
     background: #1f2937;
+
+    .selected {
+        background-color: #374151;
+    }
 }
