@@ -6,21 +6,21 @@ import {Answer, Option} from "../../../domain/learning/models/question";
 
 const title = toMarkdown(`
     # 📊 AWS Audit & Monitoring – Flash Card
-    
+
     ---
-    
+
     `);
 
 const mainContent = toMarkdown(`
     ## ☁️ Amazon CloudWatch
 
     ### ✅ Keypoints Summary
-    1. **Monitoring & observability** service for AWS resources & applications.  
-    2. Collects **metrics, logs, and events** for real-time visibility.  
-    3. Integrates with alarms, dashboards, and automation.  
-    
+    1. **Monitoring & observability** service for AWS resources & applications.
+    2. Collects **metrics, logs, and events** for real-time visibility.
+    3. Integrates with alarms, dashboards, and automation.
+
     ---
-    
+
     `);
 
 describe('MarkdownParserService', () => {
@@ -40,16 +40,16 @@ describe('MarkdownParserService', () => {
         it('removes title if present', () => {
             const markdown = toMarkdown(`
                 # 📊 AWS Audit & Monitoring – Flash Card
-                
+
                 ---
-                
+
                 ## ☁️ Amazon CloudWatch
-                
+
                 ### ✅ Keypoints Summary
-                1. **Monitoring & observability** service for AWS resources & applications.  
-                2. Collects **metrics, logs, and events** for real-time visibility.  
-                3. Integrates with alarms, dashboards, and automation.  
-                
+                1. **Monitoring & observability** service for AWS resources & applications.
+                2. Collects **metrics, logs, and events** for real-time visibility.
+                3. Integrates with alarms, dashboards, and automation.
+
                 ---`);
 
             const parsed = service.parse(markdown);
@@ -59,23 +59,23 @@ describe('MarkdownParserService', () => {
             expect(parsed.mainContent)
                 .toBe(toMarkdown(`
                 ## ☁️ Amazon CloudWatch
-                
+
                 ### ✅ Keypoints Summary
-                1. **Monitoring & observability** service for AWS resources & applications.  
-                2. Collects **metrics, logs, and events** for real-time visibility.  
-                3. Integrates with alarms, dashboards, and automation. 
-                 
+                1. **Monitoring & observability** service for AWS resources & applications.
+                2. Collects **metrics, logs, and events** for real-time visibility.
+                3. Integrates with alarms, dashboards, and automation.
+
                 ---`))
         })
 
         it('returns content if title is absent', () => {
             const input = `
                 ## ☁️ Amazon CloudWatch
-                
+
                 ### ✅ Keypoints Summary
-                1. **Monitoring & observability** service for AWS resources & applications.  
-                2. Collects **metrics, logs, and events** for real-time visibility.  
-                3. Integrates with alarms, dashboards, and automation.  
+                1. **Monitoring & observability** service for AWS resources & applications.
+                2. Collects **metrics, logs, and events** for real-time visibility.
+                3. Integrates with alarms, dashboards, and automation.
                 ---`.trim();
 
             const parsed = service.parse(input);
@@ -89,11 +89,11 @@ describe('MarkdownParserService', () => {
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?  
-                A. CloudWatch  
-                B. CloudTrail  
-                C. Config  
-                D. GuardDuty  
+                **Q1.** Which service provides **API activity history** for auditing?
+                A. CloudWatch
+                B. CloudTrail
+                C. Config
+                D. GuardDuty
                 ✅ **Answer: B**
                 `);
 
@@ -107,8 +107,8 @@ describe('MarkdownParserService', () => {
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
-                **Q1.** Question?  
-                A. Yes  
+                **Q1.** Question?
+                A. Yes
                 ✅ **Answer: A**
                 `);
             const afterQuiz = toMarkdown(`
@@ -129,11 +129,11 @@ describe('MarkdownParserService', () => {
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?  
-                A. CloudWatch  
-                B. CloudTrail  
-                C. Config  
-                D. GuardDuty  
+                **Q1.** Which service provides **API activity history** for auditing?
+                A. CloudWatch
+                B. CloudTrail
+                C. Config
+                D. GuardDuty
                 ✅ **Answer: B**
                 `);
 
@@ -157,20 +157,20 @@ describe('MarkdownParserService', () => {
                 ## ❓ Exam Practice Quiz
 
                 ### 🔹 Multiple Choice
-                **Q1.** Which service provides **API activity history** for auditing?  
-                A. CloudWatch  
-                B. CloudTrail  
-                C. Config  
-                D. GuardDuty  
+                **Q1.** Which service provides **API activity history** for auditing?
+                A. CloudWatch
+                B. CloudTrail
+                C. Config
+                D. GuardDuty
                 ✅ **Answer: B**
-                
+
                 ---
-                
-                **Q2.** Which CloudWatch feature allows analyzing logs with SQL-like queries?  
-                A. Contributor Insights  
-                B. Logs Insights  
-                C. Metrics Explorer  
-                D. Unified Agent  
+
+                **Q2.** Which CloudWatch feature allows analyzing logs with SQL-like queries?
+                A. Contributor Insights
+                B. Logs Insights
+                C. Metrics Explorer
+                D. Unified Agent
                 ✅ **Answer: B**
             `);
 
@@ -243,10 +243,10 @@ describe('MarkdownParserService', () => {
     describe('true/false questions', () => {
 
         it('parses one question', () => {
-            const markdown = restOfTheFile() + toMarkdown(` 
+            const markdown = restOfTheFile() + toMarkdown(`
                 ### 🔹 True / False
-                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.  
-                ✅ True  
+                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
+                ✅ True
             `);
 
             const parsed = service.parse(markdown);
@@ -264,17 +264,17 @@ describe('MarkdownParserService', () => {
         });
 
         it('parses multiple questions', () => {
-            const markdown = restOfTheFile() + toMarkdown(` 
+            const markdown = restOfTheFile() + toMarkdown(`
                 ### 🔹 True / False
 
-                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.  
-                ✅ True  
-                
-                **Q5.** CloudTrail Insights automatically fixes misconfigurations.  
-                ❌ False (that’s **Config Remediation**).  
-                
-                **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.  
-                ✅ True  
+                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
+                ✅ True
+
+                **Q5.** CloudTrail Insights automatically fixes misconfigurations.
+                ❌ False (that’s **Config Remediation**).
+
+                **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.
+                ✅ True
             `);
 
             const parsed = service.parse(markdown);
@@ -300,17 +300,63 @@ describe('MarkdownParserService', () => {
         });
 
         it('throws error for missing answer', () => {
-            const markdown = restOfTheFile() + toMarkdown(` 
+            const markdown = restOfTheFile() + toMarkdown(`
                 ### 🔹 True / False
-                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.  
-                ✅ True  
-                **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.  
+                **Q4.** CloudWatch Unified Agent collects both logs and OS-level metrics.
+                ✅ True
+                **Q6.** CloudWatch Alarms can trigger Auto Scaling policies.
             `);
 
             expect(() => service.parse(markdown))
                 .toThrow(/Invalid True\/False question format \(missing answer\):/);
         });
 
+    })
+
+    describe('explanation', () => {
+        it('parses explanation if present', () => {
+            const explanation = toMarkdown(`
+                First line.
+
+                Second line
+                Third line
+                Fourth line
+
+                Fifth line.
+            `);
+            const question = toMarkdown(`
+                ---
+
+                **Q1.** Which solution can comply with the requirement?
+                A. Option A
+                B. Option B
+                C. Option C
+                D. Option D
+                ✅ **Answer: C**
+
+                Explanation:
+
+                \`\`\`
+                ${explanation}
+                \`\`\`
+            `);
+
+            const markdown = title + '\n' + mainContent + '\n' + '## ❓ Exam Practice Quiz\n' + question;
+
+            const parsed = service.parse(markdown);
+
+            expect(parsed).toStrictEqual({
+                mainContent,
+                multipleChoiceQuestions: [
+                    {
+                        question: 'Which solution can comply with the requirement?',
+                        options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                        answer: new Answer(new Option('C. Option C'), explanation)
+                    }
+                ],
+                trueFalseQuestions: []
+            })
+        })
     })
 
 });

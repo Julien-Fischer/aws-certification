@@ -15,7 +15,14 @@ export interface TrueFalseQuestion extends Question {
 export class Answer<T extends {toString: () => string}> {
     readonly #brand = Symbol();
 
-    constructor(readonly value: T) { }
+    constructor(
+        readonly value: T,
+        readonly explanation?: string
+    ) { }
+
+    isExplained(): boolean {
+        return this.explanation != null;
+    }
 
     toString(): string {
         return String(this.value.toString());

@@ -2,6 +2,9 @@ import {Injectable} from '@angular/core';
 import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/learning/models/question";
 import {FlashCard} from "../../domain/learning/models/flash-card";
 
+type Letter = 'A' | 'B' | 'C' | 'D';
+const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];
+
 @Injectable({
     providedIn: 'root',
 })
@@ -28,7 +31,7 @@ export class MarkdownParserService {
     }
 
     private extractQuizSection(content: string): string | null {
-        const quizHeader = /## *.+ *Exam Practice Quiz/;
+        const quizHeader = /## *.+ *Exam Practice Quiz/i;
         const quizIndex = content.search(quizHeader);
         return quizIndex === -1 ? null : content.substring(quizIndex);
     }
@@ -65,16 +68,17 @@ export class MarkdownParserService {
         multipleChoiceContent: string;
         trueFalseContent: string;
     } {
-        const trueFalseHeader = '### 🔹 True / False';
-        const tfIndex = quizContent.indexOf(trueFalseHeader);
+        const trueFalseHeader = /### 🔹 True \/ False/i;
+        const match = quizContent.match(trueFalseHeader);
 
-        if (tfIndex === -1) {
+        if (!match || match.index === undefined) {
             return {
                 multipleChoiceContent: quizContent,
                 trueFalseContent: '',
             };
         }
 
+        const tfIndex = match.index;
         return {
             multipleChoiceContent: quizContent.substring(0, tfIndex),
             trueFalseContent: quizContent.substring(tfIndex),
@@ -144,61 +148,91 @@ class MultipleChoiceParser {
     }
 
     private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion {
-        const lines = trimLines(block);
-        const questionLine = lines[0];
-        const optionLines = lines.slice(1);
+        const questionLine = block.split('\n').map(l => l.trim()).find(Boolean) || '';
+        const questionText = extractQuestionText(questionLine);
 
-        if (!questionLine || optionLines.length === 0) {
+        const {options, answer} = this.parseMultipleChoiceAnswerLines(block);
+
+        if (!questionText || options.length === 0) {
             throw new Error(`Invalid Multiple Choice question format (missing options): ${block}`);
         }
 
-        const questionText = extractQuestionText(questionLine);
-        const {options, answer} = this.parseMultipleChoiceAnswerLines(optionLines);
-
-        if (!questionText || options.length === 0 || !answer) {
+        if (!answer) {
             throw new Error(`Invalid Multiple Choice question format (missing answer): ${block}`);
         }
 
         return {question: questionText, options, answer};
     }
 
-    private parseMultipleChoiceAnswerLines(lines: string[]): { options: Option[], answer: Answer<Option> | null } {
+    private parseMultipleChoiceAnswerLines(block: string): { options: Option[], answer: Answer<Option> | null } {
+        const lines = block.split('\n').map(l => l.trim());
         const options: Option[] = [];
-        for (const line of lines) {
+
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
             if (this.isOptionLine(line)) {
-                options.push(new Option(line.trim()));
+                options.push(new Option(line));
             } else if (line.includes('✅ **Answer:')) {
-                const match = line.match(/Answer:\s*([A-D])/);
-                if (!match) {
-                    throw new Error(`Invalid Multiple Choice answer format: ${line}`);
-                }
-
-                const letter = match[1];
-                const matchingOption = options.find((o) => o.hasPrefix(letter));
-                if (!matchingOption) {
-                    throw new Error(`Answer letter "${letter}" does not match any option`);
-                }
-
-                return {options, answer: new Answer(matchingOption)};
+                const letter = this.findLetter(line);
+                const answerOption = this.findAnswer(letter, options);
+                const explanation = this.findExplanation(lines, i);
+                return {options, answer: new Answer(answerOption, explanation)};
             }
         }
 
         return {options, answer: null};
     }
 
+    private findExplanation(lines: string[], i: number): string | undefined {
+        let explanation: string | undefined;
+        const remainingContent = lines.slice(i + 1).join('\n').trim();
+        if (remainingContent.startsWith('Explanation:')) {
+            const explanationMatch = remainingContent.match(/Explanation:\s*\n*```\n?([\s\S]*?)\n?```/);
+            if (explanationMatch) {
+                explanation = explanationMatch[1].trim();
+            }
+        }
+        return explanation;
+    }
+
+    private findLetter(line: string) {
+        const match = line.match(/Answer:\s*([A-D])/);
+        if (!match) {
+            throw new Error(`Invalid Multiple Choice answer format: ${line}`);
+        }
+        return toLetter(match[1]);
+    }
+
+    private findAnswer(letter: Letter, options: Option[]): Option {
+        const answerOption = options.find(option => option.hasPrefix(letter));
+        if (!answerOption) {
+            throw new Error(`Answer letter "${letter}" does not match any option`);
+        }
+        return answerOption;
+    }
+
     private isOptionLine(line: string): boolean {
-        return ['A.', 'B.', 'C.', 'D.'].some((prefix) => line.startsWith(prefix));
+        return LETTERS.some((prefix) => line.startsWith(`${prefix}.`));
     }
 
 }
 
 
-function trimLines(text: string): string[] {
-    return text
+function toLetter(character: string): Letter {
+    for (const letter of LETTERS) {
+        if (character === letter) {
+            return letter;
+        }
+    }
+    throw new Error(`Invalid letter: ${character}`);
+}
+
+function trimLines(multiLineString: string): string[] {
+    return multiLineString
         .trim()
         .split('\n')
-        .map((l) => l.trim())
-        .filter(Boolean);
+        .map(line => line.trim())
+        .filter(line => line !== '');
 }
 
 function extractQuestionText(line: string): string {
