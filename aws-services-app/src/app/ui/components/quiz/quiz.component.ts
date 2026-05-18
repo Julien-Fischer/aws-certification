@@ -13,7 +13,7 @@ import Ratio from "../../../domain/scoring/models/ratio";
 })
 export class QuizComponent implements OnInit {
 
-  private static readonly SUCCESS_THRESHOLD = new Ratio(0.5);
+  private static readonly SUCCESS_THRESHOLD = Ratio.HALF;
 
   private _questions: Question[] = [];
 

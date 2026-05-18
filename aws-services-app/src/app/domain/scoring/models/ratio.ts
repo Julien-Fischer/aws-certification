@@ -8,7 +8,8 @@ export default class Ratio {
     private static readonly MAX_VALUE = 1;
 
     public static readonly ZERO = new Ratio(0);
-    public static readonly ONE = new Ratio(1);
+    public static readonly HALF = new Ratio(0.5);
+    public static readonly ONE  = new Ratio(1);
 
     constructor(public readonly value: number) {
         Ratio.validate(value);
