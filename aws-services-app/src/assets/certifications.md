@@ -18,3 +18,10 @@ Comparing C03 and C04 exams.
 | Passing score     | 720/1000                           | 750/1000                         |
 | Exam fee          | $150 USD                           | $300 USD                         |
 | Recertification   | 3 years                            | 3 years                          |
+
+## SAA-C03 domains
+
+- design secure architectures          30%
+- design resilient architectures       26%
+- design high-performing architectures 24%
+- design cost-optimized architectures  20%
