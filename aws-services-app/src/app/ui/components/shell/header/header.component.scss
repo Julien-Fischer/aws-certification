@@ -105,6 +105,22 @@ button {
   }
 }
 
+.waffle-icon {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 18px;
+  height: 18px;
+  padding: 2px;
+
+  span {
+    width: 4px;
+    height: 4px;
+    background-color: currentColor;
+    border-radius: 50%;
+  }
+}
+
 .mobile-menu-button {
   display: none;
 }
@@ -124,7 +140,7 @@ button {
   }
 
   .theme-btn, .app-logo {
-    margin-right: 0 !important;
+    margin-right: .5rem !important;
   }
 
   #github_project {
@@ -164,6 +180,9 @@ button {
 
 .mobile-menu-header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  position: relative;
 }
 
 .dark .mobile-menu-header {
@@ -176,6 +195,56 @@ button {
   align-items: center;
   justify-content: center;
   text-decoration: none;
+}
+
+.mobile-menu-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  border-radius: 0px;
+  background: var(--aws-card-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+
+  &:active {
+    background: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.dark .menu-item {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  &:active {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.menu-item-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--aws-orange);
+}
+
+.menu-item-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.2;
 }
 
 .search-backdrop {

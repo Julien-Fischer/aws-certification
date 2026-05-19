@@ -77,6 +77,7 @@ export class HeaderComponent {
   async onCardSelected(id: string): Promise<void> {
     this.searchTerm.set('');
     this.isSearchFocused.set(false);
+    this.isMobileMenuOpen.set(false);
     await this.router.navigate(['/service', id]);
   }
 
