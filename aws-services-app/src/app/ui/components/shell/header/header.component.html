@@ -86,6 +86,10 @@
         <div class="mobile-menu-content" (click)="$event.stopPropagation()">
             <div class="mobile-menu-header">
                 <div class="flex justify-content-between align-items-center w-full px-3 py-3">
+                    <div (click)="goBack(); isMobileMenuOpen.set(false)" class="flex align-items-center cursor-pointer">
+                        <i [class]="logo + ' text-2xl app-logo'"></i>
+                    </div>
+
                     <div class="flex items-center gap-4">
                         <button (click)="gamification.toggle()"
                                 class="theme-toggle-btn"
@@ -108,6 +112,7 @@
                             <i class="fab fa-github fa-xl"></i>
                         </a>
                     </div>
+
                     <button (click)="isMobileMenuOpen.set(false)" class="theme-toggle-btn">
                         <i class="fas fa-times fa-xl"></i>
                     </button>

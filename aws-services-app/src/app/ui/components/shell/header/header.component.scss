@@ -183,6 +183,10 @@ button {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   z-index: 1000;
   position: relative;
+
+  .app-logo {
+    margin-right: 0 !important;
+  }
 }
 
 .dark .mobile-menu-header {
@@ -215,7 +219,7 @@ button {
   align-items: center;
   justify-content: center;
   padding: 2rem 1rem;
-  border-radius: 0px;
+  border-radius: 0;
   background: var(--aws-card-bg, rgba(255, 255, 255, 0.05));
   border: 1px solid rgba(0, 0, 0, 0.05);
   transition: background 0.2s ease;
