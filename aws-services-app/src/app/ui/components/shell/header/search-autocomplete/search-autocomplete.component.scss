@@ -9,6 +9,7 @@
     min-width: 400px;
     width: 100%;
     left: 0;
+    border: 1px solid var(--aws-gray);
 
     @media (max-width: 500px) {
         position: fixed;
@@ -30,6 +31,7 @@
 
 ::ng-deep .dark .autocomplete-dropdown {
     background: #1f2937;
+    border: 1px solid #4c5a71 !important;
 
     .selected {
         background-color: #374151;

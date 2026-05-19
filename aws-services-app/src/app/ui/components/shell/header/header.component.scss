@@ -55,6 +55,7 @@ button {
     .search-input {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.1);
       background-color: rgba(255, 255, 255, 0.95);
+      border: 2px solid var(--aws-light-blue);
     }
     .search-icon {
       color: var(--aws-orange);
@@ -66,11 +67,16 @@ button {
   background-color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
   color: #333;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
 
   &::placeholder {
     color: #999;
   }
+}
+
+::ng-deep .dark .search-input {
+  background-color: #1f2937 !important;
+  color: var(--text-primary) !important;
 }
 
 .clear-button {
