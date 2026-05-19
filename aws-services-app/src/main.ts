@@ -1,7 +1,7 @@
 import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/ui/app.component';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app/ui/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
@@ -20,7 +20,8 @@ import {GamificationService} from "./app/ui/services/gamification.service";
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideZoneChangeDetection(),provideRouter(routes),
+    provideZoneChangeDetection(),
+    provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideHttpClient(),
     {
       provide: shufflerInjectionToken,
