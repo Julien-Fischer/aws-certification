@@ -8,6 +8,50 @@
     padding: 10px 30px 30px 30px;
 }
 
+.markdown-content ::ng-deep .table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+}
+
+.markdown-content ::ng-deep table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: inherit;
+  vertical-align: top;
+  border-collapse: collapse;
+}
+
+.markdown-content ::ng-deep thead {
+  background: #eee;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+
+  :host-context(.dark) & {
+    background: #171f2c;
+  }
+}
+.markdown-content ::ng-deep th {
+  color: rgba(0, 0, 0, 0.6) !important;
+
+  :host-context(.dark) & {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+}
+
+.markdown-content ::ng-deep th,
+.markdown-content ::ng-deep td {
+  padding: 0.3rem 0.5rem;
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+
+  :host-context(.dark) & {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 .markdown-content ::ng-deep h2 {
     font-weight: bold;
 }

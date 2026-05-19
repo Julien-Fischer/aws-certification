@@ -81,7 +81,27 @@ export class FlashCardComponent implements OnInit {
     this.flashCardService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
         const { mainContent, trueFalseQuestions, multipleChoiceQuestions } = card;
-        this.markdownContent = marked(mainContent) as string;
+
+        const renderer = new marked.Renderer();
+        renderer.table = (token) => {
+          const header = token.header.map(cell => renderer.tablecell(cell)).join('');
+          const body = token.rows.map(row => {
+            return renderer.tablerow({
+              text: row.map(cell => renderer.tablecell(cell)).join('')
+            });
+          }).join('');
+
+          return `
+            <div class="table-responsive">
+              <table class="table">
+                <thead>${renderer.tablerow({ text: header })}</thead>
+                <tbody>${body}</tbody>
+              </table>
+            </div>
+          `;
+        };
+
+        this.markdownContent = marked(mainContent, { renderer }) as string;
         this.trueFalseQuestions = trueFalseQuestions;
         this.multipleChoiceQuestions = multipleChoiceQuestions;
         this.allQuestions = [...this.trueFalseQuestions, ...this.multipleChoiceQuestions];
