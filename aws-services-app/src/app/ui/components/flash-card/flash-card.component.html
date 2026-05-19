@@ -1,5 +1,6 @@
 @if (service) {
   <div class="container mt-4">
+
     <div class="row">
       <div class="col-12">
         <button class="btn main-button mb-4" (click)="goBack()">
@@ -8,24 +9,25 @@
         </button>
       </div>
     </div>
+
     <div class="row">
       <div class="col-12">
         <div class="card border-0 shadow-lg aws-card-static">
           <div class="card-header bg-transparent border-0 pt-4 pb-3">
 
             <div class="d-flex align-items-center justify-content-between border-b border-[var(--aws-orange)]">
-                <div class="d-flex align-items-center">
-                  <div class="service-icon me-3">
-                      <i [class]="service.icon"></i>
-                  </div>
-                  <div>
-                      <h1 class="mb-1 text-primary-theme">{{ service.name }}</h1>
-                      <p class="text-secondary-theme mb-0">{{ service.description }}</p>
-                  </div>
+              <div class="d-flex align-items-center">
+                <div class="service-icon me-3">
+                  <i [class]="service.icon"></i>
                 </div>
+                <div>
+                  <h1 class="mb-1 text-primary-theme">{{ service.name }}</h1>
+                  <p class="text-secondary-theme mb-0">{{ service.description }}</p>
+                </div>
+              </div>
               <div class="text-right">
-                  <div class="text-xs uppercase text-re text-gray-500 font-bold mb-1">Last Updated</div>
-                  <div>{{ service.lastUpdated }}</div>
+                <div class="text-xs uppercase text-re text-gray-500 font-bold mb-1">Last Updated</div>
+                <div>{{ service.lastUpdated }}</div>
               </div>
             </div>
 
@@ -35,80 +37,89 @@
             </div>
 
             <div class="quizzes">
-                <div class="highscore-section my-5">
-                    <h4 class="mb-0 text-primary-theme fw-bold pb-12 text-3xl">
-                        Test your knowledge
-                    </h4>
+              <div class="highscore-section my-5">
+                <h4 class="mb-0 text-primary-theme fw-bold pb-12 text-3xl">
+                  Test your knowledge
+                </h4>
 
-                    <div class="d-flex align-items-center mb-3">
-                        <h4 class="mb-0 text-primary-theme fw-bold">
-                            <i class="fas fa-trophy me-2 text-warning"></i>
-                            Current Highscore
-                        </h4>
-                    </div>
-
-                    @if (highscore !== highscoreNONE) {
-                        <div class="highscore-indicators d-flex gap-4">
-                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
-                                <div class="indicator-icon me-3 bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-tasks"></i>
-                                </div>
-                                <div>
-                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Progress</div>
-                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.progress.toFixed(0) }}</div>
-                                </div>
-                            </div>
-                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
-                                <div class="indicator-icon me-3 bg-success-light text-success rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-bullseye"></i>
-                                </div>
-                                <div>
-                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Accuracy</div>
-                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.accuracy.toFixed(0) }}</div>
-                                </div>
-                            </div>
-                            <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
-                                <div class="indicator-icon me-3 bg-info-light text-info rounded-circle d-flex align-items-center justify-content-center">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <div>
-                                    <div class="indicator-label text-secondary-theme small uppercase fw-bold">Date</div>
-                                    <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.date | date:'yyyy-MM-dd' }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    } @else {
-                        <p class="text-secondary-theme font-italic">No highscore yet. Take a quiz to set one!</p>
-                    }
+                <div class="d-flex align-items-center mb-3">
+                  <h4 class="mb-0 text-primary-theme fw-bold">
+                    <i class="fas fa-trophy me-2 text-warning"></i>
+                    Current Highscore
+                  </h4>
                 </div>
 
-                @if (trueFalseQuestions.length > 0) {
-                    <div class="mt-5">
-                        <h3 class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                            <i class="fas fa-check-circle me-3 animate-pulse"></i>
-                            True / False Quiz
-                        </h3>
-                        <app-quiz
-                                [questions]="trueFalseQuestions"
-                                [onRetry]="resetProgressTracker.bind(this)"
-                                [onAnswer]="onTrueFalseScoreChange.bind(this)"
-                        />
+                @if (highscore !== highscoreNONE) {
+                  <div class="highscore-indicators d-flex gap-4">
+                    <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                      <div
+                        class="indicator-icon me-3 bg-primary-light text-primary rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="fas fa-tasks"></i>
+                      </div>
+                      <div>
+                        <div class="indicator-label text-secondary-theme small uppercase fw-bold">Progress</div>
+                        <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.progress.toFixed(0) }}
+                        </div>
+                      </div>
                     </div>
+                    <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                      <div
+                        class="indicator-icon me-3 bg-success-light text-success rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="fas fa-bullseye"></i>
+                      </div>
+                      <div>
+                        <div class="indicator-label text-secondary-theme small uppercase fw-bold">Accuracy</div>
+                        <div class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.accuracy.toFixed(0) }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center">
+                      <div
+                        class="indicator-icon me-3 bg-info-light text-info rounded-circle d-flex align-items-center justify-content-center">
+                        <i class="fas fa-calendar-alt"></i>
+                      </div>
+                      <div>
+                        <div class="indicator-label text-secondary-theme small uppercase fw-bold">Date</div>
+                        <div
+                          class="indicator-value h4 mb-0 text-primary-theme">{{ highscore.date | date:'yyyy-MM-dd' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                } @else {
+                  <p class="text-secondary-theme font-italic">No highscore yet. Take a quiz to set one!</p>
                 }
+              </div>
 
-                @if (multipleChoiceQuestions.length > 0) {
-                    <div class="mt-5">
-                        <h3 class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                            <i class="fas fa-list-ul me-2"></i>
-                            Multiple Choice Quiz
-                        </h3>
-                        <app-quiz
-                                [questions]="multipleChoiceQuestions"
-                                [onRetry]="resetProgressTracker.bind(this)"
-                                [onAnswer]="onMultipleChoiceScoreChange.bind(this)"
-                        />
-                    </div>
-                }
+              @if (trueFalseQuestions.length > 0) {
+                <div class="mt-5">
+                  <h3
+                    class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    <i class="fas fa-check-circle me-3 animate-pulse"></i>
+                    True / False Quiz
+                  </h3>
+                  <app-quiz
+                    [questions]="trueFalseQuestions"
+                    [onRetry]="resetProgressTracker.bind(this)"
+                    [onAnswer]="onTrueFalseScoreChange.bind(this)"
+                  />
+                </div>
+              }
+
+              @if (multipleChoiceQuestions.length > 0) {
+                <div class="mt-5">
+                  <h3
+                    class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                    <i class="fas fa-list-ul me-2"></i>
+                    Multiple Choice Quiz
+                  </h3>
+                  <app-quiz
+                    [questions]="multipleChoiceQuestions"
+                    [onRetry]="resetProgressTracker.bind(this)"
+                    [onAnswer]="onMultipleChoiceScoreChange.bind(this)"
+                  />
+                </div>
+              }
             </div>
           </div>
         </div>
