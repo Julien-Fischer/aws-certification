@@ -128,3 +128,21 @@ button {
     display: none;
   }
 }
+
+.search-backdrop {
+  position: fixed;
+  top: 50px; // Just below the header (matched to app-header height)
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 900;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
