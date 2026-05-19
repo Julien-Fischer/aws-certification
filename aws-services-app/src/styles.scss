@@ -23,6 +23,11 @@
   --aws-dark-blue: #38bdf8;
 }
 
+html, body {
+  overflow-x: hidden !important;
+  width: 100vw !important;
+}
+
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--bg-color);
