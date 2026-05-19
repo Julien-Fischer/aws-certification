@@ -27,6 +27,7 @@ export class HeaderComponent {
   searchTerm = signal('');
   isSearchFocused = signal(false);
   selectedIndex = signal(-1);
+  isMobileMenuOpen = signal(false);
 
   private router = inject(Router);
   private searchService = inject(SearchService);

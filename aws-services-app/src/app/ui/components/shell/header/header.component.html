@@ -41,7 +41,7 @@
             </div>
         </div>
 
-        <div class="flex items-center ml-auto">
+        <div class="flex items-center ml-auto desktop-buttons">
             <button (click)="gamification.toggle()"
                     class="theme-toggle-btn mr-4"
                     [class.active]="gamification.isEnabled()"
@@ -64,9 +64,54 @@
             </a>
         </div>
 
+        <div class="flex items-center ml-auto mobile-menu-button">
+            <button (click)="isMobileMenuOpen.set(true)" class="theme-toggle-btn">
+                <i class="fas fa-th-large fa-xl"></i>
+            </button>
+        </div>
+
     </div>
 </div>
 
 @if (isSearchFocused() && searchTerm()) {
     <div class="search-backdrop" (click)="clearSearch()"></div>
+}
+
+@if (isMobileMenuOpen()) {
+    <div class="mobile-menu-overlay" (click)="isMobileMenuOpen.set(false)">
+        <div class="mobile-menu-content" (click)="$event.stopPropagation()">
+            <div class="mobile-menu-header">
+                <div class="flex justify-content-between align-items-center w-full px-4 py-3">
+                    <div class="flex items-center gap-4">
+                        <button (click)="gamification.toggle()"
+                                class="theme-toggle-btn"
+                                [class.active]="gamification.isEnabled()"
+                                [title]="gamification.isEnabled() ? 'Disable Gamification' : 'Enable Gamification'">
+                            <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
+                        </button>
+                        <button
+                            (click)="themeService.toggleTheme()"
+                            class="theme-toggle-btn"
+                            [title]="themeService.isDark() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+                        >
+                            <i class="fa-xl w-5 h-5 flex align-items-center justify-center"
+                               [class.fas]="true"
+                               [class.fa-sun]="themeService.isDark()"
+                               [class.fa-moon]="!themeService.isDark()">
+                            </i>
+                        </button>
+                        <a [href]="repository" title="github link" class="github-link-mobile">
+                            <i class="fab fa-github fa-xl"></i>
+                        </a>
+                    </div>
+                    <button (click)="isMobileMenuOpen.set(false)" class="theme-toggle-btn">
+                        <i class="fas fa-times fa-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="mobile-menu-body">
+                <!-- Rest of the menu will be implemented later -->
+            </div>
+        </div>
+    </div>
 }
