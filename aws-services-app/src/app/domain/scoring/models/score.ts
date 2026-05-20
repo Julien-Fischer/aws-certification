@@ -17,6 +17,10 @@ export default class Score {
         if (!this.progress.isEqualTo(other.progress)) {
             return this.progress.isGreaterThan(other.progress);
         }
+        return this.hasBetterAccuracyThan(other);
+    }
+
+    hasBetterAccuracyThan(other: Score): boolean {
         return this.accuracy.isGreaterThan(other.accuracy);
     }
 

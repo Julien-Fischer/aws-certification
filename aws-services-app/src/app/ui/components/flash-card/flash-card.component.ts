@@ -190,7 +190,7 @@ export class FlashCardComponent implements OnInit {
   }
 
   private shouldPlayAnimationFor(previousHighscore: Highscore): boolean {
-    return this.highscore.beats(previousHighscore) && !this.firstAttempt;
+    return this.highscore.hasBetterAccuracyThan(previousHighscore) && !this.firstAttempt;
   }
 
   private playAnimation() {

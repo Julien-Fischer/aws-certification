@@ -54,4 +54,12 @@ describe('Score', () => {
       expect(maxAccuracy.isMaximum()).toBe(false);
     })
 
+  it('has better accuracy', () => {
+    const maxProgress = Score.of(100, 99);
+    const maxAccuracy = Score.of(99, 100);
+
+    expect(maxAccuracy.hasBetterAccuracyThan(maxProgress)).toBe(true);
+    expect(maxProgress.hasBetterAccuracyThan(maxAccuracy)).toBe(false);
+  })
+
 });
