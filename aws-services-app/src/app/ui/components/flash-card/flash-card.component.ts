@@ -10,7 +10,7 @@ import { Question } from '../../../domain/search/models/question';
 import { FlashCard } from '../../../domain/search/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import Highscore from '../../../domain/scoring/models/highscore';
-import { ScoreWriter, scoreWriterInjectionToken } from '../../../domain/scoring/score-writer';
+import { SaveHighscore, saveHighscoreInjectionToken } from '../../../domain/scoring/save-highscore';
 import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
@@ -38,7 +38,7 @@ export class FlashCardComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private flashCardService: SearchService,
-      @Inject(scoreWriterInjectionToken) private scoreWriter: ScoreWriter,
+      @Inject(saveHighscoreInjectionToken) private saveHighscore: SaveHighscore,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider
   ) {}
 
@@ -115,25 +115,22 @@ export class FlashCardComponent implements OnInit {
     });
   }
 
-  onTrueFalseScoreChange(correct: boolean) {
-    this.onProgressUpdate(this.progressTracker, correct);
+  async onTrueFalseScoreChange(correct: boolean) {
+    await this.onProgressUpdate(this.progressTracker, correct);
   }
 
-  onMultipleChoiceScoreChange(correct: boolean) {
-    this.onProgressUpdate(this.progressTracker, correct);
+  async onMultipleChoiceScoreChange(correct: boolean) {
+    await this.onProgressUpdate(this.progressTracker, correct);
   }
 
-  private onProgressUpdate(tracker: ProgressTracker, correct: boolean) {
+  private async onProgressUpdate(tracker: ProgressTracker, correct: boolean) {
     tracker.update(correct);
     const score = tracker.score;
-    this.notifyScore(score);
+    await this.notifyScore(score);
   }
 
-  private notifyScore(score: Score) {
-    this.scoreWriter.score(this.serviceId(), score);
-    if (score.beats(this.highscore)) {
-      this.highscore = Highscore.from(score);
-    }
+  private async notifyScore(score: Score) {
+    this.highscore = await this.saveHighscore.submit(this.serviceId(), score);
   }
 
   resetProgressTracker() {

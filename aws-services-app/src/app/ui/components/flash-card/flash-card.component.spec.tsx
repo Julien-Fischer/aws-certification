@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {FlashCardComponent} from "./flash-card.component";
 import {ActivatedRoute} from "@angular/router";
 import {SearchService} from "../../../domain/search/services/search.service";
-import {scoreWriterInjectionToken} from "../../../domain/scoring/score-writer";
+import {saveHighscoreInjectionToken} from "../../../domain/scoring/save-highscore";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
 import {of} from "rxjs";
 import Highscore from "../../../domain/scoring/models/highscore";
@@ -35,7 +35,7 @@ describe('FlashCardComponent', () => {
                 },
                 { provide: SearchService, useValue: mockFlashCardService },
                 { provide: scoreProviderInjectionToken, useValue: mockScoreProvider },
-                { provide: scoreWriterInjectionToken, useValue: mockScoreWriter }
+                { provide: saveHighscoreInjectionToken, useValue: mockScoreWriter }
             ]
         })
             .compileComponents();

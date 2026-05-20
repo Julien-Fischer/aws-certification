@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import Score from "./models/score";
-import {ScoreWriter} from "./score-writer";
+import {SaveHighscore} from "./save-highscore";
 import {FlashCardId} from "../shared/flash-card-id";
 import Highscore from "./models/highscore";
 import {storageInjectionToken} from "./storage";
@@ -9,21 +9,23 @@ import type {Storage} from "./storage";
 @Injectable({
     providedIn: 'root',
 })
-export class ScoreWriterService implements ScoreWriter {
+export class SaveHighscoreService implements SaveHighscore {
 
     constructor(
         @Inject(storageInjectionToken) private storage: Storage<FlashCardId, Highscore>
     ) { }
 
-    score(serviceId: FlashCardId, score: Score): void {
+    async submit(serviceId: FlashCardId, score: Score): Promise<Highscore> {
         const highscore: Highscore = this.storage.getItem(serviceId, Highscore.NONE);
         if (score.beats(highscore)) {
-            this.saveNewHighScore(serviceId, score);
+            return this.saveNewHighScore(serviceId, score);
         }
+        return highscore;
     }
 
-    private saveNewHighScore(id: FlashCardId, score: Score) {
+    private saveNewHighScore(id: FlashCardId, score: Score): Promise<Highscore> {
         const newHighscore = Highscore.from(score, new Date());
         this.storage.setItem(id, newHighscore);
+        return Promise.resolve(newHighscore);
     }
 }

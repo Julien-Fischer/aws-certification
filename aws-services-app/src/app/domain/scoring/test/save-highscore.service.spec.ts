@@ -5,7 +5,7 @@ import {FlashCardId} from "../../shared/flash-card-id";
 import {aHighscore, aScore, ScoreBuilder} from "./utils/score-builder";
 import Highscore from "../models/highscore";
 import {storageInjectionToken} from "../storage";
-import {ScoreWriterService} from "../score-writer.service";
+import {SaveHighscoreService} from "../save-highscore.service";
 import Score from "../models/score";
 import InMemoryStorage from "./utils/in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
@@ -13,10 +13,10 @@ import {expectThat} from "./utils/score-assertions";
 
 const aurora = new FlashCardId('aurora');
 
-describe('ScoreWriterService', () => {
+describe('SaveHighscoreService', () => {
     let storage = new InMemoryStorage();
     let leaderboard = new LeaderBoardService(storage);
-    let scoreWriter: ScoreWriterService;
+    let scoreWriter: SaveHighscoreService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -31,7 +31,7 @@ describe('ScoreWriterService', () => {
                 }
             ]
         });
-        scoreWriter = TestBed.inject(ScoreWriterService);
+        scoreWriter = TestBed.inject(SaveHighscoreService);
         storage.clear();
     });
 
@@ -44,7 +44,7 @@ describe('ScoreWriterService', () => {
        whenService(aurora)
            .hasHighScore(aScore().withAccuracy(35));
 
-       scoreWriter.score(aurora, newHighScore);
+       scoreWriter.submit(aurora, newHighScore);
 
        expectThat(leaderboard.getHighscore(aurora))
            .is(Highscore.from(newHighScore))
@@ -56,7 +56,7 @@ describe('ScoreWriterService', () => {
         whenService(aurora)
             .hasHighScore(currentHighscore);
 
-        scoreWriter.score(aurora, lowerScore);
+        scoreWriter.submit(aurora, lowerScore);
 
         expectThat(leaderboard.getHighscore(aurora))
             .is(currentHighscore)
@@ -68,7 +68,7 @@ describe('ScoreWriterService', () => {
         whenService(aurora)
             .hasHighScore(currentHighscore);
 
-        scoreWriter.score(aurora, lowerScore);
+        scoreWriter.submit(aurora, lowerScore);
 
         expectThat(leaderboard.getHighscore(aurora))
             .is(currentHighscore)
@@ -86,7 +86,7 @@ describe('ScoreWriterService', () => {
         whenService(aurora)
             .hasHighScore(oldHighscore);
 
-        scoreWriter.score(aurora, newHighScore);
+        scoreWriter.submit(aurora, newHighScore);
 
         expectThat(leaderboard.getHighscore(aurora))
             .is(Highscore.from(newHighScore))
@@ -97,7 +97,7 @@ describe('ScoreWriterService', () => {
         return {
             hasHighScore(score: ScoreBuilder | Score)  {
                 const builtScore = ('build' in score) ? score.build() : score;
-                scoreWriter.score(id, builtScore);
+                scoreWriter.submit(id, builtScore);
             }
         }
     }
