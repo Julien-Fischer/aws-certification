@@ -23,9 +23,15 @@ describe('Score', () => {
         const a = Score.of(60, 80);
         const b = Score.of(60, 80);
 
+        expect(a.isEqualTo(b)).toBe(true);
+    });
+
+    it('equal scores cannot beat each other', () => {
+        const a = Score.of(60, 80);
+        const b = Score.of(60, 80);
+
         expect(a.beats(b)).toBe(false);
         expect(b.beats(a)).toBe(false);
-        expect(a.isEqualTo(b)).toBe(true);
     });
 
     it('two scores are not equal when their components differ', () => {
