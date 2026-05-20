@@ -15,6 +15,7 @@ import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scor
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Confetti} from "../../animations/confetti";
+import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 
 @Component({
   selector: 'app-flash-card',
@@ -41,7 +42,8 @@ export class FlashCardComponent implements OnInit {
       private router: Router,
       private flashCardService: SearchService,
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
-      @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider
+      @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
+      @Inject(gamificationInjectionToken) private gamification: Gamification
   ) {}
 
   ngOnInit(): void {
@@ -142,6 +144,12 @@ export class FlashCardComponent implements OnInit {
   private async notifyScore(score: Score) {
     const previousHighscore = this.highscore;
     this.highscore = await this.saveHighscore.submit(this.serviceId(), score);
+    if (this.gamification.isEnabled()) {
+      this.gamify(previousHighscore);
+    }
+  }
+
+  private gamify(previousHighscore: Highscore) {
     if (this.highscore.beats(previousHighscore)) {
       this.playAnimation();
     }
