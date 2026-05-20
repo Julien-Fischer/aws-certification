@@ -10,7 +10,7 @@ import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.com
 import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
-import {BehaviorSubject, combineLatest, map, Observable, take} from "rxjs";
+import {BehaviorSubject, combineLatest, filter, map, Observable, take} from "rxjs";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 
 type MasteryFilter = 'all' | 'mastered' | 'hide-mastered';
@@ -76,7 +76,12 @@ export class DashboardComponent implements OnInit {
         })).filter(category => category.services.length > 0);
       })
     );
+
+    if (isMobile()) {
+      this.collapseAllCategories();
+    }
   }
+
 
   navigateToService(serviceId: string): void {
     this.router.navigate(['/service', serviceId]);
@@ -120,4 +125,19 @@ export class DashboardComponent implements OnInit {
   isAnyCollapsed(): boolean {
     return this.collapsedCategories.size > 0;
   }
+
+  private collapseAllCategories() {
+    this.categories.pipe(
+      filter(categories => categories.length > 0),
+      take(1)
+    ).subscribe(categories => {
+      categories.forEach(cat => this.collapsedCategories.add(cat.name));
+    });
+  }
+
+}
+
+
+function isMobile() {
+  return window.matchMedia('(max-width: 768px)').matches;
 }
