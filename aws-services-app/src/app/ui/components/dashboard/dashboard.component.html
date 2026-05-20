@@ -1,11 +1,5 @@
 <div class="container mt-4">
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-    <button class="btn btn-outline-secondary d-flex align-items-center gap-2" (click)="toggleAllCategories()"
-            [title]="isAnyCollapsed() ? 'Expand All' : 'Collapse All'">
-      <i class="fas" [class.fa-compress-alt]="!isAnyCollapsed()" [class.fa-expand-alt]="isAnyCollapsed()"></i>
-      <span>{{ isAnyCollapsed() ? 'All' : 'All' }}</span>
-    </button>
-
     <div class="btn-group" role="group" aria-label="Mastery filter">
       <button type="button" class="btn"
               [class.btn-primary]="(masteryFilter$ | async) === 'all'"
@@ -17,15 +11,24 @@
               [class.btn-primary]="(masteryFilter$ | async) === 'mastered'"
               [class.btn-outline-primary]="(masteryFilter$ | async) !== 'mastered'"
               (click)="setMasteryFilter('mastered')">
-          Progress
+          Mastered
       </button>
       <button type="button" class="btn"
               [class.btn-primary]="(masteryFilter$ | async) === 'hide-mastered'"
               [class.btn-outline-primary]="(masteryFilter$ | async) !== 'hide-mastered'"
               (click)="setMasteryFilter('hide-mastered')">
-          Mastered
+          In Progress
       </button>
     </div>
+
+    <button class="btn btn-outline-secondary d-flex align-items-center gap-2" (click)="toggleAllCategories()"
+            [title]="isAnyCollapsed() ? 'Expand All' : 'Collapse All'">
+      <i class="fas" [class.fa-compress-alt]="!isAnyCollapsed()" [class.fa-expand-alt]="isAnyCollapsed()"></i>
+      <span>
+        <span class="d-none d-md-inline">{{ isAnyCollapsed() ? 'Expand ' : 'Collapse ' }}</span>
+        <span>All</span>
+      </span>
+    </button>
   </div>
 
   @for (category of (categories | async); track category.name) {
