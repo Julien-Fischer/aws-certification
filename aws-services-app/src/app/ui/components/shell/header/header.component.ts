@@ -109,6 +109,7 @@ export class HeaderComponent {
     if (this.searchInput) {
       this.searchInput.nativeElement.blur();
       this.isSearchFocused.set(false);
+      this.searchTerm.set('');
       this.selectedIndex.set(-1);
     }
   }

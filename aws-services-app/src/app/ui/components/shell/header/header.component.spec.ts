@@ -74,9 +74,10 @@ describe('HeaderComponent', () => {
     expect(selectSpy).toHaveBeenCalled();
   });
 
-  it('should blur search input and hide autocomplete when Escape key is pressed', () => {
+  it('should blur search input, hide autocomplete and clear search term when Escape key is pressed', () => {
     const blurSpy = vi.spyOn(component['searchInput'].nativeElement, 'blur');
     component.isSearchFocused.set(true);
+    component.searchTerm.set('test');
 
     const event = new KeyboardEvent('keydown', {
       key: 'Escape',
@@ -86,5 +87,6 @@ describe('HeaderComponent', () => {
 
     expect(blurSpy).toHaveBeenCalled();
     expect(component.isSearchFocused()).toBe(false);
+    expect(component.searchTerm()).toBe('');
   });
 });
