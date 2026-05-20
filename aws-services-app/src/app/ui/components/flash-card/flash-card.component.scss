@@ -185,8 +185,8 @@
     font-weight: 900;
     color: #ffff00;
     text-shadow:
-        4px 4px 0px #ff0000,
-        -4px -4px 0px #0000ff;
+        4px 4px 0 #ff0000,
+        -4px -4px 0 #0000ff;
     letter-spacing: 5px;
     animation: punchy-flash 0.4s ease-in-out infinite alternate, zoom-in-out 2s ease-in-out forwards;
     white-space: nowrap;
@@ -226,6 +226,6 @@
 
 @media (max-width: 768px) {
     .highscore-text {
-        font-size: 3rem;
+        font-size: 2rem;
     }
 }
