@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ActivatedRoute, Router } from '@angular/router';
@@ -20,11 +20,12 @@ import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.compo
 import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
 import {ScoreIndicatorComponent} from "../generic/score-indicator.component";
 import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";
+import {AppTextPopComponent} from "../../animations/text-pop.component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent],
+  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent, AppTextPopComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
@@ -40,7 +41,7 @@ export class FlashCardComponent implements OnInit {
   firstAttempt: boolean = true;
 
   loading: boolean = true;
-  showNewHighscoreAnimation: boolean = false;
+  @ViewChild(AppTextPopComponent) textPopComponent!: AppTextPopComponent;
 
   nextCard: FlashCardMetadata | undefined;
   prevCard: FlashCardMetadata | undefined;
@@ -188,7 +189,6 @@ export class FlashCardComponent implements OnInit {
   }
 
   private shouldPlayAnimationFor(previousHighscore: Highscore): boolean {
-    console.log('this.firstAttempt: ', this.firstAttempt)
     return this.highscore.beats(previousHighscore) && !this.firstAttempt;
   }
 
@@ -196,15 +196,8 @@ export class FlashCardComponent implements OnInit {
     if (this.highscore.isMaximum()) {
       Confetti.burst();
     } else {
-      this.animateNewHighscore();
+      this.textPopComponent.pop();
     }
-  }
-
-  private animateNewHighscore() {
-    this.showNewHighscoreAnimation = true;
-    setTimeout(() => {
-      this.showNewHighscoreAnimation = false;
-    }, 2000);
   }
 
   get previousCardName(): string {
