@@ -12,7 +12,7 @@
 
         <div class="options-section mb-4">
             @if (currentQuestion && 'options' in currentQuestion && Array.isArray(currentQuestion.options)) {
-                @for (option of currentQuestion.options; track option) {
+                @for (option of currentQuestion.options; track option.value) {
                     <div (click)="selectOption(option)"
                          [class.selected]="selectedOption === option"
                          [class.correct]="showFeedback && matchesAnswer(option)"

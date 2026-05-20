@@ -62,7 +62,7 @@
 
       <div class="col-12 cards-container" [@collapseExpand]="isCollapsed(category.name) ? 'collapsed' : 'expanded'">
         <div class="row">
-          @for (service of category.services; track service) {
+          @for (service of category.services; track service.id) {
             <app-aws-service-card
               [service]="service"
               [highscore]="getHighscore(service)"

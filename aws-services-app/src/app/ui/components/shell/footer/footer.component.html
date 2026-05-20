@@ -22,7 +22,7 @@
 
             <div class="text-center md:text-right">
                 <p class="text-sm text-gray-600 dark:text-slate-400">
-                    @for (author of authors; track author) {
+                    @for (author of authors; track author.name) {
                         <a
                             [href]="author.url"
                             class="underline hover:no-underline font-semibold text-blue-600 dark:text-sky-400"
