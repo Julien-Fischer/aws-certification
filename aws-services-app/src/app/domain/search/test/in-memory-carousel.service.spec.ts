@@ -83,6 +83,32 @@ describe('InMemoryCarouselService', () => {
       .subscribe(next => expectCard(next).toBe(onlyCard));
   })
 
+  it('cycles forward', async () => {
+    havingCards(first, last);
+
+    carousel.next(id(last))
+      .subscribe(next => expectCard(next).toBe(first));
+
+    carousel.next(id(first))
+      .subscribe(next => expectCard(next).toBe(last));
+
+    carousel.next(id(last))
+      .subscribe(next => expectCard(next).toBe(first));
+  })
+
+  it('cycles backward', async () => {
+    havingCards(first, last);
+
+    carousel.prev(id(first))
+      .subscribe(next => expectCard(next).toBe(last));
+
+    carousel.prev(id(last))
+      .subscribe(next => expectCard(next).toBe(first));
+
+    carousel.prev(id(first))
+      .subscribe(next => expectCard(next).toBe(last));
+  })
+
 
   function havingCards(...cards: FlashCardMetadata[]) {
     flashCardProvider.havingServices(...cards);
