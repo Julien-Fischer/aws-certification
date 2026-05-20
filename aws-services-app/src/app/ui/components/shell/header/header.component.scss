@@ -84,7 +84,6 @@ button {
   height: 20px;
   border-radius: 50%;
   transition: transform 0.2s ease;
-
 }
 
 @keyframes pulse-glow {
@@ -105,6 +104,7 @@ button {
   }
 }
 
+
 .waffle-icon {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -123,6 +123,20 @@ button {
 
 .mobile-menu-button {
   display: none;
+
+  .waffle-btn {
+    &:hover {
+      background: none;
+      transform: none;
+    }
+  }
+}
+
+.close-btn {
+  &:hover {
+    background: none;
+    transform: none;
+  }
 }
 
 @media (max-width: 430px) {
