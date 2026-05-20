@@ -9,16 +9,16 @@
             All
         </button>
         <button type="button" class="btn"
+                [class.btn-primary]="(masteryFilter$ | async) === 'hide-mastered'"
+                [class.btn-outline-primary]="(masteryFilter$ | async) !== 'hide-mastered'"
+                (click)="setMasteryFilter('hide-mastered')">
+          In Progress
+        </button>
+        <button type="button" class="btn"
                 [class.btn-primary]="(masteryFilter$ | async) === 'mastered'"
                 [class.btn-outline-primary]="(masteryFilter$ | async) !== 'mastered'"
                 (click)="setMasteryFilter('mastered')">
             Mastered
-        </button>
-        <button type="button" class="btn"
-                [class.btn-primary]="(masteryFilter$ | async) === 'hide-mastered'"
-                [class.btn-outline-primary]="(masteryFilter$ | async) !== 'hide-mastered'"
-                (click)="setMasteryFilter('hide-mastered')">
-            In Progress
         </button>
       </div>
     } @else {
