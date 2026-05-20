@@ -16,12 +16,12 @@ import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Confetti} from "../../animations/confetti";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
-import {AppBackButtonComponent} from "../generic/back-component";
+import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackButtonComponent],
+  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })

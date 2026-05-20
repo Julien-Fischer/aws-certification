@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-back-button',
+  selector: 'app-back-to-home-button',
   standalone: true,
   template: `
     <button class="btn main-button mb-4" (click)="goBack()">
@@ -12,7 +12,7 @@ import {Router} from "@angular/router";
   `,
   styles: [``],
 })
-export class AppBackButtonComponent {
+export class AppBackToHomeButtonComponent {
 
   constructor(private router: Router) {
   }
