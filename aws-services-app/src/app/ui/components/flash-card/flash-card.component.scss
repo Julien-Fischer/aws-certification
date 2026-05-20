@@ -91,7 +91,7 @@
         padding-right: 10px;
     }
 
-    .d-flex:not(.highscore-indicators):not(.highscore-indicator):not(.highscore-section *) {
+    .d-flex:not(.highscore-indicators):not(.highscore-indicator):not(.highscore-section *):not(.navigation-buttons button) {
         flex-direction: column;
         text-align: center;
     }
