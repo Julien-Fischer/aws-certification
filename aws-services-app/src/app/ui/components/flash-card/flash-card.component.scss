@@ -91,7 +91,7 @@
         padding-right: 10px;
     }
 
-    .d-flex {
+    .d-flex:not(.highscore-indicators):not(.highscore-indicator):not(.highscore-section *) {
         flex-direction: column;
         text-align: center;
     }
