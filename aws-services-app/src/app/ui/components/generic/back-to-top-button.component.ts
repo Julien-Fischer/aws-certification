@@ -31,11 +31,6 @@ import {Component, HostListener} from "@angular/core";
       justify-content: center;
       cursor: pointer;
       z-index: 1000;
-      transition: 0.2s ease-in-out;
-
-      &:hover {
-        color: var(--aws-orange);
-      }
 
       i {
         font-size: 1.25rem;
