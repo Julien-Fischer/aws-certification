@@ -1,13 +1,15 @@
-import {Component} from "@angular/core";
+import {Component, HostListener} from "@angular/core";
 import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-back-to-top-button',
   standalone: true,
   template: `
-    <button class="back-to-top" (click)="scrollToTop()" aria-label="Back to top">
-      <i class="fas fa-arrow-up"></i>
-    </button>
+    @if (showButton) {
+      <button class="back-to-top" (click)="scrollToTop()" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    }
   `,
   styles: [`
     .back-to-top {
@@ -51,7 +53,14 @@ import {Router} from "@angular/router";
 })
 export class AppBackToTopButtonComponent {
 
+  showButton = false;
+
   constructor(private router: Router) {
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.showButton = window.scrollY > 200;
   }
 
   scrollToTop() {
