@@ -132,12 +132,12 @@
 }
 
 @if (!service && !loading) {
-  <div class="container mt-4">
+  <div class="container mt-12">
     <div class="row">
-      <div class="col-12 text-center">
-        <h2>Service Not Found</h2>
-        <p>The requested AWS service could not be found.</p>
-        <app-back-button />
+      <div class="col-12 text-center flex flex-col gap-3">
+        <h2 class="text-6xl">404</h2>
+        <p class="mt-2 mb-8">The requested AWS service could not be found.</p>
+        <app-back-button class="mb-4" />
       </div>
     </div>
   </div>
