@@ -10,7 +10,9 @@ import { AwsServiceCardComponent } from './aws-service-card/aws-service-card.com
 import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
-import {Observable} from "rxjs";
+import {BehaviorSubject, combineLatest, map, Observable, take} from "rxjs";
+
+type MasteryFilter = 'all' | 'mastered' | 'hide-mastered';
 
 @Component({
   selector: 'app-dashboard',
@@ -42,6 +44,7 @@ import {Observable} from "rxjs";
 export class DashboardComponent implements OnInit {
   categories!: Observable<FlashCardCategory[]>;
   collapsedCategories: Set<string> = new Set<string>();
+  masteryFilter$ = new BehaviorSubject<MasteryFilter>('all');
 
   constructor(
     private flashCardService: SearchService,
@@ -50,7 +53,23 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.categories = this.flashCardService.getFilteredCategories();
+    this.categories = combineLatest([
+      this.flashCardService.getFilteredCategories(),
+      this.masteryFilter$
+    ]).pipe(
+      map(([categories, filter]) => {
+        if (filter === 'all') return categories;
+
+        return categories.map(category => ({
+          ...category,
+          services: category.services.filter(service => {
+            const highscore = this.getHighscore(service);
+            const isMastered = highscore.isMaximum();
+            return filter === 'mastered' ? isMastered : !isMastered;
+          })
+        })).filter(category => category.services.length > 0);
+      })
+    );
   }
 
   navigateToService(serviceId: string): void {
@@ -71,5 +90,28 @@ export class DashboardComponent implements OnInit {
 
   isCollapsed(categoryName: string): boolean {
     return this.collapsedCategories.has(categoryName);
+  }
+
+  toggleAllCategories(): void {
+    this.categories.pipe(take(1)).subscribe(categories => {
+      const anyCollapsed = categories.some(cat => this.isCollapsed(cat.name));
+      if (anyCollapsed) {
+        this.collapsedCategories.clear();
+      } else {
+        categories.forEach(cat => this.collapsedCategories.add(cat.name));
+      }
+    });
+  }
+
+  setMasteryFilter(filter: MasteryFilter): void {
+    this.masteryFilter$.next(filter);
+  }
+
+  isAllExpanded(): boolean {
+    return this.collapsedCategories.size === 0;
+  }
+
+  isAnyCollapsed(): boolean {
+    return this.collapsedCategories.size > 0;
   }
 }

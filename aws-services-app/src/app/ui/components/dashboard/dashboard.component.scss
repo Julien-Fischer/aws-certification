@@ -25,9 +25,53 @@
   border-color: var(--text-secondary);
 
   &:hover {
-    background-color: var(--aws-orange);
-    border-color: var(--aws-orange);
+    background-color: var(--aws-light-blue);
+    border-color: var(--aws-light-blue);
     color: white;
+  }
+}
+
+.btn-primary {
+  background-color: var(--aws-light-blue);
+  border-color: var(--aws-light-blue);
+  color: white;
+
+  //&:hover {
+  //  background-color: darken(#ff9900, 5%);
+  //  border-color: darken(#ff9900, 5%);
+  //}
+}
+
+.btn-outline-primary {
+  color: var(--aws-light-blue);
+  border-color: var(--aws-light-blue);
+
+  &:hover {
+    background-color: var(--aws-light-blue);
+    color: white;
+  }
+}
+
+.dark {
+  .btn-outline-primary {
+    color: var(--aws-light-blue);
+    border-color: var(--aws-light-blue);
+
+    &:hover {
+      background-color: var(--aws-light-blue);
+      color: white;
+    }
+  }
+
+  .btn-primary {
+    background-color: var(--aws-light-blue);
+    border-color: var(--aws-light-blue);
+    color: #232f3e; // Dark blue for contrast on light-blue in dark mode if needed, or white
+
+    &:hover {
+      background-color: lighten(#ff9900, 5%);
+      border-color: lighten(#ff9900, 5%);
+    }
   }
 }
 
