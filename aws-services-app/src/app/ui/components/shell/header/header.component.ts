@@ -11,7 +11,7 @@ import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
 import {ScoreProviderService} from "../../../../domain/scoring/score-provider.service";
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import {FlashCardId} from "../../../../domain/shared/flash-card-id";
-import {CompletionBadgeComponent} from "../../flash-card/completion-badge";
+import {CompletionBadgeComponent} from "../../generic/completion-badge";
 
 const MAX_RESULTS = 10;
 
