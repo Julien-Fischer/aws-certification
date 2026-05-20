@@ -178,30 +178,32 @@ export class FlashCardComponent implements OnInit {
   private async notifyScore(score: Score) {
     const previousHighscore = this.highscore;
     this.highscore = await this.saveHighscore.submit(this.serviceId(), score);
-    if (this.gamification.isEnabled()) {
-      this.gamify(previousHighscore);
+    if (this.shouldRewardUser(previousHighscore)) {
+      this.rewardUser();
     }
   }
 
-  private gamify(previousHighscore: Highscore) {
-    if (this.shouldPlayAnimationFor(previousHighscore)) {
-      this.playAnimation();
-    }
+  private shouldRewardUser(previousHighscore: Highscore) {
+    return this.gamification.isEnabled() && this.isRewardDeserved(previousHighscore);
   }
 
-  private shouldPlayAnimationFor(previousHighscore: Highscore): boolean {
+  private isRewardDeserved(previousHighscore: Highscore): boolean {
     return this.highscore.hasBetterAccuracyThan(previousHighscore) && !this.firstAttempt;
   }
 
-  private playAnimation() {
+  private rewardUser() {
     if (this.highscore.isMaximum()) {
       Confetti.burst();
     } else {
       if (!this.newHighscoreUnlocked) {
-        this.textPopComponent.pop();
-        this.newHighscoreUnlocked = true;
+        this.unlockNewHighscore();
       }
     }
+  }
+
+  private unlockNewHighscore() {
+    this.textPopComponent.pop();
+    this.newHighscoreUnlocked = true;
   }
 
   get previousCardName(): string {
