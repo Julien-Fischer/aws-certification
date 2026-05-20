@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
@@ -16,11 +16,12 @@ import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Confetti} from "../../animations/confetti";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
+import {AppBackButtonComponent} from "../generic/back-component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent],
+  imports: [CommonModule, QuizComponent, AppBackButtonComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
@@ -39,7 +40,6 @@ export class FlashCardComponent implements OnInit {
 
   constructor(
       private route: ActivatedRoute,
-      private router: Router,
       private flashCardService: SearchService,
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
@@ -170,7 +170,4 @@ export class FlashCardComponent implements OnInit {
     }, 2000);
   }
 
-  goBack(): void {
-    void this.router.navigate(['/']);
-  }
 }
