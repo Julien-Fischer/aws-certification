@@ -1,22 +1,28 @@
 <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 pe-2.5 ps-2.5">
     <div class="card aws-card h-100" (click)="onCardClick()">
         @if (gamification.isEnabled() && isComplete()) {
+          <div class="absolute top-1 right-1">
             <app-completion-badge />
+          </div>
         }
         <div class="card-body">
-            <div class="service-icon">
+            <div class="service-icon flex flex-col grow">
                 <i [class]="service.icon"></i>
-                <h5 class="service-title mt-4">{{ service.name }}</h5>
-                <p class="service-description">{{ service.description }}</p>
+                <div class="details grow">
+                    <h5 class="service-title mt-4">{{ service.name }}</h5>
+                    <p class="service-description">{{ service.description }}</p>
+                </div>
+                <div class="progress-indicators">
                     @if (gamification.isEnabled()) {
                         @if (isComplete()) {
-                            <div class="success-indicator mt-3 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
+                            <div class="success-indicator -mt-16 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
                                 <span class="text-sm">Mastered!</span>
                             </div>
                         } @else {
                             <app-highscore-bars [highscore]="highscore"></app-highscore-bars>
                         }
                     }
+                </div>
             </div>
         </div>
     </div>
