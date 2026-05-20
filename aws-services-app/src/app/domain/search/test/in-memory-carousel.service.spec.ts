@@ -65,6 +65,13 @@ describe('InMemoryCarouselService', () => {
       .subscribe(next => expectCard(next).toBe(first));
   })
 
+  it('returns last card when current is first', async () => {
+    havingCards(first, last);
+
+    carousel.prev(id(first))
+      .subscribe(next => expectCard(next).toBe(last));
+  })
+
 
   function havingCards(...cards: FlashCardMetadata[]) {
     flashCardProvider.havingServices(...cards);
