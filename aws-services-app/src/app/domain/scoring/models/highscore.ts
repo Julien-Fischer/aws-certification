@@ -1,5 +1,6 @@
 import Score from "./score";
 import Percentage from "./percentage";
+import {Accuracy, Progress} from "./types";
 
 export default class Highscore extends Score {
     readonly #brand = Symbol();
@@ -7,8 +8,8 @@ export default class Highscore extends Score {
     public static NONE = new Highscore(Percentage.ZERO, Percentage.ZERO, new Date('1970-01-01'));
 
     constructor(
-        progress: Percentage,
-        accuracy: Percentage,
+        progress: Progress,
+        accuracy: Accuracy,
         public readonly date: Date = new Date()
     ) {
         super(progress, accuracy);

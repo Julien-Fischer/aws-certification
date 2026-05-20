@@ -1,11 +1,12 @@
 import Percentage from "./percentage";
+import {Accuracy, Progress} from "./types";
 
 export default class Score {
     readonly #brand = Symbol();
 
     constructor(
-        public readonly progress: Percentage,
-        public readonly accuracy: Percentage
+        public readonly progress: Progress,
+        public readonly accuracy: Accuracy
     ) { }
 
     beats(other: Score): boolean {
