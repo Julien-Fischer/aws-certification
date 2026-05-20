@@ -9,6 +9,10 @@ export default class Score {
         public readonly accuracy: Accuracy
     ) { }
 
+    isMaximum(): boolean {
+        return this.progress.isMaximum() && this.accuracy.isMaximum();
+    }
+
     beats(other: Score): boolean {
         if (!this.progress.isEqualTo(other.progress)) {
             return this.progress.isGreaterThan(other.progress);

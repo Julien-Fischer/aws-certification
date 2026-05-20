@@ -44,4 +44,14 @@ describe('Score', () => {
         expect(b.isEqualTo(c)).toBe(false);
     });
 
+    it('is maximum', () => {
+      const max = Score.of(100, 100);
+      const maxProgress = Score.of(100, 99);
+      const maxAccuracy = Score.of(99, 100);
+
+      expect(max.isMaximum()).toBe(true);
+      expect(maxProgress.isMaximum()).toBe(false);
+      expect(maxAccuracy.isMaximum()).toBe(false);
+    })
+
 });
