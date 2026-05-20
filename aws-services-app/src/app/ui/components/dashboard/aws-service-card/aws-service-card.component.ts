@@ -4,11 +4,12 @@ import { FlashCardMetadata } from '../../../../domain/search/models/metadata';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {HighscoreBarsComponent} from "./highscore-bars/highscore-bars.component";
 import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
+import {CompletionBadgeComponent} from "../../flash-card/completion-badge";
 
 @Component({
   selector: 'app-aws-service-card',
   standalone: true,
-  imports: [CommonModule, HighscoreBarsComponent],
+  imports: [CommonModule, HighscoreBarsComponent, CompletionBadgeComponent],
   templateUrl: './aws-service-card.component.html',
   styleUrls: ['./aws-service-card.component.scss']
 })
