@@ -72,6 +72,17 @@ describe('InMemoryCarouselService', () => {
       .subscribe(next => expectCard(next).toBe(last));
   })
 
+  it('returns same card when only one card', async () => {
+    const onlyCard = first;
+    havingCards(onlyCard);
+
+    carousel.prev(id(onlyCard))
+      .subscribe(next => expectCard(next).toBe(onlyCard));
+
+    carousel.next(id(onlyCard))
+      .subscribe(next => expectCard(next).toBe(onlyCard));
+  })
+
 
   function havingCards(...cards: FlashCardMetadata[]) {
     flashCardProvider.havingServices(...cards);
