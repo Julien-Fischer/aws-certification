@@ -68,11 +68,7 @@ export class DashboardComponent implements OnInit {
 
         return categories.map(category => ({
           ...category,
-          services: category.services.filter(service => {
-            const highscore = this.getHighscore(service);
-            const isMastered = highscore.isMaximum();
-            return filter === 'mastered' ? isMastered : !isMastered;
-          })
+          services: this.filterFlashCards(category, filter)
         })).filter(category => category.services.length > 0);
       })
     );
@@ -82,6 +78,14 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+
+  private filterFlashCards(category: FlashCardCategory, filter: MasteryFilter): FlashCardMetadata[] {
+    return category.services.filter(service => {
+      const highscore = this.getHighscore(service);
+      const isMastered = highscore.isMaximum();
+      return filter === 'mastered' ? isMastered : !isMastered;
+    });
+  }
 
   navigateToService(serviceId: string): void {
     this.router.navigate(['/service', serviceId]);
