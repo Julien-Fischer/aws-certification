@@ -53,28 +53,27 @@
                 </div>
 
                 @if (highscore !== highscoreNONE) {
-                  <div class="highscore-indicators d-flex gap-4">
-                    <app-score-indicator
-                      label="progress"
-                      icon="tasks"
-                      borderColor="#4b9cd3"
-                      iconClass="text-primary bg-primary-light"
-                      [percentage]="highscore.progress"
-                    />
-                    <app-score-indicator
-                      label="accuracy"
-                      icon="bullseye"
-                      borderColor="#28a745"
-                      iconClass="text-success bg-success-light"
-                      [percentage]="highscore.accuracy"
-                    />
-                    <app-score-indicator
-                      label="date"
-                      icon="calendar-alt"
-                      borderColor="#28a745"
-                      iconClass="text-info bg-info-light"
-                      value="{{ highscore.date | date:'yyyy-MM-dd' }}"
-                    />
+                  <div class="highscore-details">
+                    <div class="mt-4 mb-2">
+                      <i class="fas fa-calendar-alt text-info bg-info-light me-3"></i>
+                      <span class="value">{{ highscore.date | date:'yyyy-MM-dd' }}</span>
+                    </div>
+                    <div class="highscore-indicators d-flex gap-4">
+                      <app-score-indicator
+                        label="progress"
+                        icon="tasks"
+                        borderColor="#4b9cd3"
+                        iconClass="text-primary bg-primary-light"
+                        [percentage]="highscore.progress"
+                      />
+                      <app-score-indicator
+                        label="accuracy"
+                        icon="bullseye"
+                        borderColor="#28a745"
+                        iconClass="text-success bg-success-light"
+                        [percentage]="highscore.accuracy"
+                      />
+                    </div>
                   </div>
                 } @else {
                   <p class="text-secondary-theme font-italic">No highscore yet. Take a quiz to set one!</p>

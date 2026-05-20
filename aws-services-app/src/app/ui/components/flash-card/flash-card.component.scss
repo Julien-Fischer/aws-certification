@@ -106,7 +106,8 @@
     border-radius: 12px;
 }
 
-.highscore-indicators {
+::ng-deep .highscore-details .value {
+  font-family: 'Courier New', Courier, monospace;
 }
 
 .highscore-animation-overlay {

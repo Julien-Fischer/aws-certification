@@ -20,17 +20,14 @@ import Percentage from "../../../domain/scoring/models/percentage";
         <div class="indicator-label text-secondary-theme small uppercase fw-bold">
           {{ label }}
         </div>
-        <div class="indicator-value h4 mb-0 text-primary-theme">
-          {{ value ?? percentage.toFixed(0) }}
+        <div class="indicator-value value h4 mb-0 text-primary-theme">
+          {{ percentage.toFixed(0) }}
         </div>
       </div>
     </div>
   `,
   styles: [
     `
-      :host {
-        flex-grow: 1;
-      }
       .highscore-indicator {
         background-color: var(--card-bg);
         border: 1px solid rgba(0, 0, 0, 0.08);
@@ -97,6 +94,5 @@ export class ScoreIndicatorComponent {
   @Input() borderColor: string = '';
   @Input() iconClass: string = '';
   @Input() percentage: Percentage = Percentage.ZERO;
-  @Input() value?: string;
 
 }
