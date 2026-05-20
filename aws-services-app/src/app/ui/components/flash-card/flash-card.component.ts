@@ -10,7 +10,7 @@ import { Question } from '../../../domain/search/models/question';
 import { FlashCard } from '../../../domain/search/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import Highscore from '../../../domain/scoring/models/highscore';
-import { SaveHighscore, saveHighscoreInjectionToken } from '../../../domain/scoring/save-highscore';
+import { HighscoreEvaluator, saveHighscoreInjectionToken } from '../../../domain/scoring/highscore-evaluator';
 import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
@@ -38,7 +38,7 @@ export class FlashCardComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private flashCardService: SearchService,
-      @Inject(saveHighscoreInjectionToken) private saveHighscore: SaveHighscore,
+      @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider
   ) {}
 

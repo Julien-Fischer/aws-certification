@@ -7,7 +7,7 @@ import { provideHttpClient } from '@angular/common/http';
 import {FisherYatesShuffler, shufflerInjectionToken} from "./app/ui/services/shuffler";
 import {flashCardProviderInjectionToken} from "./app/domain/search/flash-card-provider";
 import {MarkdownFlashCardProvider} from "./app/infra/learning/markdown-flash-card-provider.service";
-import {SaveHighscore, saveHighscoreInjectionToken} from "./app/domain/scoring/save-highscore";
+import {HighscoreEvaluator, saveHighscoreInjectionToken} from "./app/domain/scoring/highscore-evaluator";
 import {scoreProviderInjectionToken} from "./app/domain/scoring/score-provider";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";
 import {storageInjectionToken} from "./app/domain/scoring/storage";

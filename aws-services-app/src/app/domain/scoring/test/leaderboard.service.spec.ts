@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
-import {saveHighscoreInjectionToken} from "../save-highscore";
+import {saveHighscoreInjectionToken} from "../highscore-evaluator";
 import {FlashCardId} from "../../shared/flash-card-id";
 import {aHighscore, aScore, ScoreBuilder} from "./utils/score-builder";
 import Highscore from "../models/highscore";

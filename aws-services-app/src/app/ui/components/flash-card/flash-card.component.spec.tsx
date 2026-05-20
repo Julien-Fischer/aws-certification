@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {FlashCardComponent} from "./flash-card.component";
 import {ActivatedRoute} from "@angular/router";
 import {SearchService} from "../../../domain/search/services/search.service";
-import {saveHighscoreInjectionToken} from "../../../domain/scoring/save-highscore";
+import {saveHighscoreInjectionToken} from "../../../domain/scoring/highscore-evaluator";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
 import {of} from "rxjs";
 import Highscore from "../../../domain/scoring/models/highscore";

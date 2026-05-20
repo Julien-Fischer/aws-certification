@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import Score from "./models/score";
-import {SaveHighscore} from "./save-highscore";
+import {HighscoreEvaluator} from "./highscore-evaluator";
 import {FlashCardId} from "../shared/flash-card-id";
 import Highscore from "./models/highscore";
 import {storageInjectionToken} from "./storage";
@@ -9,7 +9,7 @@ import type {Storage} from "./storage";
 @Injectable({
     providedIn: 'root',
 })
-export class SaveHighscoreService implements SaveHighscore {
+export class SaveHighscoreService implements HighscoreEvaluator {
 
     constructor(
         @Inject(storageInjectionToken) private storage: Storage<FlashCardId, Highscore>

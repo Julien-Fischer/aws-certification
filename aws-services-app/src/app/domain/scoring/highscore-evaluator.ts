@@ -6,7 +6,7 @@ import Highscore from "./models/highscore";
 
 export const saveHighscoreInjectionToken = new InjectionToken<Shuffler>('SaveHighscore');
 
-export interface SaveHighscore {
+export interface HighscoreEvaluator {
 
     submit(serviceId: FlashCardId, score: Score): Promise<Highscore>;
 
