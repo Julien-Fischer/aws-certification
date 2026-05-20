@@ -34,6 +34,7 @@ export class FlashCardComponent implements OnInit {
   readonly highscoreNONE = Highscore.NONE;
 
   loading: boolean = true;
+  showNewHighscoreAnimation: boolean = false;
 
   constructor(
       private route: ActivatedRoute,
@@ -150,8 +151,15 @@ export class FlashCardComponent implements OnInit {
     if (this.highscore.isMaximum()) {
       Confetti.burst();
     } else {
-      // playNewHighscoreAnimation();
+      this.animateNewHighscore();
     }
+  }
+
+  private animateNewHighscore() {
+    this.showNewHighscoreAnimation = true;
+    setTimeout(() => {
+      this.showNewHighscoreAnimation = false;
+    }, 2000);
   }
 
   goBack(): void {

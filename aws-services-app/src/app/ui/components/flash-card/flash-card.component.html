@@ -1,6 +1,12 @@
 @if (service) {
   <div class="container mt-4">
 
+    @if (showNewHighscoreAnimation) {
+      <div class="highscore-animation-overlay">
+        <div class="highscore-text">NEW HIGHSCORE!</div>
+      </div>
+    }
+
     <div class="row">
       <div class="col-12">
         <button class="btn main-button mb-4" (click)="goBack()">
