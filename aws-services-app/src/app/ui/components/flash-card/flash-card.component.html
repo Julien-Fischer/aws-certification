@@ -40,6 +40,7 @@
             </div>
 
             <div class="quizzes">
+              @if (gamification.isEnabled()) {
                 <div class="highscore-card my-5">
                   <div class="d-flex align-items-center mb-4">
                     <h4 class="mb-0 text-primary-theme fw-bold">
@@ -90,6 +91,7 @@
                     </div>
                   }
                 </div>
+              }
 
               @if (trueFalseQuestions.length > 0) {
                 <div class="mt-5">

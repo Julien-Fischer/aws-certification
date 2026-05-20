@@ -52,7 +52,7 @@ export class FlashCardComponent implements OnInit {
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
       @Inject(forgetHighscoreInjectionToken) private forgetHighscore: HighscoreEraser,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
-      @Inject(gamificationInjectionToken) private gamification: Gamification
+      @Inject(gamificationInjectionToken) protected gamification: Gamification
   ) {}
 
   ngOnInit(): void {
