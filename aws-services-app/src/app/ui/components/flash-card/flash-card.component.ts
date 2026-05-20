@@ -19,6 +19,7 @@ import {Gamification, gamificationInjectionToken} from "../../services/gamificat
 import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
 import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
 import {ScoreIndicatorComponent} from "../generic/score-indicator.component";
+import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";
 
 @Component({
   selector: 'app-flash-card',
@@ -49,6 +50,7 @@ export class FlashCardComponent implements OnInit {
       private flashCardService: SearchService,
       @Inject(carouselInjectionToken) private carousel: Carousel,
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
+      @Inject(forgetHighscoreInjectionToken) private forgetHighscore: HighscoreEraser,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
       @Inject(gamificationInjectionToken) private gamification: Gamification
   ) {}
@@ -204,6 +206,13 @@ export class FlashCardComponent implements OnInit {
   navigateToNext(): void {
     const nextId = this.nextCard?.id;
     this.router.navigate(['/service', nextId]);
+  }
+
+  resetHighscore(): void {
+    if (this.service) {
+      this.forgetHighscore.forget(new FlashCardId(this.service.id));
+      this.highscore = Highscore.NONE;
+    }
   }
 
 }

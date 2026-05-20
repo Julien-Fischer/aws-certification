@@ -1,24 +1,20 @@
 import {Inject, Injectable} from "@angular/core";
-import Highscore from "./models/highscore";
-import {ScoreProvider} from "./score-provider";
 import {FlashCardId} from "../shared/flash-card-id";
+import Highscore from "./models/highscore";
 import {Storage, storageInjectionToken} from "./storage";
+import {HighscoreEraser} from "./highscore-eraser";
 
 @Injectable({
     providedIn: 'root',
 })
-export class ScoreProviderService implements ScoreProvider {
+export class ForgetHighscoreService implements HighscoreEraser {
 
     constructor(
         @Inject(storageInjectionToken) private storage: Storage<FlashCardId, Highscore>
     ) { }
 
-    get(serviceId: FlashCardId): Highscore {
-        return this.storage.getItem(serviceId, Highscore.NONE);
-    }
-
-    clear(serviceId: FlashCardId): void {
+  forget(serviceId: FlashCardId): void {
       this.storage.clear(serviceId);
-    }
+  }
 
 }

@@ -6,7 +6,7 @@ import Percentage from "../../../domain/scoring/models/percentage";
   selector: 'app-score-indicator',
   standalone: true,
   template: `
-    <div class="highscore-indicator p-3 rounded-3 shadow-sm d-flex align-items-center position-relative">
+    <div class="highscore-indicator p-3 d-flex align-items-center position-relative">
       <div class="indicator-icon-wrapper position-relative me-4">
         <app-circle-progress [percentage]="percentage" [color]="borderColor"></app-circle-progress>
         <div class="
@@ -30,16 +30,11 @@ import Percentage from "../../../domain/scoring/models/percentage";
     `
       .highscore-indicator {
         background-color: var(--card-bg);
-        border: 1px solid rgba(0, 0, 0, 0.08);
         flex: 1;
         min-width: 180px;
         transition: all 0.2s ease-in-out;
         position: relative;
         overflow: visible;
-
-        :host-context(.dark) & {
-          border-color: rgba(255, 255, 255, 0.1);
-        }
 
         .indicator-icon-wrapper {
           width: 42px;

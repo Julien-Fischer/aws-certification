@@ -11,8 +11,12 @@ export default class LocalStorageAccessor implements Storage<FlashCardId, Highsc
 
     private static readonly PREFIX = "highscore:";
 
-    clear(): void {
-        localStorage.removeItem(LocalStorageAccessor.PREFIX);
+    clear(key?: FlashCardId): void {
+        if (key == null) {
+            localStorage.removeItem(LocalStorageAccessor.PREFIX);
+        } else {
+            localStorage.removeItem(this.keyFor(key));
+        }
     }
 
     getItem(key: FlashCardId, defaultValue: Highscore): Highscore {

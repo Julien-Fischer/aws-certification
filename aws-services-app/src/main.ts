@@ -20,6 +20,8 @@ import {Gamification, gamificationInjectionToken} from "./app/ui/services/gamifi
 import {GamificationService} from "./app/ui/services/gamification.service";
 import {carouselInjectionToken} from "./app/domain/search/carousel";
 import {InMemoryCarousel} from "./app/domain/search/services/in-memory-carousel.service";
+import {ForgetHighscoreService} from "./app/domain/scoring/forget-highscore.service";
+import {forgetHighscoreInjectionToken} from "./app/domain/scoring/highscore-eraser";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -42,6 +44,10 @@ bootstrapApplication(AppComponent, {
     {
       provide: saveHighscoreInjectionToken,
       useClass: SaveHighscoreService
+    },
+    {
+      provide: forgetHighscoreInjectionToken,
+      useClass: ForgetHighscoreService
     },
     {
       provide: scoreProviderInjectionToken,

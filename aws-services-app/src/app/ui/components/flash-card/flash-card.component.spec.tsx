@@ -9,6 +9,9 @@ import {of} from "rxjs";
 import Highscore from "../../../domain/scoring/models/highscore";
 import {carouselInjectionToken} from "../../../domain/search/carousel";
 import {gamificationInjectionToken} from "../../services/gamification";
+import {forgetHighscoreInjectionToken} from "../../../domain/scoring/highscore-eraser";
+import {FlashCardId} from "../../../domain/shared/flash-card-id";
+import {By} from "@angular/platform-browser";
 
 describe('FlashCardComponent', () => {
     let component: FlashCardComponent;
@@ -36,6 +39,9 @@ describe('FlashCardComponent', () => {
         const mockGamification = {
             isEnabled: vi.fn().mockReturnValue(false)
         };
+        const mockForgetHighscore = {
+            forget: vi.fn()
+        };
 
         await TestBed.configureTestingModule({
             imports: [FlashCardComponent],
@@ -52,7 +58,8 @@ describe('FlashCardComponent', () => {
                 { provide: scoreProviderInjectionToken, useValue: mockScoreProvider },
                 { provide: saveHighscoreInjectionToken, useValue: mockScoreWriter },
                 { provide: carouselInjectionToken, useValue: mockCarousel },
-                { provide: gamificationInjectionToken, useValue: mockGamification }
+                { provide: gamificationInjectionToken, useValue: mockGamification },
+                { provide: forgetHighscoreInjectionToken, useValue: mockForgetHighscore }
             ]
         })
             .compileComponents();
@@ -64,5 +71,25 @@ describe('FlashCardComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('should reset highscore when reset button is clicked', async () => {
+        // Arrange
+        const highscore = new Highscore(new Date(), 80, 90);
+        component.highscore = highscore;
+        fixture.detectChanges();
+
+        const forgetHighscore = TestBed.inject(forgetHighscoreInjectionToken);
+        const forgetSpy = vi.spyOn(forgetHighscore, 'forget');
+
+        // Act
+        const resetButton = fixture.debugElement.query(By.css('.reset-highscore-btn'));
+        expect(resetButton).toBeTruthy();
+        resetButton.nativeElement.click();
+        fixture.detectChanges();
+
+        // Assert
+        expect(component.highscore).toBe(Highscore.NONE);
+        expect(forgetSpy).toHaveBeenCalledWith(new FlashCardId('test'));
     });
 });

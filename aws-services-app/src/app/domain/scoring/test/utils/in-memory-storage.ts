@@ -6,8 +6,12 @@ export default class InMemoryStorage implements Storage<FlashCardId, Highscore> 
 
     private readonly map = new Map<FlashCardId, Highscore>();
 
-    clear(): void {
-        this.map.clear();
+    clear(key?: FlashCardId): void {
+        if (key == null) {
+            this.map.clear();
+        } else {
+            this.map.delete(key);
+        }
     }
 
     getItem(key: FlashCardId, defaultValue: Highscore): Highscore {

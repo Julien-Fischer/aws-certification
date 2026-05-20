@@ -8,4 +8,6 @@ export interface ScoreProvider {
 
     get(serviceId: FlashCardId): Highscore;
 
+    clear(serviceId: FlashCardId): void;
+
 }

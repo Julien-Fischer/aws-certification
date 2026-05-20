@@ -8,7 +8,7 @@ export interface Storage<K, V> {
 
     getItem(key: K, defaultValue: V): V;
 
-    clear(): void;
+    clear(key?: K): void;
 
 }
 
