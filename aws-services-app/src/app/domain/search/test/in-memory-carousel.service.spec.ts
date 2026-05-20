@@ -6,7 +6,7 @@ import {InMemoryCarousel} from "../services/in-memory-carousel.service";
 import {FlashCardMetadata} from "../models/metadata";
 import {FlashCardId} from "../../shared/flash-card-id";
 
-const aurora = {
+const first = {
   id: 'aurora',
   name: 'Aurora',
   description: 'Aurora description.',
@@ -14,15 +14,7 @@ const aurora = {
   category: 'Database',
   lastUpdated: '2026-01-31'
 };
-const cloudTrail = {
-  id: 'cloudtrail',
-  name: 'CloudTrail',
-  description: 'CloudTrail description.',
-  icon: 'cloud',
-  category: 'Cloud',
-  lastUpdated: '2026-01-30'
-};
-const ec2 = {
+const last = {
   id: 'ec2',
   name: 'Amazon EC2',
   description: 'Virtual servers',
@@ -53,18 +45,19 @@ describe('InMemoryCarouselService', () => {
   });
 
   it('returns next card', async () => {
-    havingCards(aurora, ec2);
+    havingCards(first, last);
 
-    carousel.next(id(aurora))
-      .subscribe(next => expectCard(next).toBe(ec2));
+    carousel.next(id(first))
+      .subscribe(next => expectCard(next).toBe(last));
   })
 
   it('returns previous card', async () => {
-    havingCards(aurora, ec2);
+    havingCards(first, last);
 
-    carousel.prev(id(ec2))
-      .subscribe(next => expectCard(next).toBe(aurora));
+    carousel.prev(id(last))
+      .subscribe(next => expectCard(next).toBe(first));
   })
+
 
 
   function havingCards(...cards: FlashCardMetadata[]) {
