@@ -18,6 +18,8 @@ import {ScoreProviderService} from "./app/domain/scoring/score-provider.service"
 import {LeaderBoardService} from "./app/domain/scoring/leaderboard.service";
 import {Gamification, gamificationInjectionToken} from "./app/ui/services/gamification";
 import {GamificationService} from "./app/ui/services/gamification.service";
+import {carouselInjectionToken} from "./app/domain/search/carousel";
+import {InMemoryCarousel} from "./app/domain/search/services/in-memory-carousel.service";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -52,6 +54,10 @@ bootstrapApplication(AppComponent, {
     {
       provide: gamificationInjectionToken,
       useClass: GamificationService
+    },
+    {
+      provide: carouselInjectionToken,
+      useClass: InMemoryCarousel
     }
   ]
 }).catch(err => console.error(err));

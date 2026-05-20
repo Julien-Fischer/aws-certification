@@ -2,27 +2,27 @@ import {FlashCardMetadata} from "../models/metadata";
 import {FlashCardProvider} from "../flash-card-provider";
 import {FlashCardId} from "../../shared/flash-card-id";
 import {FlashCard} from "../models/flash-card";
-import {Observable, of} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 export class MockFlashCardProvider implements FlashCardProvider {
 
-    private metadata: FlashCardMetadata[] = [];
-    private cards: Map<FlashCardId, FlashCard> = new Map();
+    private metadata$ = new BehaviorSubject<FlashCardMetadata[]>([]);
+    private cards: Map<string, FlashCard> = new Map();
 
     havingServices(...services: FlashCardMetadata[]) {
-        this.metadata.push(...services);
+        this.metadata$.next(services);
     }
 
     havingFlashCard(id: FlashCardId, card: FlashCard) {
-        this.cards.set(id, card);
+        this.cards.set(id.toString(), card);
     }
 
     getAll(): Observable<FlashCardMetadata[]> {
-        return of(this.metadata);
+        return this.metadata$.asObservable();
     }
 
     getCard(id: FlashCardId): Observable<FlashCard> {
-        return of(this.cards.get(id)!);
+        return new BehaviorSubject(this.cards.get(id.toString())!).asObservable();
     }
 
 }

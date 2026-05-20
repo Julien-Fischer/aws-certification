@@ -17,6 +17,7 @@ import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Confetti} from "../../animations/confetti";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
+import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
 
 @Component({
   selector: 'app-flash-card',
@@ -38,28 +39,28 @@ export class FlashCardComponent implements OnInit {
   loading: boolean = true;
   showNewHighscoreAnimation: boolean = false;
 
-  private allMetadata: FlashCardMetadata[] = [];
+  nextCard: FlashCardMetadata | undefined;
+  prevCard: FlashCardMetadata | undefined;
 
   constructor(
       private route: ActivatedRoute,
       private router: Router,
       private flashCardService: SearchService,
+      @Inject(carouselInjectionToken) private carousel: Carousel,
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
       @Inject(gamificationInjectionToken) private gamification: Gamification
   ) {}
 
   ngOnInit(): void {
-    this.flashCardService.getAllMetadata().subscribe(metadata => {
-      this.allMetadata = metadata;
-    });
-
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.loading = true;
         this.resetProgressTracker();
-        this.loadService(new FlashCardId(id));
+        let flashCardId = new FlashCardId(id);
+        this.loadService(flashCardId);
+        this.loadNeighboringCards(flashCardId);
       } else {
         this.loading = false;
       }
@@ -72,6 +73,15 @@ export class FlashCardComponent implements OnInit {
       throw new Error('ID parameter is missing');
     }
     return new FlashCardId(idParam);
+  }
+
+  private loadNeighboringCards(serviceId: FlashCardId): void {
+    this.carousel.next(serviceId).subscribe(nextCard => {
+      this.nextCard = nextCard;
+    })
+    this.carousel.prev(serviceId).subscribe(prevCard => {
+      this.prevCard = prevCard;
+    })
   }
 
   private loadService(serviceId: FlashCardId): void {
@@ -177,44 +187,22 @@ export class FlashCardComponent implements OnInit {
     }, 2000);
   }
 
-  get hasPrevious(): boolean {
-    return this.currentIndex > 0;
-  }
-
-  get hasNext(): boolean {
-    return this.currentIndex < this.allMetadata.length - 1;
-  }
-
   get previousCardName(): string {
-    if (this.hasPrevious) {
-      return this.allMetadata[this.currentIndex - 1].name;
-    }
-    return '';
+    return this.prevCard?.name || '';
   }
 
   get nextCardName(): string {
-    if (this.hasNext) {
-      return this.allMetadata[this.currentIndex + 1].name;
-    }
-    return '';
-  }
-
-  private get currentIndex(): number {
-    return this.allMetadata.findIndex(metadata => metadata.id === this.service?.id);
+    return this.nextCard?.name || '';
   }
 
   navigateToPrevious(): void {
-    if (this.hasPrevious) {
-      const prevId = this.allMetadata[this.currentIndex - 1].id;
-      this.router.navigate(['/service', prevId]);
-    }
+    const prevId = this.prevCard?.id;
+    this.router.navigate(['/service', prevId]);
   }
 
   navigateToNext(): void {
-    if (this.hasNext) {
-      const nextId = this.allMetadata[this.currentIndex + 1].id;
-      this.router.navigate(['/service', nextId]);
-    }
+    const nextId = this.nextCard?.id;
+    this.router.navigate(['/service', nextId]);
   }
 
 }

@@ -128,7 +128,6 @@
             <div class="navigation-buttons d-flex justify-content-between mt-5 pt-4 border-top">
               <button
                 class="btn btn-outline-secondary text-[var(--text-primary)] d-flex align-items-center gap-2"
-                [disabled]="!hasPrevious"
                 (click)="navigateToPrevious()"
               >
                 <i class="fas fa-arrow-left"></i>
@@ -136,7 +135,6 @@
               </button>
               <button
                 class="btn btn-outline-secondary text-[var(--text-primary)] d-flex align-items-center gap-2"
-                [disabled]="!hasNext"
                 (click)="navigateToNext()"
               >
                 {{ nextCardName }}

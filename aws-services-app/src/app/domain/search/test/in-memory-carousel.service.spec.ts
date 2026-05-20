@@ -44,11 +44,11 @@ describe('InMemoryCarouselService', () => {
     expect(carousel).toBeTruthy();
   });
 
-  it('returns next card', async () => {
-    havingCards(first, last);
-
+  it('returns next card even if data is loaded late', async () => {
     carousel.next(id(first))
       .subscribe(next => expectCard(next).toBe(last));
+
+    havingCards(first, last);
   })
 
   it('returns previous card', async () => {
