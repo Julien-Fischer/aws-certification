@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
@@ -38,8 +38,11 @@ export class FlashCardComponent implements OnInit {
   loading: boolean = true;
   showNewHighscoreAnimation: boolean = false;
 
+  private allMetadata: FlashCardMetadata[] = [];
+
   constructor(
       private route: ActivatedRoute,
+      private router: Router,
       private flashCardService: SearchService,
       @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
       @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
@@ -47,6 +50,10 @@ export class FlashCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.flashCardService.getAllMetadata().subscribe(metadata => {
+      this.allMetadata = metadata;
+    });
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -168,6 +175,46 @@ export class FlashCardComponent implements OnInit {
     setTimeout(() => {
       this.showNewHighscoreAnimation = false;
     }, 2000);
+  }
+
+  get hasPrevious(): boolean {
+    return this.currentIndex > 0;
+  }
+
+  get hasNext(): boolean {
+    return this.currentIndex < this.allMetadata.length - 1;
+  }
+
+  get previousCardName(): string {
+    if (this.hasPrevious) {
+      return this.allMetadata[this.currentIndex - 1].name;
+    }
+    return '';
+  }
+
+  get nextCardName(): string {
+    if (this.hasNext) {
+      return this.allMetadata[this.currentIndex + 1].name;
+    }
+    return '';
+  }
+
+  private get currentIndex(): number {
+    return this.allMetadata.findIndex(metadata => metadata.id === this.service?.id);
+  }
+
+  navigateToPrevious(): void {
+    if (this.hasPrevious) {
+      const prevId = this.allMetadata[this.currentIndex - 1].id;
+      this.router.navigate(['/service', prevId]);
+    }
+  }
+
+  navigateToNext(): void {
+    if (this.hasNext) {
+      const nextId = this.allMetadata[this.currentIndex + 1].id;
+      this.router.navigate(['/service', nextId]);
+    }
   }
 
 }

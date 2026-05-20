@@ -35,6 +35,10 @@ export class SearchService {
     ));
   }
 
+  getAllMetadata(): Observable<FlashCardMetadata[]> {
+    return this.allMetadata.asObservable();
+  }
+
   getFlashCard(id: FlashCardId): Observable<FlashCard> {
     return this.flashCardProvider.getCard(id)
   }

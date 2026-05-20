@@ -229,3 +229,19 @@
         font-size: 2rem;
     }
 }
+
+.navigation-buttons {
+    .btn {
+        min-width: 120px;
+        transition: all 0.2s ease-in-out;
+
+        &:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        i {
+            font-size: 0.8rem;
+        }
+    }
+}

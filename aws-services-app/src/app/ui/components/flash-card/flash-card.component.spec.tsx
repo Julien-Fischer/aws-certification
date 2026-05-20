@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {FlashCardComponent} from "./flash-card.component";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {SearchService} from "../../../domain/search/services/search.service";
 import {saveHighscoreInjectionToken} from "../../../domain/scoring/highscore-evaluator";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
@@ -15,6 +15,7 @@ describe('FlashCardComponent', () => {
     beforeEach(async () => {
         const mockFlashCardService = {
             getMetadata: vi.fn().mockReturnValue(of({ id: 'test', name: 'Test Service', description: 'Test', icon: 'test-icon' })),
+            getAllMetadata: vi.fn().mockReturnValue(of([{ id: 'test', name: 'Test Service', description: 'Test', icon: 'test-icon' }])),
             getFlashCard: vi.fn().mockReturnValue(of({ mainContent: 'Test Content', trueFalseQuestions: [], multipleChoiceQuestions: [] }))
         };
         const mockScoreProvider = {
@@ -23,6 +24,9 @@ describe('FlashCardComponent', () => {
         const mockScoreWriter = {
             score: vi.fn()
         };
+        const mockRouter = {
+            navigate: vi.fn()
+        };
 
         await TestBed.configureTestingModule({
             imports: [FlashCardComponent],
@@ -30,9 +34,10 @@ describe('FlashCardComponent', () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        snapshot: { paramMap: { get: () => 'test' } }
+                        paramMap: of({ get: () => 'test' })
                     }
                 },
+                { provide: Router, useValue: mockRouter },
                 { provide: SearchService, useValue: mockFlashCardService },
                 { provide: scoreProviderInjectionToken, useValue: mockScoreProvider },
                 { provide: saveHighscoreInjectionToken, useValue: mockScoreWriter }
