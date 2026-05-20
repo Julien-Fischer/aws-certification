@@ -8,17 +8,16 @@ import {SearchService} from "../../../../domain/search/services/search.service";
 import {SearchAutocompleteComponent} from "./search-autocomplete/search-autocomplete.component";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
-import {ScoreProviderService} from "../../../../domain/scoring/score-provider.service";
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import {FlashCardId} from "../../../../domain/shared/flash-card-id";
-import {CompletionBadgeComponent} from "../../generic/completion-badge";
+import {CompletionBadgeComponent} from "../../generic/completion-badge.component";
 
 const MAX_RESULTS = 10;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent],
+  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
