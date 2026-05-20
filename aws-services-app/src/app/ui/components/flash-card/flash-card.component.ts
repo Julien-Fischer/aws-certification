@@ -37,6 +37,7 @@ export class FlashCardComponent implements OnInit {
   progressTracker = this.trackProgress();
   highscore: Highscore = Highscore.NONE;
   readonly highscoreNONE = Highscore.NONE;
+  firstAttempt: boolean = true;
 
   loading: boolean = true;
   showNewHighscoreAnimation: boolean = false;
@@ -88,16 +89,27 @@ export class FlashCardComponent implements OnInit {
   }
 
   private loadService(serviceId: FlashCardId): void {
+    this.loadHighscore(serviceId);
+    this.loadContent(serviceId);
+  }
+
+  private loadHighscore(serviceId: FlashCardId): void {
     this.highscore = this.scoreProvider.get(serviceId);
+    if (this.highscore.beats(Highscore.NONE)) {
+      this.firstAttempt = false;
+    }
+  }
+
+  private loadContent(serviceId: FlashCardId): void {
     this.flashCardService.getMetadata(serviceId).subscribe(
-        service => {
-          this.service = service;
-          if (service) {
-            this.loadMarkdownContent(serviceId);
-          } else {
-            this.loading = false;
-          }
+      service => {
+        this.service = service;
+        if (service) {
+          this.loadMarkdownContent(serviceId);
+        } else {
+          this.loading = false;
         }
+      }
     );
   }
 
@@ -170,9 +182,14 @@ export class FlashCardComponent implements OnInit {
   }
 
   private gamify(previousHighscore: Highscore) {
-    if (this.highscore.beats(previousHighscore)) {
+    if (this.shouldPlayAnimationFor(previousHighscore)) {
       this.playAnimation();
     }
+  }
+
+  private shouldPlayAnimationFor(previousHighscore: Highscore): boolean {
+    console.log('this.firstAttempt: ', this.firstAttempt)
+    return this.highscore.beats(previousHighscore) && !this.firstAttempt;
   }
 
   private playAnimation() {
