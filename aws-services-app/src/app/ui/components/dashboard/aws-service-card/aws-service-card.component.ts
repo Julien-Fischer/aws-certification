@@ -24,11 +24,14 @@ export class AwsServiceCardComponent {
       @Inject(gamificationInjectionToken) gamification: Gamification
   ) {
     this.gamification = gamification;
-
   }
 
   onCardClick(): void {
     this.serviceClick.emit(this.service.id);
+  }
+
+  isComplete(): boolean {
+    return this.highscore.isMaximum();
   }
 
 }

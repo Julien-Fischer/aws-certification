@@ -1,10 +1,21 @@
 <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 pe-2.5 ps-2.5">
     <div class="card aws-card h-100" (click)="onCardClick()">
+        @if (gamification.isEnabled() && isComplete()) {
+            <div class="absolute top-3 right-3 text-green-500 animate-bounce-short">
+                <i class="fas fa-check"></i>
+            </div>
+        }
         <div class="card-body">
             <div class="service-icon">
                 <i [class]="service.icon"></i>
                 @if (gamification.isEnabled()) {
-                    <app-highscore-bars [highscore]="highscore"></app-highscore-bars>
+                    @if (isComplete()) {
+                        <div class="success-indicator mt-3 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
+                            <span class="text-sm">Mastered!</span>
+                        </div>
+                    } @else {
+                        <app-highscore-bars [highscore]="highscore"></app-highscore-bars>
+                    }
                 }
             </div>
             <h5 class="service-title mt-4">{{ service.name }}</h5>
