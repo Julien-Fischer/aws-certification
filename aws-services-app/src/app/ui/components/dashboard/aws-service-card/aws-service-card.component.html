@@ -6,18 +6,18 @@
         <div class="card-body">
             <div class="service-icon">
                 <i [class]="service.icon"></i>
-                @if (gamification.isEnabled()) {
-                    @if (isComplete()) {
-                        <div class="success-indicator mt-3 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
-                            <span class="text-sm">Mastered!</span>
-                        </div>
-                    } @else {
-                        <app-highscore-bars [highscore]="highscore"></app-highscore-bars>
+                <h5 class="service-title mt-4">{{ service.name }}</h5>
+                <p class="service-description">{{ service.description }}</p>
+                    @if (gamification.isEnabled()) {
+                        @if (isComplete()) {
+                            <div class="success-indicator mt-3 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
+                                <span class="text-sm">Mastered!</span>
+                            </div>
+                        } @else {
+                            <app-highscore-bars [highscore]="highscore"></app-highscore-bars>
+                        }
                     }
-                }
             </div>
-            <h5 class="service-title mt-4">{{ service.name }}</h5>
-            <p class="service-description">{{ service.description }}</p>
         </div>
     </div>
 </div>
