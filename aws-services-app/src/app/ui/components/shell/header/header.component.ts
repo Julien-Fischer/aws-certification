@@ -11,13 +11,14 @@ import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
 import {ScoreProviderService} from "../../../../domain/scoring/score-provider.service";
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import {FlashCardId} from "../../../../domain/shared/flash-card-id";
+import {CompletionBadgeComponent} from "../../flash-card/completion-badge";
 
 const MAX_RESULTS = 10;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchAutocompleteComponent],
+  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
