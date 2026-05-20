@@ -59,6 +59,13 @@ describe('InMemoryCarouselService', () => {
       .subscribe(next => expectCard(next).toBe(ec2));
   })
 
+  it('returns previous card', async () => {
+    havingCards(aurora, ec2);
+
+    carousel.prev(id(ec2))
+      .subscribe(next => expectCard(next).toBe(aurora));
+  })
+
 
   function havingCards(...cards: FlashCardMetadata[]) {
     flashCardProvider.havingServices(...cards);
