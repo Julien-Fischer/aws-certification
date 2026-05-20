@@ -11,6 +11,7 @@ import Highscore from "../../../domain/scoring/models/highscore";
 import {Leaderboard, leaderboardInjectionToken} from "../../../domain/scoring/leaderboard";
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {BehaviorSubject, combineLatest, map, Observable, take} from "rxjs";
+import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 
 type MasteryFilter = 'all' | 'mastered' | 'hide-mastered';
 
@@ -46,11 +47,16 @@ export class DashboardComponent implements OnInit {
   collapsedCategories: Set<string> = new Set<string>();
   masteryFilter$ = new BehaviorSubject<MasteryFilter>('all');
 
+  gamification: Gamification;
+
   constructor(
     private flashCardService: SearchService,
     @Inject(leaderboardInjectionToken) private leaderBoard: Leaderboard,
+    @Inject(gamificationInjectionToken) gamification: Gamification,
     private router: Router
-  ) {}
+  ) {
+    this.gamification = gamification;
+  }
 
   ngOnInit(): void {
     this.categories = combineLatest([

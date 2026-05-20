@@ -1,25 +1,29 @@
 <div class="container mt-4">
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-    <div class="btn-group" role="group" aria-label="Mastery filter">
-      <button type="button" class="btn"
-              [class.btn-primary]="(masteryFilter$ | async) === 'all'"
-              [class.btn-outline-primary]="(masteryFilter$ | async) !== 'all'"
-              (click)="setMasteryFilter('all')">
-          All
-      </button>
-      <button type="button" class="btn"
-              [class.btn-primary]="(masteryFilter$ | async) === 'mastered'"
-              [class.btn-outline-primary]="(masteryFilter$ | async) !== 'mastered'"
-              (click)="setMasteryFilter('mastered')">
-          Mastered
-      </button>
-      <button type="button" class="btn"
-              [class.btn-primary]="(masteryFilter$ | async) === 'hide-mastered'"
-              [class.btn-outline-primary]="(masteryFilter$ | async) !== 'hide-mastered'"
-              (click)="setMasteryFilter('hide-mastered')">
-          In Progress
-      </button>
-    </div>
+    @if (gamification.isEnabled()) {
+      <div class="btn-group" role="group" aria-label="Mastery filter">
+        <button type="button" class="btn"
+                [class.btn-primary]="(masteryFilter$ | async) === 'all'"
+                [class.btn-outline-primary]="(masteryFilter$ | async) !== 'all'"
+                (click)="setMasteryFilter('all')">
+            All
+        </button>
+        <button type="button" class="btn"
+                [class.btn-primary]="(masteryFilter$ | async) === 'mastered'"
+                [class.btn-outline-primary]="(masteryFilter$ | async) !== 'mastered'"
+                (click)="setMasteryFilter('mastered')">
+            Mastered
+        </button>
+        <button type="button" class="btn"
+                [class.btn-primary]="(masteryFilter$ | async) === 'hide-mastered'"
+                [class.btn-outline-primary]="(masteryFilter$ | async) !== 'hide-mastered'"
+                (click)="setMasteryFilter('hide-mastered')">
+            In Progress
+        </button>
+      </div>
+    } @else {
+      <span></span>
+    }
 
     <button class="btn btn-outline-secondary d-flex align-items-center gap-2" (click)="toggleAllCategories()"
             [title]="isAnyCollapsed() ? 'Expand All' : 'Collapse All'">
