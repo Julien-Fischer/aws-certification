@@ -18,11 +18,12 @@ import {Confetti} from "../../animations/confetti";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
 import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
+import {ScoreIndicatorComponent} from "../generic/score-indicator.component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent],
+  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
