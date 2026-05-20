@@ -14,6 +14,7 @@ import { HighscoreEvaluator, saveHighscoreInjectionToken } from '../../../domain
 import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
+import {Confetti} from "../../animations/confetti";
 
 @Component({
   selector: 'app-flash-card',
@@ -123,6 +124,14 @@ export class FlashCardComponent implements OnInit {
     await this.onProgressUpdate(this.progressTracker, correct);
   }
 
+  resetProgressTracker() {
+    this.progressTracker = this.trackProgress();
+  }
+
+  private trackProgress() {
+    return new ProgressTracker(() => this.allQuestions.length);
+  }
+
   private async onProgressUpdate(tracker: ProgressTracker, correct: boolean) {
     tracker.update(correct);
     const score = tracker.score;
@@ -130,15 +139,19 @@ export class FlashCardComponent implements OnInit {
   }
 
   private async notifyScore(score: Score) {
+    const previousHighscore = this.highscore;
     this.highscore = await this.saveHighscore.submit(this.serviceId(), score);
+    if (this.highscore.beats(previousHighscore)) {
+      this.playAnimation();
+    }
   }
 
-  resetProgressTracker() {
-    this.progressTracker = this.trackProgress();
-  }
-
-  private trackProgress() {
-    return new ProgressTracker(() => this.allQuestions.length);
+  private playAnimation() {
+    if (this.highscore.isMaximum()) {
+      Confetti.burst();
+    } else {
+      // playNewHighscoreAnimation();
+    }
   }
 
   goBack(): void {
