@@ -1,5 +1,6 @@
 import { provideZoneChangeDetection } from "@angular/core";
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { AppComponent } from './app/ui/app.component';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { routes } from './app/ui/app.routes';
@@ -21,6 +22,7 @@ import {GamificationService} from "./app/ui/services/gamification.service";
 bootstrapApplication(AppComponent, {
   providers: [
     provideZoneChangeDetection(),
+    provideAnimations(),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
     provideHttpClient(),
     {

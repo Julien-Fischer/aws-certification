@@ -2,6 +2,35 @@
   max-width: 1200px;
 }
 
+.cards-container {
+  overflow: hidden;
+}
+
+.category-header-container {
+  border-bottom: 3px solid var(--aws-orange);
+  margin-bottom: 2rem;
+  padding-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .category-header {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+}
+
+.btn-outline-secondary {
+  color: var(--text-secondary);
+  border-color: var(--text-secondary);
+
+  &:hover {
+    background-color: var(--aws-orange);
+    border-color: var(--aws-orange);
+    color: white;
+  }
+}
+
 .card {
   transition: all 0.3s ease;
 }
