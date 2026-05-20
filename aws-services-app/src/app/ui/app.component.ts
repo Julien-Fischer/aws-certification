@@ -4,21 +4,23 @@ import {FooterComponent} from "./components/shell/footer/footer.component";
 import {HeaderComponent} from "./components/shell/header/header.component";
 import {ThemeService} from "./services/theme.service";
 import appConfig from '../../assets/app-config.json';
+import {AppBackToTopButtonComponent} from "./components/generic/back-to-top-button.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet, FooterComponent, HeaderComponent, AppBackToTopButtonComponent],
   providers: [],
   template: `
     <div [class.dark]="themeService.isDark()">
       <div class="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
         <app-header [appName]="title" [logo]="logo" [repository]="repository"></app-header>
-        <main class="pt-12"> 
+        <main class="pt-12">
           <router-outlet></router-outlet>
         </main>
         <app-footer [authors]="authors"></app-footer>
       </div>
+      <app-back-to-top-button />
     </div>
   `,
   styles: [`
