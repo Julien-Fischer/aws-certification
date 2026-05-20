@@ -9,6 +9,8 @@ import {MockFlashCardProvider} from "../../../../domain/search/test/mock-flashca
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { SearchService } from '../../../../domain/search/services/search.service';
+import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
+import Highscore from "../../../../domain/scoring/models/highscore";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -33,7 +35,13 @@ describe('HeaderComponent', () => {
       providers: [
           provideRouter([]),
           provideGamification(),
-          { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider }
+          { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider },
+          {
+            provide: scoreProviderInjectionToken,
+            useValue: {
+              get: vi.fn().mockReturnValue(Highscore.NONE)
+            }
+          }
       ]
     });
     // Use compileComponents to resolve external templates/styles

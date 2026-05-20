@@ -122,6 +122,11 @@
                 <div class="menu-grid">
                     @for (card of allMetadata(); track card.id) {
                         <div class="menu-item" (click)="onCardSelected(card.id)">
+                            @if (gamification.isEnabled() && isComplete(card.id)) {
+                                <div class="completion-badge">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            }
                             <i [class]="card.icon + ' menu-item-icon'"></i>
                             <span class="menu-item-name">{{card.name}}</span>
                         </div>

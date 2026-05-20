@@ -8,6 +8,9 @@ import {SearchService} from "../../../../domain/search/services/search.service";
 import {SearchAutocompleteComponent} from "./search-autocomplete/search-autocomplete.component";
 import {toSignal} from "@angular/core/rxjs-interop";
 import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
+import {ScoreProviderService} from "../../../../domain/scoring/score-provider.service";
+import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
+import {FlashCardId} from "../../../../domain/shared/flash-card-id";
 
 const MAX_RESULTS = 10;
 
@@ -31,6 +34,7 @@ export class HeaderComponent {
 
   private router = inject(Router);
   private searchService = inject(SearchService);
+  private scoreProvider = inject(scoreProviderInjectionToken);
   themeService = inject(ThemeService);
   gamification = inject<Gamification>(gamificationInjectionToken);
 
@@ -112,6 +116,10 @@ export class HeaderComponent {
       this.searchTerm.set('');
       this.selectedIndex.set(-1);
     }
+  }
+
+  isComplete(cardId: string): boolean {
+    return this.scoreProvider.get(new FlashCardId(cardId)).isMaximum();
   }
 
   onKeyDown(event: KeyboardEvent): void {
