@@ -33,7 +33,13 @@ export class InMemoryCarousel implements Carousel {
 
   private nextCard(from: FlashCardId, direction: 1 | -1): Observable<FlashCardMetadata> {
     const currentIndex = this.indexOf(from);
-    const nextIndex = currentIndex + direction;
+    const length = this.cards.length;
+
+    let nextIndex = (currentIndex + direction) % length;
+    if (nextIndex < 0) {
+      nextIndex += length;
+    }
+
     const nextElement = this.cards[nextIndex];
     return of(nextElement);
   }
