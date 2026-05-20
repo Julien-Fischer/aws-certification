@@ -199,13 +199,11 @@ export class FlashCardComponent implements OnInit {
   }
 
   navigateToPrevious(): void {
-    const prevId = this.prevCard?.id;
-    this.router.navigate(['/service', prevId]);
+    this.navigateTo(this.prevCard);
   }
 
   navigateToNext(): void {
-    const nextId = this.nextCard?.id;
-    this.router.navigate(['/service', nextId]);
+    this.navigateTo(this.nextCard);
   }
 
   resetHighscore(): void {
@@ -213,6 +211,10 @@ export class FlashCardComponent implements OnInit {
       this.forgetHighscore.forget(new FlashCardId(this.service.id));
       this.highscore = Highscore.NONE;
     }
+  }
+
+  private navigateTo(card: FlashCardMetadata | undefined): void {
+    this.router.navigate(['/service', card?.id]);
   }
 
 }
