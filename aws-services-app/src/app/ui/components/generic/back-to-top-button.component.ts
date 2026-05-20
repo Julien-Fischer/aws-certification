@@ -1,5 +1,4 @@
 import {Component, HostListener} from "@angular/core";
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-back-to-top-button',
@@ -54,9 +53,6 @@ import {Router} from "@angular/router";
 export class AppBackToTopButtonComponent {
 
   showButton = false;
-
-  constructor(private router: Router) {
-  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
