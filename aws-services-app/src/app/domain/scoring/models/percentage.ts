@@ -35,6 +35,10 @@ export default class Percentage {
         return this.value < other.value;
     }
 
+    isMaximum(): boolean {
+      return this.value === Percentage.MAX_VALUE;
+    }
+
     toRatio(): Ratio {
         return new Ratio(this.value / 100);
     }

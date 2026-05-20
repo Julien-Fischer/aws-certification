@@ -82,4 +82,10 @@ describe('Percentage', () => {
         expect(oneAndAHalf.toFixed(3)).toBe('1.500%');
     });
 
+    it('is maximum', () => {
+      expect(Percentage.ONE_HUNDRED.isMaximum()).toBe(true);
+      expect(new Percentage(99.9999).isMaximum()).toBe(false);
+      expect(Percentage.ZERO.isMaximum()).toBe(false);
+    })
+
 });
