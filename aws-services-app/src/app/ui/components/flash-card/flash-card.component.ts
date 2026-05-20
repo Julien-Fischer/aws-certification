@@ -39,6 +39,7 @@ export class FlashCardComponent implements OnInit {
   highscore: Highscore = Highscore.NONE;
   readonly highscoreNONE = Highscore.NONE;
   firstAttempt: boolean = true;
+  newHighscoreUnlocked = false;
 
   loading: boolean = true;
   @ViewChild(AppTextPopComponent) textPopComponent!: AppTextPopComponent;
@@ -196,7 +197,10 @@ export class FlashCardComponent implements OnInit {
     if (this.highscore.isMaximum()) {
       Confetti.burst();
     } else {
-      this.textPopComponent.pop();
+      if (!this.newHighscoreUnlocked) {
+        this.textPopComponent.pop();
+        this.newHighscoreUnlocked = true;
+      }
     }
   }
 
