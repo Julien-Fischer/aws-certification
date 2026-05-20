@@ -163,6 +163,8 @@ export class FlashCardComponent implements OnInit {
 
   resetProgressTracker() {
     this.progressTracker = this.trackProgress();
+    this.newHighscoreUnlocked = false;
+    this.firstAttempt = false;
   }
 
   private trackProgress() {
