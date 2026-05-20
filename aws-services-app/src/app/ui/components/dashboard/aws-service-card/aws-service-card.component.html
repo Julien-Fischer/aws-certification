@@ -1,7 +1,7 @@
 <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4 pe-2.5 ps-2.5">
     <div class="card aws-card h-100" (click)="onCardClick()">
         @if (gamification.isEnabled() && isComplete()) {
-          <div class="absolute top-1 right-1">
+          <div class="absolute top-2 right-2">
             <app-completion-badge />
           </div>
         }
@@ -15,7 +15,14 @@
                 <div class="progress-indicators">
                     @if (gamification.isEnabled()) {
                         @if (isComplete()) {
-                            <div class="success-indicator -mt-16 flex items-center justify-center gap-2 text-green-500 font-semibold animate-bounce-short">
+                            <div class="
+                                success-indicator flex items-center justify-center gap-2
+                                mt-6 py-2 rounded-full
+                                bg-green-500 text-white
+                                font-semibold animate-bounce-short
+
+                            ">
+                                <i class="fas fa-trophy text-sm"></i>
                                 <span class="text-sm">Mastered!</span>
                             </div>
                         } @else {
