@@ -12,6 +12,7 @@ import {gamificationInjectionToken} from "../../services/gamification";
 import {forgetHighscoreInjectionToken} from "../../../domain/scoring/highscore-eraser";
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {By} from "@angular/platform-browser";
+import Percentage from "../../../domain/scoring/models/percentage";
 
 describe('FlashCardComponent', () => {
     let component: FlashCardComponent;
@@ -73,9 +74,58 @@ describe('FlashCardComponent', () => {
         expect(component).toBeTruthy();
     });
 
+    it('should not reward user on first attempt', async () => {
+        // Arrange
+        const mockGamification = TestBed.inject(gamificationInjectionToken);
+        vi.spyOn(mockGamification, 'isEnabled').mockReturnValue(true);
+
+        const mockSaveHighscore = TestBed.inject(saveHighscoreInjectionToken);
+        const newHighscore = new Highscore(new Percentage(80), new Percentage(80));
+        vi.spyOn(mockSaveHighscore, 'submit').mockResolvedValue(newHighscore);
+
+        // Access private component state for test
+        component.highscore = Highscore.NONE;
+        component.firstAttempt = true;
+
+        // Mock the text pop component
+        component.textPopComponent = { pop: vi.fn() } as any;
+
+        // Act
+        // Simulate score notification which triggers reward logic
+        await (component as any).notifyScore(newHighscore);
+
+        // Assert
+        expect(component.textPopComponent.pop).not.toHaveBeenCalled();
+        expect(component.firstAttempt).toBe(false);
+    });
+
+    it('should reward user on subsequent attempts if score improves', async () => {
+        // Arrange
+        const mockGamification = TestBed.inject(gamificationInjectionToken);
+        vi.spyOn(mockGamification, 'isEnabled').mockReturnValue(true);
+
+        const mockSaveHighscore = TestBed.inject(saveHighscoreInjectionToken);
+        const initialHighscore = new Highscore(new Percentage(50), new Percentage(50));
+        const improvedHighscore = new Highscore(new Percentage(60), new Percentage(90));
+        vi.spyOn(mockSaveHighscore, 'submit').mockResolvedValue(improvedHighscore);
+
+        // Access private component state for test
+        component.highscore = initialHighscore;
+        component.firstAttempt = false;
+
+        // Mock the text pop component
+        component.textPopComponent = { pop: vi.fn() } as any;
+
+        // Act
+        await (component as any).notifyScore(improvedHighscore);
+
+        // Assert
+        expect(component.textPopComponent.pop).toHaveBeenCalled();
+    });
+
     it('should reset highscore when reset button is clicked', async () => {
         // Arrange
-        const highscore = new Highscore(new Date(), 80, 90);
+        const highscore = new Highscore(new Percentage(80), new Percentage(90));
         component.highscore = highscore;
         fixture.detectChanges();
 
@@ -90,6 +140,7 @@ describe('FlashCardComponent', () => {
 
         // Assert
         expect(component.highscore).toBe(Highscore.NONE);
+        expect(component.firstAttempt).toBe(true);
         expect(forgetSpy).toHaveBeenCalledWith(new FlashCardId('test'));
     });
 });

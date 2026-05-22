@@ -42,12 +42,36 @@
         </div>
 
         <div class="flex items-center ml-auto desktop-buttons">
-            <button (click)="gamification.toggle()"
-                    class="theme-toggle-btn mr-4"
-                    [class.active]="gamification.isEnabled()"
-                    [title]="gamification.isEnabled() ? 'Disable Gamification' : 'Enable Gamification'">
-                <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
-            </button>
+            <div class="relative">
+                <button (click)="toggleGamificationOptions($event)"
+                        class="gamification-btn theme-toggle-btn mr-4"
+                        [class.active]="gamification.isEnabled()"
+                        title="Gamification options">
+                    <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
+                </button>
+
+                @if (showGamificationOptions()) {
+                    <div class="gamification-menu-container">
+                        <div class="gamification-menu" (click)="$event.stopPropagation()">
+                            <p class="menu-title">Gamification</p>
+                            <ul>
+                              <li>
+                                <button (click)="gamification.toggle()" class="menu-item-btn">
+                                  <i class="fas" [class.fa-toggle-on]="gamification.isEnabled()" [class.fa-toggle-off]="!gamification.isEnabled()"></i>
+                                  <span>{{gamification.isEnabled() ? 'Disable' : 'Enable'}} Mode</span>
+                                </button>
+                              </li>
+                              <li>
+                                <button (click)="forgetAll()" class="menu-item-btn">
+                                  <i class="fas fa-trash"></i>
+                                  <span>Reset Highscores</span>
+                                </button>
+                              </li>
+                            </ul>
+                        </div>
+                    </div>
+                }
+            </div>
             <button
                 (click)="themeService.toggleTheme()"
                 class="theme-toggle-btn theme-btn mr-4"
@@ -77,6 +101,7 @@
     </div>
 </div>
 
+
 @if (isSearchFocused() && searchTerm()) {
     <div class="search-backdrop" (click)="clearSearch()"></div>
 }
@@ -91,12 +116,35 @@
                     </div>
 
                     <div class="flex items-center gap-4">
-                        <button (click)="gamification.toggle()"
-                                class="theme-toggle-btn"
-                                [class.active]="gamification.isEnabled()"
-                                [title]="gamification.isEnabled() ? 'Disable Gamification' : 'Enable Gamification'">
-                            <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
-                        </button>
+                        <div class="relative">
+                            <button (click)="toggleGamificationOptions($event)"
+                                    class="gamification-btn theme-toggle-btn"
+                                    [class.active]="gamification.isEnabled()"
+                                    title="Gamification options">
+                                <i class="fas fa-gamepad fa-xl w-5 h-5 flex align-items-center justify-center"></i>
+                            </button>
+                            @if (showGamificationOptions()) {
+                                <div class="gamification-menu-container">
+                                    <div class="gamification-menu" (click)="$event.stopPropagation()">
+                                        <p class="menu-title">Gamification</p>
+                                        <ul>
+                                            <li>
+                                                <button (click)="gamification.toggle()" class="menu-item-btn">
+                                                    <i class="fas" [class.fa-toggle-on]="gamification.isEnabled()" [class.fa-toggle-off]="!gamification.isEnabled()"></i>
+                                                    <span>{{gamification.isEnabled() ? 'Disable' : 'Enable'}} Mode</span>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button (click)="forgetAll()" class="menu-item-btn">
+                                                    <i class="fas fa-trash"></i>
+                                                    <span>Reset Highscores</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                         <button
                             (click)="themeService.toggleTheme()"
                             class="theme-toggle-btn"

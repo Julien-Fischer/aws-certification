@@ -4,7 +4,7 @@ import {Shuffler} from "../../ui/services/shuffler";
 import {FlashCardId} from "../shared/flash-card-id";
 import Highscore from "./models/highscore";
 
-export const saveHighscoreInjectionToken = new InjectionToken<Shuffler>('SaveHighscore');
+export const saveHighscoreInjectionToken = new InjectionToken<HighscoreEvaluator>('SaveHighscore');
 
 export interface HighscoreEvaluator {
 

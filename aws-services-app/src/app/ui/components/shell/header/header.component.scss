@@ -266,6 +266,127 @@ button {
   line-height: 1.2;
 }
 
+.gamification-menu-container {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1001;
+  padding-top: 0.5rem;
+  animation: slideIn 0.2s ease-out;
+
+  .mobile-menu-content & {
+    right: 1.5rem;
+    animation-name: slideIn;
+  }
+
+  @media (max-width: 430px) {
+    left: 0;
+    right: 0;
+    width: 100vw;
+    position: fixed;
+    top: 50px; // Just below the header
+    padding: 0 1rem;
+    animation: slideInMobile 0.2s ease-out;
+
+    .gamification-menu {
+      width: 100%;
+      min-width: 0;
+      border-radius: 0 0 12px 12px;
+      border-top: none;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+  }
+}
+
+.gamification-menu {
+  background: var(--card-bg);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  min-width: 180px;
+  padding: 0.75rem;
+
+  .dark & {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-secondary, #666);
+    margin: 0 0 0.5rem 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+    &:last-child { margin-bottom: 0; }
+    text-wrap: nowrap;
+  }
+
+  .menu-item-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    i {
+      font-size: 1.25rem;
+      width: 1.5rem;
+      text-align: center;
+    }
+
+    .fa-toggle-on { color: var(--aws-orange); }
+    .fa-toggle-off { color: #ccc; }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .dark &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .search-backdrop {
   position: fixed;
   top: 50px; // Just below the header (matched to app-header height)

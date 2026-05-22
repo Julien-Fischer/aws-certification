@@ -1,5 +1,6 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
@@ -29,7 +30,7 @@ import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.c
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
-export class FlashCardComponent implements OnInit {
+export class FlashCardComponent implements OnInit, OnDestroy {
   service: FlashCardMetadata | undefined;
   markdownContent: string = '';
   trueFalseQuestions: Question[] = [];
@@ -46,6 +47,8 @@ export class FlashCardComponent implements OnInit {
   nextCard: FlashCardMetadata | undefined;
   prevCard: FlashCardMetadata | undefined;
 
+  private resetSubscription: Subscription | undefined;
+
   constructor(
       private route: ActivatedRoute,
       private router: Router,
@@ -58,6 +61,13 @@ export class FlashCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.resetSubscription = this.forgetHighscore.onReset.subscribe(() => {
+      const id = this.route.snapshot.paramMap.get('id');
+      if (id) {
+        this.loadHighscore(new FlashCardId(id));
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
@@ -70,6 +80,10 @@ export class FlashCardComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.resetSubscription?.unsubscribe();
   }
 
   private serviceId(): FlashCardId {
@@ -163,7 +177,6 @@ export class FlashCardComponent implements OnInit {
   resetProgressTracker() {
     this.progressTracker = this.trackProgress();
     this.newHighscoreUnlocked = false;
-    this.firstAttempt = false;
   }
 
   private trackProgress() {
@@ -182,6 +195,7 @@ export class FlashCardComponent implements OnInit {
     if (this.shouldRewardUser(previousHighscore)) {
       this.rewardUser();
     }
+    this.firstAttempt = false;
   }
 
   private shouldRewardUser(previousHighscore: Highscore) {
@@ -227,6 +241,7 @@ export class FlashCardComponent implements OnInit {
     if (this.service) {
       this.forgetHighscore.forget(new FlashCardId(this.service.id));
       this.highscore = Highscore.NONE;
+      this.firstAttempt = true;
       this.resetProgressTracker();
     }
   }

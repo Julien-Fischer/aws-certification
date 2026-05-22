@@ -11,6 +11,10 @@ import { of } from 'rxjs';
 import { SearchService } from '../../../../domain/search/services/search.service';
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import Highscore from "../../../../domain/scoring/models/highscore";
+import {forgetHighscoreInjectionToken} from "../../../../domain/scoring/highscore-eraser";
+import {ForgetHighscoreService} from "../../../../domain/scoring/forget-highscore.service";
+import InMemoryStorage from "../../../../domain/scoring/test/utils/in-memory-storage";
+import {storageInjectionToken} from "../../../../domain/scoring/storage";
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -36,6 +40,8 @@ describe('HeaderComponent', () => {
           provideRouter([]),
           provideGamification(),
           { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider },
+          { provide: storageInjectionToken, useClass: InMemoryStorage },
+          { provide: forgetHighscoreInjectionToken, useClass: ForgetHighscoreService },
           {
             provide: scoreProviderInjectionToken,
             useValue: {

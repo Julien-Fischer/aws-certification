@@ -11,6 +11,7 @@ import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import {FlashCardId} from "../../../../domain/shared/flash-card-id";
 import {CompletionBadgeComponent} from "../../generic/completion-badge.component";
+import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../../domain/scoring/highscore-eraser";
 
 const MAX_RESULTS = 10;
 
@@ -29,12 +30,14 @@ export class HeaderComponent {
 
   searchTerm = signal('');
   isSearchFocused = signal(false);
+  showGamificationOptions = signal(false);
   selectedIndex = signal(-1);
   isMobileMenuOpen = signal(false);
 
   private router = inject(Router);
   private searchService = inject(SearchService);
   private scoreProvider = inject(scoreProviderInjectionToken);
+  private highscoreEraser = inject(forgetHighscoreInjectionToken);
   themeService = inject(ThemeService);
   gamification = inject<Gamification>(gamificationInjectionToken);
 
@@ -120,6 +123,28 @@ export class HeaderComponent {
 
   isComplete(cardId: string): boolean {
     return this.scoreProvider.get(new FlashCardId(cardId)).isMaximum();
+  }
+
+  toggleGamificationOptions(event: MouseEvent): void {
+    event.stopPropagation();
+    this.showGamificationOptions.update(v => !v);
+  }
+
+  @HostListener('window:click', ['$event'])
+  onWindowClick(event: MouseEvent): void {
+    if (this.showGamificationOptions()) {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.gamification-menu-container') && !target.closest('.gamification-btn')) {
+        this.showGamificationOptions.set(false);
+      }
+    }
+  }
+
+  forgetAll(): void {
+    if (confirm('Are you sure you want to reset all highscores? This action cannot be undone.')) {
+      this.highscoreEraser.forgetAll();
+      this.showGamificationOptions.set(false);
+    }
   }
 
   onKeyDown(event: KeyboardEvent): void {

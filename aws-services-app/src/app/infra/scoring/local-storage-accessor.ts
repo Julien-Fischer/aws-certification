@@ -13,7 +13,9 @@ export default class LocalStorageAccessor implements Storage<FlashCardId, Highsc
 
     clear(key?: FlashCardId): void {
         if (key == null) {
-            localStorage.removeItem(LocalStorageAccessor.PREFIX);
+            Object.keys(localStorage)
+                .filter(key => key.startsWith(LocalStorageAccessor.PREFIX))
+                .forEach(key => localStorage.removeItem(key));
         } else {
             localStorage.removeItem(this.keyFor(key));
         }
