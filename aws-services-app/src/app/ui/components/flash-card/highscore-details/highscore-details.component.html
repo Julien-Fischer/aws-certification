@@ -1,15 +1,11 @@
 <div class="highscore-card my-5">
 
-  <div class="d-flex align-items-center mb-4">
-    <h4 class="mb-0 text-primary-theme fw-bold">
-      <i class="fas fa-trophy me-2 text-warning"></i>
-      Learning Progress & Highscore
-    </h4>
-  </div>
-
   @if (highscore !== highscoreNONE) {
     <div class="highscore-details-container p-4 rounded-4 shadow-sm border">
-      <div class="highscore-label">Best Performance</div>
+      <div class="highscore-label">
+        <i class="fas fa-trophy me-2 text-warning"></i>
+        Best Performance
+      </div>
 
       <div class="highscore-meta mb-4 d-flex align-items-center justify-content-end">
         <div class="d-flex align-items-center gap-3 grow justify-between">
