@@ -108,7 +108,7 @@
         padding-right: 10px;
     }
 
-    .d-flex:not(.highscore-indicator):not(.highscore-card *):not(.navigation-buttons button) {
+    .d-flex:not(.navigation-buttons button) {
         flex-direction: column;
         text-align: center;
     }
