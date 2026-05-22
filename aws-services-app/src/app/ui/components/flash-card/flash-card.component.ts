@@ -18,7 +18,6 @@ import {Confetti} from "../../animations/confetti";
 import {Gamification, gamificationInjectionToken} from "../../services/gamification";
 import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
 import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
-import {ScoreIndicatorComponent} from "../generic/score-indicator.component";
 import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";
 import {AppTextPopComponent} from "../../animations/text-pop.component";
 import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.component";
@@ -26,7 +25,7 @@ import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.c
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent, AppTextPopComponent, HighscoreDetailsComponent],
+  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, AppTextPopComponent, HighscoreDetailsComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
@@ -228,6 +227,7 @@ export class FlashCardComponent implements OnInit {
     if (this.service) {
       this.forgetHighscore.forget(new FlashCardId(this.service.id));
       this.highscore = Highscore.NONE;
+      this.resetProgressTracker();
     }
   }
 
