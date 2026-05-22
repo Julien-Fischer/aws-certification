@@ -89,6 +89,29 @@
   }
 }
 
+.master-message {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  animation: pulse-green 2s infinite;
+
+  i {
+    color: #ffc107;
+    filter: drop-shadow(0 0 5px rgba(255, 193, 7, 0.4));
+  }
+
+  :host-context(.dark) & {
+    background-color: rgba(40, 167, 69, 0.15);
+    border-color: rgba(40, 167, 69, 0.3);
+  }
+}
+
+@keyframes pulse-green {
+  0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
 @media (max-width: 768px) {
   .highscore-details-container {
     padding: 1.25rem !important;

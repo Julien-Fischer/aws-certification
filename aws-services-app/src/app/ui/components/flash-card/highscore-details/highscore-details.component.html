@@ -24,22 +24,29 @@
         </div>
       </div>
 
-      <div class="highscore-indicators-grid">
-        <app-score-indicator
-          label="Overall Progress"
-          icon="tasks"
-          borderColor="#4b9cd3"
-          iconClass="text-primary bg-primary-light"
-          [percentage]="highscore.progress"
-        />
-        <app-score-indicator
-          label="Success Rate"
-          icon="bullseye"
-          borderColor="#28a745"
-          iconClass="text-success bg-success-light"
-          [percentage]="highscore.accuracy"
-        />
-      </div>
+      @if (highscore.isMaximum()) {
+        <div class="master-message d-flex align-items-center justify-content-center p-3 rounded-3">
+          <i class="fas fa-medal me-3 fs-3"></i>
+          <span class="fw-bold fs-4">Mastered!</span>
+        </div>
+      } @else {
+        <div class="highscore-indicators-grid">
+          <app-score-indicator
+            label="Overall Progress"
+            icon="tasks"
+            borderColor="#4b9cd3"
+            iconClass="text-primary bg-primary-light"
+            [percentage]="highscore.progress"
+          />
+          <app-score-indicator
+            label="Success Rate"
+            icon="bullseye"
+            borderColor="#28a745"
+            iconClass="text-success bg-success-light"
+            [percentage]="highscore.accuracy"
+          />
+        </div>
+      }
 
     </div>
 
