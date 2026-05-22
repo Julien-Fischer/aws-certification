@@ -4,6 +4,7 @@ import { marked } from 'marked';
 import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
 import {MultipleChoiceQuestion, Option, Question} from "../../../domain/search/models/question";
 import Ratio from "../../../domain/scoring/models/ratio";
+import {Letter, LETTERS} from "../../../infra/learning/markdown-parser.service";
 
 @Component({
   selector: 'app-quiz',
@@ -127,6 +128,10 @@ export class QuizComponent implements OnInit {
       ...question,
       options: this.shuffler.shuffle([...question.options])
     } as MultipleChoiceQuestion;
+  }
+
+  protected prefixFor(index: number): Letter {
+    return LETTERS[index];
   }
 
   protected readonly Array = Array;

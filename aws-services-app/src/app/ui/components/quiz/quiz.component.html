@@ -12,7 +12,7 @@
 
         <div class="options-section mb-4">
             @if (currentQuestion && 'options' in currentQuestion && Array.isArray(currentQuestion.options)) {
-                @for (option of currentQuestion.options; track option.value) {
+                @for (option of currentQuestion.options; track option.value; let index = $index) {
                     <div (click)="selectOption(option)"
                          [class.selected]="selectedOption === option"
                          [class.correct]="showFeedback && matchesAnswer(option)"
@@ -21,7 +21,7 @@
                         <div class="d-flex align-items-center">
                             <div class="option-indicator me-3 bg-gray-500 dark:bg-gray-700 text-white
                             rounded-circle d-flex align-items-center justify-content-center font-weight-bold">
-                                {{ option.prefix }}
+                                {{ prefixFor(index) }}
                             </div>
                             <div class="option-label">{{ option.label }}</div>
                         </div>

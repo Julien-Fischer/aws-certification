@@ -3,7 +3,7 @@ import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../d
 import {FlashCard} from "../../domain/search/models/flash-card";
 
 export type Letter = 'A' | 'B' | 'C' | 'D';
-const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];
+export const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];
 
 @Injectable({
     providedIn: 'root',
