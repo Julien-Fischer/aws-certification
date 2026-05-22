@@ -1,0 +1,110 @@
+.highscore-card {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.highscore-details-container {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  background-color: rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 800px;
+  padding-top: 1.5rem !important;
+
+  :host-context(.dark) & {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+}
+
+.highscore-label {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background-color: var(--card-bg);
+  padding: 0 8px;
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+  pointer-events: none;
+  color: var(--text-secondary);
+
+  :host-context(.dark) & {
+    opacity: 0.7;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.date-badge {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+
+  :host-context(.dark) & {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .value {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: 0.02em;
+  }
+}
+
+.reset-highscore-btn {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 50rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  color: #e45e6b;
+  border-color: rgba(220, 53, 69, 0.2);
+
+  &:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  i {
+    font-size: 0.7rem;
+  }
+}
+
+.highscore-indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-highscore {
+  border-style: dashed !important;
+  border-width: 2px !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+  background-color: rgba(0, 0, 0, 0.01);
+
+  :host-context(.dark) & {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.01);
+  }
+}
+
+@media (max-width: 768px) {
+  .highscore-details-container {
+    padding: 1.25rem !important;
+  }
+  .highscore-indicators-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .highscore-meta {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+
+    .d-flex.align-items-center.gap-3 {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
+}

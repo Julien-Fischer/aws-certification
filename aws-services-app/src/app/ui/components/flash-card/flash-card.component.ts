@@ -21,11 +21,12 @@ import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel"
 import {ScoreIndicatorComponent} from "../generic/score-indicator.component";
 import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";
 import {AppTextPopComponent} from "../../animations/text-pop.component";
+import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent, AppTextPopComponent],
+  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, ScoreIndicatorComponent, AppTextPopComponent, HighscoreDetailsComponent],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
@@ -37,7 +38,6 @@ export class FlashCardComponent implements OnInit {
   allQuestions: Question[] = [];
   progressTracker = this.trackProgress();
   highscore: Highscore = Highscore.NONE;
-  readonly highscoreNONE = Highscore.NONE;
   firstAttempt: boolean = true;
   newHighscoreUnlocked = false;
 

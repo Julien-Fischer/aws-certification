@@ -1,0 +1,56 @@
+<div class="highscore-card my-5">
+
+  <div class="d-flex align-items-center mb-4">
+    <h4 class="mb-0 text-primary-theme fw-bold">
+      <i class="fas fa-trophy me-2 text-warning"></i>
+      Learning Progress & Highscore
+    </h4>
+  </div>
+
+  @if (highscore !== highscoreNONE) {
+    <div class="highscore-details-container p-4 rounded-4 shadow-sm border">
+      <div class="highscore-label">Best Performance</div>
+
+      <div class="highscore-meta mb-4 d-flex align-items-center justify-content-end">
+        <div class="d-flex align-items-center gap-3 grow justify-between">
+          <div class="date-badge px-3 py-1 rounded-pill bg-light d-flex align-items-center">
+            <i class="fas fa-calendar-alt text-info me-2"></i>
+            <span class="value text-secondary-theme small fw-bold">{{ highscore.date | date:'yyyy-MM-dd' }}</span>
+          </div>
+          <button
+            class="btn btn-sm reset-highscore-btn d-flex align-items-center"
+            (click)="onHighscoreReset.emit()"
+            title="Reset Highscore"
+          >
+            <i class="fas fa-trash-alt me-2"></i>
+            <span>Reset</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="highscore-indicators-grid">
+        <app-score-indicator
+          label="Overall Progress"
+          icon="tasks"
+          borderColor="#4b9cd3"
+          iconClass="text-primary bg-primary-light"
+          [percentage]="highscore.progress"
+        />
+        <app-score-indicator
+          label="Success Rate"
+          icon="bullseye"
+          borderColor="#28a745"
+          iconClass="text-success bg-success-light"
+          [percentage]="highscore.accuracy"
+        />
+      </div>
+
+    </div>
+
+  } @else {
+    <div class="empty-highscore p-4 rounded-4 border border-dashed text-center">
+      <p class="text-secondary-theme font-italic mb-0">No highscore yet. Take a quiz to set your first record!</p>
+    </div>
+  }
+
+</div>
