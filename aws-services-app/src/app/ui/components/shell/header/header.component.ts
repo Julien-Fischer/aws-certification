@@ -13,13 +13,14 @@ import {FlashCardId} from "../../../../domain/shared/flash-card-id";
 import {CompletionBadgeComponent} from "../../generic/completion-badge.component";
 import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../../domain/scoring/highscore-eraser";
 import {WaffleIconComponent} from "../../generic/waffle-icon.component";
+import {ToggleComponent} from "../../generic/toggle.component";
 
 const MAX_RESULTS = 10;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent],
+  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent, ToggleComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
