@@ -21,7 +21,7 @@ const MAX_RESULTS = 10;
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent, ToggleComponent, GamificationSettingsMenuComponent],
+  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent, GamificationSettingsMenuComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })

@@ -41,7 +41,7 @@ export class HighscoreBuilder extends ScoreBuilder {
         return this;
     }
 
-    override build(): Score {
+    override build(): Highscore {
         return new Highscore(
             new Percentage(this.progress),
             new Percentage(this.accuracy),

@@ -39,7 +39,7 @@ describe('LeaderboardService', () => {
     });
 
     it(`returns specified service's highscore when exists`, () => {
-        whenService(aurora)
+        givenThat(aurora)
             .hasHighScore(aScore().withAccuracy(35));
 
         const highscore = leaderboard.getHighscore(aurora);
@@ -49,7 +49,7 @@ describe('LeaderboardService', () => {
     });
 
     it(`returns highscore of zero when service's has no highscore`, () => {
-        whenService(aurora).hasNoHighscore();
+        givenThat(aurora).hasNoHighscore();
 
         const highscore = leaderboard.getHighscore(aurora);
 
@@ -57,7 +57,7 @@ describe('LeaderboardService', () => {
     });
 
 
-    function whenService(id: FlashCardId) {
+    function givenThat(id: FlashCardId) {
         return {
             hasHighScore(score: ScoreBuilder) {
                 scoreWriter.submit(id, score.build());
