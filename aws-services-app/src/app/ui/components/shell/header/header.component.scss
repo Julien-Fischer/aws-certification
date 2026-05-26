@@ -98,15 +98,6 @@ button {
   }
 }
 
-@media (max-width: 768px) {
-  .aws-header h1 {
-    font-size: 1.5rem;
-  }
-}
-
-
-
-
 .mobile-menu-button {
   display: none;
 
@@ -122,36 +113,6 @@ button {
   &:hover {
     background: none;
     transform: none;
-  }
-}
-
-@media (max-width: 430px) {
-  .desktop-buttons {
-    display: none;
-  }
-  .mobile-menu-button {
-    display: flex;
-  }
-  .aws-header h1 {
-    font-size: 1rem;
-  }
-  .aws-header p {
-    font-size: 0.8rem;
-  }
-
-  .theme-btn, .app-logo {
-    margin-right: .5rem !important;
-  }
-
-  #github_project {
-    align-content: center;
-  }
-  #github_project i {
-    margin-right: 0 !important;
-  }
-
-  .github-link {
-    display: none;
   }
 }
 
@@ -270,7 +231,7 @@ button {
     right: 0;
     width: 100vw;
     position: fixed;
-    top: 50px; // Just below the header
+    top: 60px; // Just below the header
     padding: 0 1rem;
     animation: slideInMobile 0.2s ease-out;
 
@@ -375,7 +336,7 @@ button {
 
 .search-backdrop {
   position: fixed;
-  top: 50px; // Just below the header (matched to app-header height)
+  top: 50px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -389,4 +350,41 @@ button {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+
+@media (max-width: 768px) {
+  .aws-header h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .desktop-buttons {
+    display: none;
+  }
+  .mobile-menu-button {
+    display: flex;
+  }
+  .aws-header h1 {
+    font-size: 1rem;
+  }
+  .aws-header p {
+    font-size: 0.8rem;
+  }
+
+  .theme-btn, .app-logo {
+    margin-right: .5rem !important;
+  }
+
+  #github_project {
+    align-content: center;
+  }
+  #github_project i {
+    margin-right: 0 !important;
+  }
+
+  .github-link {
+    display: none;
+  }
 }
