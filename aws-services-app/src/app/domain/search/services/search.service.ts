@@ -10,7 +10,7 @@ import {FlashCardId} from "../../shared/flash-card-id";
 })
 export class SearchService {
 
-  private allMetadata = new BehaviorSubject<FlashCardMetadata[]>([]);
+  private allMetadata = new BehaviorSubject<FlashCardMetadata[] | null>(null);
   private _searchTerm = new BehaviorSubject<string>('');
 
   constructor(
@@ -29,14 +29,21 @@ export class SearchService {
     return this._searchTerm.asObservable();
   }
 
-  getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined> {
+  getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined | null> {
     return this.allMetadata.pipe(
-        map(services => services.find(s => id.hasValue(s.id))
+        map(services => {
+          if (services === null) {
+            return null;
+          }
+          return services.find(s => id.hasValue(s.id));
+        }
     ));
   }
 
   getAllMetadata(): Observable<FlashCardMetadata[]> {
-    return this.allMetadata.asObservable();
+    return this.allMetadata.pipe(
+      map(services => services ?? [])
+    );
   }
 
   getFlashCard(id: FlashCardId): Observable<FlashCard> {
@@ -45,6 +52,7 @@ export class SearchService {
 
   getCategories(): Observable<FlashCardCategory[]> {
     return this.allMetadata.pipe(
+        map(services => services ?? []),
         map(services => this.toCategories(services))
     );
   }
@@ -52,8 +60,9 @@ export class SearchService {
   getFilteredCategories(): Observable<FlashCardCategory[]> {
     return combineLatest([this.allMetadata, this._searchTerm]).pipe(
       map(([allMetadata, query]) => {
+        const services = allMetadata ?? [];
         const lowerQuery = query.toLowerCase();
-        return allMetadata.filter(card =>
+        return services.filter(card =>
           card.name.toLowerCase().includes(lowerQuery) ||
           card.description.toLowerCase().includes(lowerQuery) ||
           card.category.toLowerCase().includes(lowerQuery)

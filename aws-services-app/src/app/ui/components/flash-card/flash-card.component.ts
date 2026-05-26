@@ -118,6 +118,11 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   private loadContent(serviceId: FlashCardId): void {
     this.flashCardService.getMetadata(serviceId).subscribe(
       service => {
+        if (service === null) {
+          this.loading = true;
+          return;
+        }
+
         this.service = service;
         if (service) {
           this.loadMarkdownContent(serviceId);

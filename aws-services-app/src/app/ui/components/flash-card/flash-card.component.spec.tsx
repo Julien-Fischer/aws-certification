@@ -67,11 +67,46 @@ describe('FlashCardComponent', () => {
 
         fixture = TestBed.createComponent(FlashCardComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
 
     it('should create', () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
+    });
+
+    it('should show loading spinner while metadata is null', () => {
+        const mockFlashCardService = TestBed.inject(SearchService);
+        const metadataSubject = new BehaviorSubject<any>(null);
+        vi.spyOn(mockFlashCardService, 'getMetadata').mockReturnValue(metadataSubject.asObservable());
+
+        fixture.detectChanges();
+
+        expect(component.loading).toBe(true);
+        const spinner = fixture.debugElement.query(By.css('.spinner-border'));
+        expect(spinner).toBeTruthy();
+    });
+
+    it('should show 404 if metadata is undefined (not found)', () => {
+        const mockFlashCardService = TestBed.inject(SearchService);
+        vi.spyOn(mockFlashCardService, 'getMetadata').mockReturnValue(of(undefined));
+
+        fixture.detectChanges();
+
+        expect(component.loading).toBe(false);
+        expect(component.service).toBeUndefined();
+        const error404 = fixture.debugElement.query(By.css('h2.text-6xl'));
+        expect(error404.nativeElement.textContent).toBe('404');
+    });
+
+    it('should show content if metadata is found', () => {
+        const mockFlashCardService = TestBed.inject(SearchService);
+        const serviceMetadata = { id: 'test', name: 'Test Service', description: 'Test', icon: 'test-icon' };
+        vi.spyOn(mockFlashCardService, 'getMetadata').mockReturnValue(of(serviceMetadata));
+
+        fixture.detectChanges();
+
+        expect(component.loading).toBe(true); // Still true because markdown might be loading, but service is set
+        expect(component.service).toEqual(serviceMetadata);
     });
 
     it('should not reward user on first attempt', async () => {
