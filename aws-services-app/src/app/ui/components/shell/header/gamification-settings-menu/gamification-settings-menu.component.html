@@ -1,0 +1,23 @@
+<div class="gamification-menu-container">
+    <div class="gamification-menu" (click)="$event.stopPropagation()">
+        <div class="menu-header">
+            <p class="menu-title">Gamification</p>
+            <button class="close-menu-btn" (click)="onClose()" title="Close menu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="menu-separator"></div>
+        <ul>
+          <li class="menu-item-toggle">
+            <span class="menu-item-label">{{gamification.isEnabled() ? 'Disable' : 'Enable'}} Mode</span>
+            <app-toggle [checked]="gamification.isEnabled()" (changed)="gamification.toggle()" />
+          </li>
+          <li>
+            <button (click)="forgetAll()" class="menu-item-btn btn-destructive">
+              <i class="fas fa-trash"></i>
+              <span>Reset Highscores</span>
+            </button>
+          </li>
+        </ul>
+    </div>
+</div>

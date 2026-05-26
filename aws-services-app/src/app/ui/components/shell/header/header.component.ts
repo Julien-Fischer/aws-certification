@@ -11,16 +11,17 @@ import {FlashCardMetadata} from "../../../../domain/search/models/metadata";
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import {FlashCardId} from "../../../../domain/shared/flash-card-id";
 import {CompletionBadgeComponent} from "../../generic/completion-badge.component";
-import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../../domain/scoring/highscore-eraser";
 import {WaffleIconComponent} from "../../generic/waffle-icon.component";
 import {ToggleComponent} from "../../generic/toggle.component";
+
+import {GamificationSettingsMenuComponent} from "./gamification-settings-menu/gamification-settings-menu.component";
 
 const MAX_RESULTS = 10;
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent, ToggleComponent],
+  imports: [CommonModule, FormsModule, SearchAutocompleteComponent, CompletionBadgeComponent, CompletionBadgeComponent, WaffleIconComponent, ToggleComponent, GamificationSettingsMenuComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -39,7 +40,6 @@ export class HeaderComponent {
   private router = inject(Router);
   private searchService = inject(SearchService);
   private scoreProvider = inject(scoreProviderInjectionToken);
-  private highscoreEraser = inject(forgetHighscoreInjectionToken);
   themeService = inject(ThemeService);
   gamification = inject<Gamification>(gamificationInjectionToken);
 
@@ -139,13 +139,6 @@ export class HeaderComponent {
       if (!target.closest('.gamification-menu-container') && !target.closest('.gamification-btn')) {
         this.showGamificationOptions.set(false);
       }
-    }
-  }
-
-  forgetAll(): void {
-    if (confirm('Are you sure you want to reset all highscores? This action cannot be undone.')) {
-      this.highscoreEraser.forgetAll();
-      this.showGamificationOptions.set(false);
     }
   }
 

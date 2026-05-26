@@ -19,7 +19,7 @@ import { Component, input, output } from '@angular/core';
     .toggle-switch {
       position: relative;
       width: 44px;
-      height: 24px;
+      height: 20px;
       background-color: #e9e9ea;
       border-radius: 12px;
       border: 2px solid transparent;
@@ -41,10 +41,10 @@ import { Component, input, output } from '@angular/core';
 
     .toggle-thumb {
       position: absolute;
-      top: 0px;
-      left: 0px;
-      width: 20px;
-      height: 20px;
+      top:  -1px;
+      left:  0px;
+      width:  18px;
+      height: 18px;
       background-color: white;
       border-radius: 50%;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -52,7 +52,7 @@ import { Component, input, output } from '@angular/core';
     }
 
     .toggle-switch.checked .toggle-thumb {
-      transform: translateX(20px);
+      transform: translateX(22px);
     }
 
     /* Apple-style specific touch: subtle border and shadow for the thumb */
