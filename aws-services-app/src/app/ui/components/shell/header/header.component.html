@@ -53,7 +53,12 @@
                 @if (showGamificationOptions()) {
                     <div class="gamification-menu-container">
                         <div class="gamification-menu" (click)="$event.stopPropagation()">
-                            <p class="menu-title">Gamification</p>
+                            <div class="menu-header">
+                                <p class="menu-title">Gamification</p>
+                                <button class="close-menu-btn" (click)="showGamificationOptions.set(false)" title="Close menu">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
                             <ul>
                               <li>
                                 <button (click)="gamification.toggle()" class="menu-item-btn">
@@ -122,7 +127,12 @@
                             @if (showGamificationOptions()) {
                                 <div class="gamification-menu-container">
                                     <div class="gamification-menu" (click)="$event.stopPropagation()">
-                                        <p class="menu-title">Gamification</p>
+                                        <div class="menu-header">
+                                            <p class="menu-title">Gamification</p>
+                                            <button class="close-menu-btn" (click)="showGamificationOptions.set(false)" title="Close menu">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
                                         <ul>
                                             <li>
                                                 <button (click)="gamification.toggle()" class="menu-item-btn">

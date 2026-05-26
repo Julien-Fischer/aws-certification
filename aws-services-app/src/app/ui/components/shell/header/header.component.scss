@@ -258,13 +258,45 @@ button {
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  .menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
   .menu-title {
     font-size: 0.75rem;
     font-weight: 700;
     text-transform: uppercase;
     color: var(--text-secondary, #666);
-    margin: 0 0 0.5rem 0.5rem;
+    margin: 0 0 0 0.5rem;
     letter-spacing: 0.05em;
+    flex-grow: 1;
+  }
+
+  .close-menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #666);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--text-primary);
+    }
+
+    .dark & {
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
   }
 
   ul {
