@@ -16,39 +16,30 @@
             <app-toggle [checked]="gamification.isEnabled()" style="pointer-events: none;" />
           </li>
 
-          <div class="menu-separator"></div>
+          <li class="menu-separator"></li>
 
-          <li class="menu-item-toggle"
-              [class.disabled]="!gamification.isEnabled()"
-              (click)="gamification.isEnabled() && gamification.toggleProgress()"
-              (keydown.enter)="gamification.isEnabled() && gamification.toggleProgress()"
-              [tabindex]="gamification.isEnabled() ? 0 : -1"
-              role="button">
-            <span class="menu-item-label">Progress</span>
-            <app-toggle [checked]="gamification.isProgressEnabled()" style="pointer-events: none;" />
-          </li>
+          <app-gamification-setting
+            label="Progress"
+            [isEnabled]="gamification.isEnabled()"
+            [isChecked]="gamification.isProgressEnabled()"
+            (toggle)="gamification.toggleProgress()"
+          />
 
-          <li class="menu-item-toggle"
-              [class.disabled]="!gamification.isEnabled()"
-              (click)="gamification.isEnabled() && gamification.toggleScore()"
-              (keydown.enter)="gamification.isEnabled() && gamification.toggleScore()"
-              [tabindex]="gamification.isEnabled() ? 0 : -1"
-              role="button">
-            <span class="menu-item-label">Score</span>
-            <app-toggle [checked]="gamification.isScoredEnabled()" style="pointer-events: none;" />
-          </li>
+          <app-gamification-setting
+            label="Score"
+            [isEnabled]="gamification.isEnabled()"
+            [isChecked]="gamification.isScoredEnabled()"
+            (toggle)="gamification.toggleScore()"
+          />
 
-          <li class="menu-item-toggle"
-              [class.disabled]="!gamification.isEnabled()"
-              (click)="gamification.isEnabled() && gamification.toggleHighscore()"
-              (keydown.enter)="gamification.isEnabled() && gamification.toggleHighscore()"
-              [tabindex]="gamification.isEnabled() ? 0 : -1"
-              role="button">
-            <span class="menu-item-label">Highscore</span>
-            <app-toggle [checked]="gamification.isHighscoreEnabled()" style="pointer-events: none;" />
-          </li>
+          <app-gamification-setting
+            label="Highscore"
+            [isEnabled]="gamification.isEnabled()"
+            [isChecked]="gamification.isHighscoreEnabled()"
+            (toggle)="gamification.toggleHighscore()"
+          />
 
-          <div class="menu-separator"></div>
+          <li class="menu-separator"></li>
 
           <li>
             <button (click)="gamification.isEnabled() && forgetAll()"

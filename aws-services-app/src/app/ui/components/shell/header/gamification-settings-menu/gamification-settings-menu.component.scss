@@ -153,23 +153,17 @@
       opacity: 0.8;
     }
 
+    .menu-item-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
     &.main-toggle {
       .menu-item-label {
         font-weight: 600;
         font-size: 0.95rem;
       }
-    }
-
-    &.disabled {
-      opacity: 0.4;
-      pointer-events: none;
-      filter: grayscale(1);
-    }
-
-    .menu-item-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-primary);
     }
   }
 
