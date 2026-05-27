@@ -19,23 +19,38 @@ import {Component, HostListener} from "@angular/core";
       height: 3.5rem;
       border-radius: 200px;
       background: rgba(0,0,0,.1);
+      color: black;
       backdrop-filter: blur(8px);
       box-shadow:
         0 3px 5px -1px rgba(0, 0, 0, 0.2),
         0 6px 10px 0   rgba(0, 0, 0, 0.14),
         0 1px 18px 0   rgba(0, 0, 0, 0.12) !important;
-      color: white;
       border: none;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 1000;
+      transition: .2s;
+
+      &:hover {
+        background: rgba(255,255,255,.1) !important;
+      }
+
+      :host-context(.dark) & {
+        background: rgba(0,0,0,.1);
+        color: white;
+        &:hover {
+          background: rgba(255,255,255,.1);
+        }
+      }
 
       i {
         font-size: 1.25rem;
       }
+
     }
+
 
     @media (min-width: 768px) {
       .back-to-top {
