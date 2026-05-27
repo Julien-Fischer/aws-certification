@@ -122,7 +122,7 @@
   {
     "id": "kinesis",
     "name": "Amazon Kinesis",
-    "description": "Amazon Kinesis description",
+    "description": "Analyzing real-time streaming data at scale",
     "icon": "fas fa-arrows-turn-right",
     "category": "Messaging",
     "lastUpdated": "2025-09-21"
