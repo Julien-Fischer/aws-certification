@@ -151,6 +151,22 @@ describe('GamificationService', () => {
     })
   })
 
+  describe('Default values', () => {
+    it('Gamification is disabled by default', () => {
+      initGamificationService();
+
+      expect(gamificationService!.isEnabled()).toBe(false);
+    });
+
+    it('Progress, Score, and Highscore are enabled by default', () => {
+      initGamificationService();
+
+      expect(gamificationService!.isProgressEnabled()).toBe(true);
+      expect(gamificationService!.isScoredEnabled()).toBe(true);
+      expect(gamificationService!.isHighscoreEnabled()).toBe(true);
+    });
+  });
+
 
   function givenThat(key: Key) {
     return {

@@ -23,9 +23,9 @@ export class GamificationService implements Gamification {
   private platformId = inject(PLATFORM_ID);
 
   private _isEnabled = signal<boolean>(false);
-  private _isScoresEnabled = signal<boolean>(false);
-  private _isProgressEnabled = signal<boolean>(false);
-  private _isHighscoreEnabled = signal<boolean>(false);
+  private _isScoresEnabled = signal<boolean>(true);
+  private _isProgressEnabled = signal<boolean>(true);
+  private _isHighscoreEnabled = signal<boolean>(true);
 
   isEnabled = this._isEnabled.asReadonly();
   isScoredEnabled = this._isScoresEnabled.asReadonly();
@@ -34,8 +34,8 @@ export class GamificationService implements Gamification {
 
   private pairs: Pair[] = [
     {key: 'gamification_enabled', value: this._isEnabled},
-    {key: 'highscore_enabled',   value: this._isHighscoreEnabled},
-    {key: 'score_enabled',       value: this._isScoresEnabled},
+    {key: 'highscore_enabled',    value: this._isHighscoreEnabled},
+    {key: 'score_enabled',        value: this._isScoresEnabled},
     {key: 'progress_enabled',     value: this._isProgressEnabled},
   ];
 
@@ -89,7 +89,7 @@ export class GamificationService implements Gamification {
   }
 
   private load(pair: Pair) {
-    const stored = this.storageAccessor.getItem(pair.key, false);
+    const stored = this.storageAccessor.getItem(pair.key, undefined);
 
     if (stored == null) {
       return;

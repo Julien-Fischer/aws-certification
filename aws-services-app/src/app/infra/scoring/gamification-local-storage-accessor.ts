@@ -21,7 +21,7 @@ export default class GamificationLocalStorageAccessor implements Storage<Key, bo
     }
   }
 
-  getItem(key: string, defaultValue: boolean = false): boolean {
+  getItem(key: string, defaultValue: boolean): boolean {
     const storeKey = this.keyFor(key);
     const item = localStorage.getItem(storeKey);
     if (item == null) {

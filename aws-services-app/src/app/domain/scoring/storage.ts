@@ -6,7 +6,7 @@ export interface Storage<K, V> {
 
     setItem(key: K, value: V): void;
 
-    getItem(key: K, defaultValue: V): V;
+    getItem(key: K, defaultValue: V | undefined): V;
 
     clear(key?: K): void;
 

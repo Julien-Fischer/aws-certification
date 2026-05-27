@@ -3,16 +3,16 @@ import {Gamification, gamificationInjectionToken} from "../../domain/scoring/gam
 export class StubGamificationService implements Gamification {
 
     private _isEnabled = false;
-    private _isScoresEnabled = false;
-    private _isProgressEnabled = false;
-    private _isHighscoreEnabled = false;
+    private _isScoresEnabled = true;
+    private _isProgressEnabled = true;
+    private _isHighscoreEnabled = true;
 
     isEnabled(): boolean {
         return this._isEnabled;
     }
 
     isHighscoreEnabled(): boolean {
-        return this._isScoresEnabled;
+        return this._isHighscoreEnabled;
     }
 
     isProgressEnabled(): boolean {
@@ -20,7 +20,7 @@ export class StubGamificationService implements Gamification {
     }
 
     isScoredEnabled(): boolean {
-        return this._isHighscoreEnabled;
+        return this._isScoresEnabled;
     }
 
     toggle() {
@@ -28,7 +28,7 @@ export class StubGamificationService implements Gamification {
     }
 
     setHighscoreEnabled(enabled: boolean): void {
-      this._isScoresEnabled = enabled;
+      this._isHighscoreEnabled = enabled;
     }
 
     setProgressEnabled(enabled: boolean): void {
@@ -36,11 +36,11 @@ export class StubGamificationService implements Gamification {
     }
 
     setScoresEnabled(enabled: boolean): void {
-      this._isHighscoreEnabled = enabled;
+      this._isScoresEnabled = enabled;
     }
 
     toggleHighscore(): void {
-      this._isScoresEnabled = !this._isScoresEnabled;
+      this._isHighscoreEnabled = !this._isHighscoreEnabled;
     }
 
     toggleProgress(): void {
@@ -48,7 +48,7 @@ export class StubGamificationService implements Gamification {
     }
 
     toggleScore(): void {
-      this._isHighscoreEnabled = !this._isHighscoreEnabled;
+      this._isScoresEnabled = !this._isScoresEnabled;
     }
 
 }
