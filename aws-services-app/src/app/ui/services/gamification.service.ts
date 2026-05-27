@@ -24,7 +24,7 @@ export class GamificationService implements Gamification {
   private _isProgressEnabled = signal<boolean>(true);
 
   isEnabled = this._isEnabled.asReadonly();
-  isScoredEnabled = this._isScoresEnabled.asReadonly();
+  isAccuracyEnabled = this._isScoresEnabled.asReadonly();
   isProgressEnabled = this._isProgressEnabled.asReadonly();
 
   private pairs: Pair[] = [
@@ -58,7 +58,7 @@ export class GamificationService implements Gamification {
   }
 
   toggleScore(): void {
-    this.setScoresEnabled(!this.isScoredEnabled());
+    this.setScoresEnabled(!this.isAccuracyEnabled());
   }
 
 

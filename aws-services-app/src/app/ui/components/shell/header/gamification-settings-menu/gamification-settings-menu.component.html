@@ -28,7 +28,7 @@
           <app-gamification-setting
             label="Accuracy"
             [isEnabled]="gamification.isEnabled()"
-            [isChecked]="gamification.isScoredEnabled()"
+            [isChecked]="gamification.isAccuracyEnabled()"
             (toggle)="gamification.toggleScore()"
           />
 

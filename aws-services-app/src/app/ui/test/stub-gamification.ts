@@ -14,7 +14,7 @@ export class StubGamificationService implements Gamification {
         return this._isProgressEnabled;
     }
 
-    isScoredEnabled(): boolean {
+    isAccuracyEnabled(): boolean {
         return this._isScoresEnabled;
     }
 

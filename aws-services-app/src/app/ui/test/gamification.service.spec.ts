@@ -71,7 +71,7 @@ describe('GamificationService', () => {
 
       gamificationService!.setScoresEnabled(enabled);
 
-      expect(gamificationService!.isScoredEnabled()).toBe(enabled);
+      expect(gamificationService!.isAccuracyEnabled()).toBe(enabled);
     })
 
     it.each([true, false])
@@ -80,7 +80,7 @@ describe('GamificationService', () => {
 
       gamificationService!.setScoresEnabled(enabled);
 
-      expect(gamificationService!.isScoredEnabled()).toBe(enabled);
+      expect(gamificationService!.isAccuracyEnabled()).toBe(enabled);
     })
 
     it('toggle is idempotent', () => {
@@ -89,7 +89,7 @@ describe('GamificationService', () => {
       gamificationService!.toggleScore();
       gamificationService!.toggleScore();
 
-      expect(gamificationService!.isScoredEnabled()).toBe(true);
+      expect(gamificationService!.isAccuracyEnabled()).toBe(true);
     })
   })
 
@@ -133,7 +133,7 @@ describe('GamificationService', () => {
       initGamificationService();
 
       expect(gamificationService!.isProgressEnabled()).toBe(true);
-      expect(gamificationService!.isScoredEnabled()).toBe(true);
+      expect(gamificationService!.isAccuracyEnabled()).toBe(true);
     });
   });
 

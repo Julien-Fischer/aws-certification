@@ -31,20 +31,24 @@
         </div>
       } @else {
         <div class="highscore-indicators-grid">
-          <app-score-indicator
-            label="Overall Progress"
-            icon="tasks"
-            borderColor="#4b9cd3"
-            iconClass="text-primary bg-primary-light"
-            [percentage]="highscore.progress"
-          />
-          <app-score-indicator
-            label="Success Rate"
-            icon="bullseye"
-            borderColor="#28a745"
-            iconClass="text-success bg-success-light"
-            [percentage]="highscore.accuracy"
-          />
+          @if (gamification.isProgressEnabled()) {
+            <app-score-indicator
+              label="Overall Progress"
+              icon="tasks"
+              borderColor="#4b9cd3"
+              iconClass="text-primary bg-primary-light"
+              [percentage]="highscore.progress"
+            />
+          }
+          @if (gamification.isAccuracyEnabled()) {
+            <app-score-indicator
+              label="Success Rate"
+              icon="bullseye"
+              borderColor="#28a745"
+              iconClass="text-success bg-success-light"
+              [percentage]="highscore.accuracy"
+            />
+          }
         </div>
       }
 

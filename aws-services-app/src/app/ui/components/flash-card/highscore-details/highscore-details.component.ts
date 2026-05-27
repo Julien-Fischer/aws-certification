@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {DatePipe} from "@angular/common";
 import {ScoreIndicatorComponent} from "../../generic/score-indicator.component";
+import {Gamification, gamificationInjectionToken} from "../../../../domain/scoring/gamification";
 
 @Component({
   selector: 'app-highscore-details',
@@ -18,5 +19,10 @@ export class HighscoreDetailsComponent {
   @Output() onHighscoreReset = new EventEmitter<void>();
 
   protected readonly highscoreNONE = Highscore.NONE;
+
+  constructor(
+    @Inject(gamificationInjectionToken) readonly gamification: Gamification
+  ) {
+  }
 
 }

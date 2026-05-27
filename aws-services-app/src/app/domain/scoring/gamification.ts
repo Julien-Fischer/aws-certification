@@ -16,7 +16,7 @@ export interface Gamification {
 
     isEnabled(): boolean;
 
-    isScoredEnabled(): boolean;
+    isAccuracyEnabled(): boolean;
 
     isProgressEnabled(): boolean;
 
