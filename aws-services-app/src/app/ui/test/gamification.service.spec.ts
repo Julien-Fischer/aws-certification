@@ -93,35 +93,6 @@ describe('GamificationService', () => {
     })
   })
 
-  describe('setHighscoreEnabled', () => {
-    it.each([true, false])
-    ('sets highscore when initially false', (enabled: boolean) => {
-      givenThat('highscore_enabled').isFalse();
-
-      gamificationService!.setHighscoreEnabled(enabled);
-
-      expect(gamificationService!.isHighscoreEnabled()).toBe(enabled);
-    })
-
-    it.each([true, false])
-    ('sets highscore when initially true', (enabled: boolean) => {
-      givenThat('highscore_enabled').isTrue();
-
-      gamificationService!.setHighscoreEnabled(enabled);
-
-      expect(gamificationService!.isHighscoreEnabled()).toBe(enabled);
-    })
-
-    it('toggle is idempotent', () => {
-      givenThat('highscore_enabled').isTrue();
-
-      gamificationService!.toggleHighscore();
-      gamificationService!.toggleHighscore();
-
-      expect(gamificationService!.isHighscoreEnabled()).toBe(true);
-    })
-  })
-
   describe('setProgressEnabled', () => {
     it.each([true, false])
     ('sets progress when initially false', (enabled: boolean) => {
@@ -163,7 +134,6 @@ describe('GamificationService', () => {
 
       expect(gamificationService!.isProgressEnabled()).toBe(true);
       expect(gamificationService!.isScoredEnabled()).toBe(true);
-      expect(gamificationService!.isHighscoreEnabled()).toBe(true);
     });
   });
 

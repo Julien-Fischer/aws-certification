@@ -10,20 +10,14 @@ export interface Gamification {
 
     toggleProgress(): void;
 
-    toggleHighscore(): void;
-
     setScoresEnabled(enabled: boolean): void;
 
     setProgressEnabled(enabled: boolean): void;
-
-    setHighscoreEnabled(enabled: boolean): void;
 
     isEnabled(): boolean;
 
     isScoredEnabled(): boolean;
 
     isProgressEnabled(): boolean;
-
-    isHighscoreEnabled(): boolean;
 
 }

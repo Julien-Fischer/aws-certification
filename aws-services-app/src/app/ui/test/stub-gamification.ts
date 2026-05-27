@@ -5,14 +5,9 @@ export class StubGamificationService implements Gamification {
     private _isEnabled = false;
     private _isScoresEnabled = true;
     private _isProgressEnabled = true;
-    private _isHighscoreEnabled = true;
 
     isEnabled(): boolean {
         return this._isEnabled;
-    }
-
-    isHighscoreEnabled(): boolean {
-        return this._isHighscoreEnabled;
     }
 
     isProgressEnabled(): boolean {
@@ -27,20 +22,12 @@ export class StubGamificationService implements Gamification {
       this._isEnabled = !this._isEnabled;
     }
 
-    setHighscoreEnabled(enabled: boolean): void {
-      this._isHighscoreEnabled = enabled;
-    }
-
     setProgressEnabled(enabled: boolean): void {
       this._isProgressEnabled = enabled;
     }
 
     setScoresEnabled(enabled: boolean): void {
       this._isScoresEnabled = enabled;
-    }
-
-    toggleHighscore(): void {
-      this._isHighscoreEnabled = !this._isHighscoreEnabled;
     }
 
     toggleProgress(): void {

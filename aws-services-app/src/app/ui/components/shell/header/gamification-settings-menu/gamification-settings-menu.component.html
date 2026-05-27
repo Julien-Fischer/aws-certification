@@ -26,17 +26,10 @@
           />
 
           <app-gamification-setting
-            label="Score"
+            label="Accuracy"
             [isEnabled]="gamification.isEnabled()"
             [isChecked]="gamification.isScoredEnabled()"
             (toggle)="gamification.toggleScore()"
-          />
-
-          <app-gamification-setting
-            label="Highscore"
-            [isEnabled]="gamification.isEnabled()"
-            [isChecked]="gamification.isHighscoreEnabled()"
-            (toggle)="gamification.toggleHighscore()"
           />
 
           <li class="menu-separator"></li>
