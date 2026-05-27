@@ -93,15 +93,15 @@ export class HighscoreBarsPage extends PageObject<HighscoreBarsComponent> {
   }
 
   get progressLabel(): string {
-    return this.lookupTextOfElement('.progress-label');
+    return this.lookupTextOfElement('[data-testid="progress-bar"] [data-testid="label"]');
   }
 
   get progressValue(): string {
-    return this.lookupTextOfElement('.progress-value');
+    return this.lookupTextOfElement('[data-testid="progress-bar"] [data-testid="value"]');
   }
 
   get progressBar(): HTMLElement {
-    return this.lookupElement('.progress-bar');
+    return this.lookupElement('[data-testid="progress-bar"] [data-testid="bar"]');
   }
 
   get progressWidth(): string {
@@ -109,19 +109,18 @@ export class HighscoreBarsPage extends PageObject<HighscoreBarsComponent> {
   }
 
   get accuracyLabel(): string {
-    return this.lookupTextOfElement('.accuracy-label');
+    return this.lookupTextOfElement('[data-testid="accuracy-bar"] [data-testid="label"]');
   }
 
   get accuracyValue(): string {
-    return this.lookupTextOfElement('.accuracy-value');
+    return this.lookupTextOfElement('[data-testid="accuracy-bar"] [data-testid="value"]');
   }
 
   get accuracyBar(): HTMLElement {
-    return this.lookupElement('.progress-bar.accuracy');
+    return this.lookupElement('[data-testid="accuracy-bar"] [data-testid="bar"]');
   }
 
   get accuracyWidth(): string {
     return this.accuracyBar.style.width;
   }
-
 }

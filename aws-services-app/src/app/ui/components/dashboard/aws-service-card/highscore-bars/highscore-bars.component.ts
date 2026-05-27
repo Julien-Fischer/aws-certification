@@ -1,11 +1,11 @@
 import {Component, Input, SimpleChanges} from '@angular/core';
 import Highscore from "../../../../../domain/scoring/models/highscore";
-import {NgStyle} from "@angular/common";
+import {HighscoreBarComponent} from "./highscore-bar/highscore-bar.component";
 
 @Component({
   selector: 'app-highscore-bars',
   imports: [
-    NgStyle
+    HighscoreBarComponent
   ],
   templateUrl: './highscore-bars.component.html',
   styleUrl: './highscore-bars.component.scss',
