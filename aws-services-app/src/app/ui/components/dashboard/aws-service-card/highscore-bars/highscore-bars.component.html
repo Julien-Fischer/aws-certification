@@ -1,16 +1,20 @@
 <div class="mt-3 flex flex-col gap-2">
-  <app-highscore-bar
-    data-testid="progress-bar"
-    label="Progress"
-    [value]="progressValue()"
-    fromClass="from-[#fb923c]"
-    toClass="to-[#f7b139]"
-  />
-  <app-highscore-bar
-    data-testid="accuracy-bar"
-    label="Accuracy"
-    [value]="accuracyValue()"
-    fromClass="from-[#3b82f6]"
-    toClass="to-[#22d3ee]"
-  />
+  @if (gamification.isProgressEnabled()) {
+    <app-highscore-bar
+      data-testid="progress-bar"
+      label="Progress"
+      [value]="progressValue()"
+      fromClass="from-[#fb923c]"
+      toClass="to-[#f7b139]"
+    />
+  }
+  @if (gamification.isScoredEnabled()) {
+    <app-highscore-bar
+      data-testid="accuracy-bar"
+      label="Accuracy"
+      [value]="accuracyValue()"
+      fromClass="from-[#3b82f6]"
+      toClass="to-[#22d3ee]"
+    />
+  }
 </div>

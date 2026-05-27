@@ -1,6 +1,7 @@
-import {Component, Input, SimpleChanges} from '@angular/core';
+import {Component, Inject, Input, SimpleChanges} from '@angular/core';
 import Highscore from "../../../../../domain/scoring/models/highscore";
 import {HighscoreBarComponent} from "./highscore-bar/highscore-bar.component";
+import {Gamification, gamificationInjectionToken} from "../../../../../domain/scoring/gamification";
 
 @Component({
   selector: 'app-highscore-bars',
@@ -16,6 +17,11 @@ export class HighscoreBarsComponent {
 
   progress = 0;
   accuracy = 0;
+
+  constructor(
+    @Inject(gamificationInjectionToken) readonly gamification: Gamification
+  ) {
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['highscore'] && this.highscore) {
