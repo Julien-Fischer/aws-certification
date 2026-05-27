@@ -19,12 +19,9 @@ export class AwsServiceCardComponent {
   @Input({ required: true }) highscore!: Highscore;
   @Output() serviceClick = new EventEmitter<string>();
 
-  gamification: Gamification;
-
   constructor(
-      @Inject(gamificationInjectionToken) gamification: Gamification
+      @Inject(gamificationInjectionToken) readonly gamification: Gamification
   ) {
-    this.gamification = gamification;
   }
 
   onCardClick(): void {
