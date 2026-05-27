@@ -16,7 +16,7 @@ import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scor
 import ProgressTracker from './progress-tracker';
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {Confetti} from "../../animations/confetti";
-import {Gamification, gamificationInjectionToken} from "../../services/gamification";
+import {Gamification, gamificationInjectionToken} from "../../../domain/scoring/gamification";
 import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
 import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
 import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";

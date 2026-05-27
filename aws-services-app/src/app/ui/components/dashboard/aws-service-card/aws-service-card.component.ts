@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlashCardMetadata } from '../../../../domain/search/models/metadata';
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {HighscoreBarsComponent} from "./highscore-bars/highscore-bars.component";
-import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
+import {Gamification, gamificationInjectionToken} from "../../../../domain/scoring/gamification";
 import {CompletionBadgeComponent} from "../../generic/completion-badge.component";
 
 @Component({

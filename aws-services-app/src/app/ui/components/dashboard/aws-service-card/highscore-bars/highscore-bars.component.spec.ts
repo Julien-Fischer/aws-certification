@@ -5,7 +5,7 @@ import { HighscoreBarsComponent } from './highscore-bars.component';
 import Highscore from "../../../../../domain/scoring/models/highscore";
 import {aHighscore, HighscoreBuilder} from "../../../../../domain/scoring/test/utils/score-builder";
 import PageObject from "../../../../test/page-object";
-import {gamificationInjectionToken} from "../../../../services/gamification";
+import {gamificationInjectionToken} from "../../../../../domain/scoring/gamification";
 import {StubGamificationService} from "../../../../test/stub-gamification";
 
 describe('HighscoreBarsComponent', () => {

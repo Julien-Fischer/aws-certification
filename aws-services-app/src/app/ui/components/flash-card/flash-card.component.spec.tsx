@@ -8,7 +8,7 @@ import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provide
 import {of} from "rxjs";
 import Highscore from "../../../domain/scoring/models/highscore";
 import {carouselInjectionToken} from "../../../domain/search/carousel";
-import {gamificationInjectionToken} from "../../services/gamification";
+import {gamificationInjectionToken} from "../../../domain/scoring/gamification";
 import {forgetHighscoreInjectionToken} from "../../../domain/scoring/highscore-eraser";
 import {FlashCardId} from "../../../domain/shared/flash-card-id";
 import {By} from "@angular/platform-browser";

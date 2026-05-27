@@ -4,7 +4,7 @@ import {FlashCardId} from "../../shared/flash-card-id";
 import {aHighscore, HighscoreBuilder} from "./utils/score-builder";
 import {storageInjectionToken} from "../storage";
 import {ForgetHighscoreService} from "../forget-highscore.service";
-import InMemoryStorage from "./utils/in-memory-storage";
+import HighscoreInMemoryStorage from "./utils/highscore-in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
 import {expectThat} from "./utils/score-assertions";
 
@@ -12,7 +12,7 @@ const aurora = new FlashCardId('aurora');
 const dynamo = new FlashCardId('dynamo');
 
 describe('ForgetHighscoreService', () => {
-    let storage = new InMemoryStorage();
+    let storage = new HighscoreInMemoryStorage();
     let leaderboard = new LeaderBoardService(storage);
     let highscoreEraser: ForgetHighscoreService;
 

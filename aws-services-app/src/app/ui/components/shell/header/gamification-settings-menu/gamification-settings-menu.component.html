@@ -11,16 +11,52 @@
         <div class="menu-separator"></div>
 
         <ul>
-
-          <li class="menu-item-toggle" (click)="gamification.toggle()" (keydown.enter)="gamification.toggle()" tabindex="0" role="button">
-            <span class="menu-item-label">{{gamification.isEnabled() ? 'Disable' : 'Enable'}} Mode</span>
+          <li class="menu-item-toggle main-toggle" (click)="gamification.toggle()" (keydown.enter)="gamification.toggle()" tabindex="0" role="button">
+            <span class="menu-item-label">Gamification</span>
             <app-toggle [checked]="gamification.isEnabled()" style="pointer-events: none;" />
           </li>
 
+          <div class="menu-separator"></div>
+
+          <li class="menu-item-toggle"
+              [class.disabled]="!gamification.isEnabled()"
+              (click)="gamification.isEnabled() && gamification.toggleProgress()"
+              (keydown.enter)="gamification.isEnabled() && gamification.toggleProgress()"
+              [tabindex]="gamification.isEnabled() ? 0 : -1"
+              role="button">
+            <span class="menu-item-label">Progress</span>
+            <app-toggle [checked]="gamification.isProgressEnabled()" style="pointer-events: none;" />
+          </li>
+
+          <li class="menu-item-toggle"
+              [class.disabled]="!gamification.isEnabled()"
+              (click)="gamification.isEnabled() && gamification.toggleScore()"
+              (keydown.enter)="gamification.isEnabled() && gamification.toggleScore()"
+              [tabindex]="gamification.isEnabled() ? 0 : -1"
+              role="button">
+            <span class="menu-item-label">Score</span>
+            <app-toggle [checked]="gamification.isScoredEnabled()" style="pointer-events: none;" />
+          </li>
+
+          <li class="menu-item-toggle"
+              [class.disabled]="!gamification.isEnabled()"
+              (click)="gamification.isEnabled() && gamification.toggleHighscore()"
+              (keydown.enter)="gamification.isEnabled() && gamification.toggleHighscore()"
+              [tabindex]="gamification.isEnabled() ? 0 : -1"
+              role="button">
+            <span class="menu-item-label">Highscore</span>
+            <app-toggle [checked]="gamification.isHighscoreEnabled()" style="pointer-events: none;" />
+          </li>
+
+          <div class="menu-separator"></div>
+
           <li>
-            <button (click)="forgetAll()" class="menu-item-btn btn-destructive">
+            <button (click)="gamification.isEnabled() && forgetAll()"
+                    class="menu-item-btn btn-destructive"
+                    [class.disabled]="!gamification.isEnabled()"
+                    [disabled]="!gamification.isEnabled()">
               <i class="fas fa-trash"></i>
-              <span>Reset Highscores</span>
+              <span>Reset All Scores</span>
             </button>
           </li>
 

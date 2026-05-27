@@ -13,7 +13,7 @@ import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-prov
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {forgetHighscoreInjectionToken} from "../../../../domain/scoring/highscore-eraser";
 import {ForgetHighscoreService} from "../../../../domain/scoring/forget-highscore.service";
-import InMemoryStorage from "../../../../domain/scoring/test/utils/in-memory-storage";
+import HighscoreInMemoryStorage from "../../../../domain/scoring/test/utils/highscore-in-memory-storage";
 import {storageInjectionToken} from "../../../../domain/scoring/storage";
 
 describe('HeaderComponent', () => {
@@ -40,7 +40,7 @@ describe('HeaderComponent', () => {
           provideRouter([]),
           provideGamification(),
           { provide: flashCardProviderInjectionToken, useClass: MockFlashCardProvider },
-          { provide: storageInjectionToken, useClass: InMemoryStorage },
+          { provide: storageInjectionToken, useClass: HighscoreInMemoryStorage },
           { provide: forgetHighscoreInjectionToken, useClass: ForgetHighscoreService },
           {
             provide: scoreProviderInjectionToken,

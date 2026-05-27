@@ -12,16 +12,17 @@ import {HighscoreEvaluator, saveHighscoreInjectionToken} from "./app/domain/scor
 import {scoreProviderInjectionToken} from "./app/domain/scoring/score-provider";
 import {leaderboardInjectionToken} from "./app/domain/scoring/leaderboard";
 import {storageInjectionToken} from "./app/domain/scoring/storage";
-import LocalStorageAccessor from "./app/infra/scoring/local-storage-accessor";
+import HighscoreLocalStorageAccessor from "./app/infra/scoring/highscore-local-storage-accessor";
 import {SaveHighscoreService} from "./app/domain/scoring/save-highscore.service";
 import {ScoreProviderService} from "./app/domain/scoring/score-provider.service";
 import {LeaderBoardService} from "./app/domain/scoring/leaderboard.service";
-import {Gamification, gamificationInjectionToken} from "./app/ui/services/gamification";
+import {Gamification, gamificationInjectionToken} from "./app/domain/scoring/gamification";
 import {GamificationService} from "./app/ui/services/gamification.service";
 import {carouselInjectionToken} from "./app/domain/search/carousel";
 import {InMemoryCarousel} from "./app/domain/search/services/in-memory-carousel.service";
 import {ForgetHighscoreService} from "./app/domain/scoring/forget-highscore.service";
 import {forgetHighscoreInjectionToken} from "./app/domain/scoring/highscore-eraser";
+import GamificationLocalStorageAccessor, {GAMIFICATION_STORAGE} from "./app/infra/scoring/gamification-local-storage-accessor";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -55,7 +56,11 @@ bootstrapApplication(AppComponent, {
     },
     {
       provide: storageInjectionToken,
-      useClass: LocalStorageAccessor
+      useClass: HighscoreLocalStorageAccessor
+    },
+    {
+      provide: GAMIFICATION_STORAGE,
+      useClass: GamificationLocalStorageAccessor,
     },
     {
       provide: gamificationInjectionToken,

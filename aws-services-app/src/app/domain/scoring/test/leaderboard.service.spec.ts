@@ -3,17 +3,16 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import {saveHighscoreInjectionToken} from "../highscore-evaluator";
 import {FlashCardId} from "../../shared/flash-card-id";
 import {aHighscore, aScore, ScoreBuilder} from "./utils/score-builder";
-import Highscore from "../models/highscore";
 import {storageInjectionToken} from "../storage";
 import {SaveHighscoreService} from "../save-highscore.service";
-import InMemoryStorage from "./utils/in-memory-storage";
+import HighscoreInMemoryStorage from "./utils/highscore-in-memory-storage";
 import {LeaderBoardService} from "../leaderboard.service";
 import {expectThat} from "./utils/score-assertions";
 
 const aurora = new FlashCardId('aurora');
 
 describe('LeaderboardService', () => {
-    let storage = new InMemoryStorage();
+    let storage = new HighscoreInMemoryStorage();
     let scoreWriter = new SaveHighscoreService(storage);
     let leaderboard: LeaderBoardService;
 

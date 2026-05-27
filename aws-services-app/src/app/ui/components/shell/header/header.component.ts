@@ -2,7 +2,7 @@ import {Component, ElementRef, HostListener, Inject, inject, Input, signal, View
 import {ThemeService} from "../../../services/theme.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {Gamification, gamificationInjectionToken} from "../../../services/gamification";
+import {Gamification, gamificationInjectionToken} from "../../../../domain/scoring/gamification";
 import {Router} from "@angular/router";
 import {SearchService} from "../../../../domain/search/services/search.service";
 import {SearchAutocompleteComponent} from "./search-autocomplete/search-autocomplete.component";

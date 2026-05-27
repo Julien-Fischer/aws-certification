@@ -1,6 +1,6 @@
 import { Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Gamification, gamificationInjectionToken } from "../../../../services/gamification";
+import { Gamification, gamificationInjectionToken } from "../../../../../domain/scoring/gamification";
 import { forgetHighscoreInjectionToken } from "../../../../../domain/scoring/highscore-eraser";
 import {ToggleComponent} from "../../../generic/toggle.component";
 

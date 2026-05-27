@@ -7,21 +7,21 @@ import Percentage from "../../domain/scoring/models/percentage";
 @Injectable({
     providedIn: 'root',
 })
-export default class LocalStorageAccessor implements Storage<FlashCardId, Highscore> {
+export default class HighscoreLocalStorageAccessor implements Storage<FlashCardId, Highscore> {
 
     private static readonly PREFIX = "highscore:";
 
     clear(key?: FlashCardId): void {
         if (key == null) {
             Object.keys(localStorage)
-                .filter(key => key.startsWith(LocalStorageAccessor.PREFIX))
+                .filter(key => key.startsWith(HighscoreLocalStorageAccessor.PREFIX))
                 .forEach(key => localStorage.removeItem(key));
         } else {
             localStorage.removeItem(this.keyFor(key));
         }
     }
 
-    getItem(key: FlashCardId, defaultValue: Highscore): Highscore {
+    getItem(key: FlashCardId, defaultValue: Highscore = Highscore.NONE): Highscore {
         const storeKey = this.keyFor(key);
         const item = localStorage.getItem(storeKey);
         if (item == null) {
@@ -41,7 +41,7 @@ export default class LocalStorageAccessor implements Storage<FlashCardId, Highsc
     }
 
     private keyFor(id: FlashCardId): string {
-        return `${LocalStorageAccessor.PREFIX}${id}`;
+        return `${HighscoreLocalStorageAccessor.PREFIX}${id}`;
     }
 
 }
