@@ -190,6 +190,10 @@
       opacity: 0.8;
     }
 
+    span {
+      flex-grow: 1;
+    }
+
     &:hover {
       background: rgba(0, 0, 0, 0.05);
     }
