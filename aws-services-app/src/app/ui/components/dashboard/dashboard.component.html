@@ -25,8 +25,11 @@
       <span></span>
     }
 
-    <button class="btn btn-outline-secondary d-flex align-items-center gap-2" (click)="toggleAllCategories()"
-            [title]="isAnyCollapsed() ? 'Expand All' : 'Collapse All'">
+    <button
+      class="btn btn-outline-secondary d-flex align-items-center gap-2"
+      (click)="toggleAllCategories()"
+      [title]="isAnyCollapsed() ? 'Expand All' : 'Collapse All'"
+    >
       <i class="fas" [class.fa-compress-alt]="!isAnyCollapsed()" [class.fa-expand-alt]="isAnyCollapsed()"></i>
       <span>
         <span class="d-none d-md-inline">{{ isAnyCollapsed() ? 'Expand ' : 'Collapse ' }}</span>
