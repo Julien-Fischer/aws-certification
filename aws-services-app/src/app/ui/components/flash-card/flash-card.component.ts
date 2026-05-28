@@ -200,13 +200,17 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   }
 
   private rewardUser() {
-    if (this.highscore.isMaximum()) {
+    if (this.hasMasteredQuiz()) {
       Confetti.burst();
     } else {
       if (!this.newHighscoreUnlocked) {
         this.unlockNewHighscore();
       }
     }
+  }
+
+  private hasMasteredQuiz() {
+    return this.highscore.isMaximum();
   }
 
   private unlockNewHighscore() {
