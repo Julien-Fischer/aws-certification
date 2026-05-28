@@ -43,7 +43,7 @@ export class SearchService {
   getCategories(): Observable<FlashCardCategory[]> {
     return this.allMetadata.pipe(
         map(services => services ?? []),
-        map(services => this.toCategories(services))
+        map(services => toCategories(services))
     );
   }
 
@@ -58,7 +58,7 @@ export class SearchService {
           card.category.toLowerCase().includes(lowerQuery)
         );
       }),
-      map(filteredServices => this.toCategories(filteredServices))
+      map(filteredServices => toCategories(filteredServices))
     );
   }
 
@@ -73,17 +73,17 @@ export class SearchService {
     );
   }
 
-  private toCategories(services: FlashCardMetadata[]): FlashCardCategory[] {
-    const categoryMap = services.reduce((map, service) => {
-      const category = service.category;
-      const list = map.get(category) ?? [];
-      map.set(category, [...list, service]);
-      return map;
-    }, new Map<string, FlashCardMetadata[]>());
-    return Array.from(categoryMap.entries()).map(([name, services]) => ({
-      name,
-      services
-    }));
-  }
+}
 
+function toCategories(services: FlashCardMetadata[]): FlashCardCategory[] {
+  const categoryMap = services.reduce((map, service) => {
+    const category = service.category;
+    const list = map.get(category) ?? [];
+    map.set(category, [...list, service]);
+    return map;
+  }, new Map<string, FlashCardMetadata[]>());
+  return Array.from(categoryMap.entries()).map(([name, services]) => ({
+    name,
+    services
+  }));
 }
