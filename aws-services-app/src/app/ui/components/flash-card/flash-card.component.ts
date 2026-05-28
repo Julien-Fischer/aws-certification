@@ -22,6 +22,7 @@ import { forgetHighscoreInjectionToken, HighscoreEraser } from "../../../domain/
 import { AppTextPopComponent } from "../../animations/text-pop.component";
 import { HighscoreDetailsComponent } from "./highscore-details/highscore-details.component";
 import { FlashCardNavigationComponent } from "./flash-card-navigation.component";
+import { FlashCardHeaderComponent } from "./flash-card-header.component";
 
 @Component({
   selector: 'app-flash-card',
@@ -32,7 +33,8 @@ import { FlashCardNavigationComponent } from "./flash-card-navigation.component"
     AppBackToHomeButtonComponent,
     AppTextPopComponent,
     HighscoreDetailsComponent,
-    FlashCardNavigationComponent
+    FlashCardNavigationComponent,
+    FlashCardHeaderComponent
   ],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
