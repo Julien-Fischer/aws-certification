@@ -116,13 +116,9 @@ export class FlashCardComponent implements OnInit, OnDestroy {
           this.loading = true;
           return;
         }
-
         this.service = service;
-        if (service) {
-          this.loadMarkdownContent(serviceId);
-        } else {
-          this.loading = false;
-        }
+        this.loadMarkdownContent(serviceId);
+        this.loading = false;
       }
     );
   }
