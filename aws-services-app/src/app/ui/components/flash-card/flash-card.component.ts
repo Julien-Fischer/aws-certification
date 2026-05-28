@@ -2,7 +2,7 @@ import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
@@ -14,23 +14,31 @@ import Highscore from '../../../domain/scoring/models/highscore';
 import { HighscoreEvaluator, saveHighscoreInjectionToken } from '../../../domain/scoring/highscore-evaluator';
 import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
-import {FlashCardId} from "../../../domain/shared/flash-card-id";
-import {Confetti} from "../../animations/confetti";
-import {Gamification, gamificationInjectionToken} from "../../../domain/scoring/gamification";
-import {AppBackToHomeButtonComponent} from "../generic/back-to-home-button.component";
-import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
-import {forgetHighscoreInjectionToken, HighscoreEraser} from "../../../domain/scoring/highscore-eraser";
-import {AppTextPopComponent} from "../../animations/text-pop.component";
-import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.component";
+import { FlashCardId } from "../../../domain/shared/flash-card-id";
+import { Confetti } from "../../animations/confetti";
+import { Gamification, gamificationInjectionToken } from "../../../domain/scoring/gamification";
+import { AppBackToHomeButtonComponent } from "../generic/back-to-home-button.component";
+import { forgetHighscoreInjectionToken, HighscoreEraser } from "../../../domain/scoring/highscore-eraser";
+import { AppTextPopComponent } from "../../animations/text-pop.component";
+import { HighscoreDetailsComponent } from "./highscore-details/highscore-details.component";
+import { FlashCardNavigationComponent } from "./flash-card-navigation.component";
 
 @Component({
   selector: 'app-flash-card',
   standalone: true,
-  imports: [CommonModule, QuizComponent, AppBackToHomeButtonComponent, AppTextPopComponent, HighscoreDetailsComponent],
+  imports: [
+    CommonModule,
+    QuizComponent,
+    AppBackToHomeButtonComponent,
+    AppTextPopComponent,
+    HighscoreDetailsComponent,
+    FlashCardNavigationComponent
+  ],
   templateUrl: './flash-card.component.html',
   styleUrl: './flash-card.component.scss',
 })
 export class FlashCardComponent implements OnInit, OnDestroy {
+
   service: FlashCardMetadata | undefined;
   markdownContent: string = '';
   trueFalseQuestions: Question[] = [];
@@ -41,23 +49,19 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   firstAttempt: boolean = true;
   newHighscoreUnlocked = false;
 
-  loading: boolean = true;
+  protected flashcardId: FlashCardId | undefined = undefined;
+  protected loading: boolean = true;
   @ViewChild(AppTextPopComponent) textPopComponent!: AppTextPopComponent;
-
-  nextCard: FlashCardMetadata | undefined;
-  prevCard: FlashCardMetadata | undefined;
 
   private resetSubscription: Subscription | undefined;
 
   constructor(
-      private route: ActivatedRoute,
-      private router: Router,
-      private flashCardService: SearchService,
-      @Inject(carouselInjectionToken) private carousel: Carousel,
-      @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
-      @Inject(forgetHighscoreInjectionToken) private forgetHighscore: HighscoreEraser,
-      @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
-      @Inject(gamificationInjectionToken) protected gamification: Gamification
+    private route: ActivatedRoute,
+    private flashCardService: SearchService,
+    @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
+    @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
+    @Inject(gamificationInjectionToken) protected gamification: Gamification,
+    @Inject(forgetHighscoreInjectionToken) private forgetHighscore: HighscoreEraser
   ) {}
 
   ngOnInit(): void {
@@ -73,9 +77,8 @@ export class FlashCardComponent implements OnInit, OnDestroy {
       if (id) {
         this.loading = true;
         this.resetProgressTracker();
-        let flashCardId = new FlashCardId(id);
-        this.loadService(flashCardId);
-        this.loadNeighboringCards(flashCardId);
+        this.flashcardId = new FlashCardId(id);
+        this.loadService(this.flashcardId);
       } else {
         this.loading = false;
       }
@@ -92,15 +95,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
       throw new Error('ID parameter is missing');
     }
     return new FlashCardId(idParam);
-  }
-
-  private loadNeighboringCards(serviceId: FlashCardId): void {
-    this.carousel.next(serviceId).subscribe(nextCard => {
-      this.nextCard = nextCard;
-    })
-    this.carousel.prev(serviceId).subscribe(prevCard => {
-      this.prevCard = prevCard;
-    })
   }
 
   private loadService(serviceId: FlashCardId): void {
@@ -226,22 +220,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     this.newHighscoreUnlocked = true;
   }
 
-  get previousCardName(): string {
-    return this.prevCard?.name || '';
-  }
-
-  get nextCardName(): string {
-    return this.nextCard?.name || '';
-  }
-
-  navigateToPrevious(): void {
-    this.navigateTo(this.prevCard);
-  }
-
-  navigateToNext(): void {
-    this.navigateTo(this.nextCard);
-  }
-
   resetHighscore(): void {
     if (this.service) {
       this.forgetHighscore.forget(new FlashCardId(this.service.id));
@@ -249,10 +227,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
       this.firstAttempt = true;
       this.resetProgressTracker();
     }
-  }
-
-  private navigateTo(card: FlashCardMetadata | undefined): void {
-    this.router.navigate(['/service', card?.id]);
   }
 
 }

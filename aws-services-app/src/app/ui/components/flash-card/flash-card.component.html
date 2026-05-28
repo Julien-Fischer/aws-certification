@@ -74,22 +74,7 @@
               }
             </div>
 
-            <div class="navigation-buttons d-flex justify-content-between mt-5 pt-4 border-top">
-              <button
-                class="btn text-[var(--text-primary)] d-flex align-items-center justify-start gap-2"
-                (click)="navigateToPrevious()"
-              >
-                <i class="fas fa-arrow-left"></i>
-                {{ previousCardName }}
-              </button>
-              <button
-                class="btn text-[var(--text-primary)] d-flex align-items-center justify-end gap-2"
-                (click)="navigateToNext()"
-              >
-                {{ nextCardName }}
-                <i class="fas fa-arrow-right"></i>
-              </button>
-            </div>
+            <app-flash-card-navigation [id]="flashcardId" />
 
           </div>
         </div>

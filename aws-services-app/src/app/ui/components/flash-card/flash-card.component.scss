@@ -77,22 +77,6 @@
     border-radius: 15px 15px 0 0 !important;
 }
 
-.navigation-buttons {
-  .btn {
-    min-width: 120px;
-    transition: all 0.2s ease-in-out;
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    i {
-      font-size: 0.8rem;
-    }
-  }
-}
-
 
 @media (max-width: 768px) {
     .card {
@@ -108,7 +92,7 @@
         padding-right: 10px;
     }
 
-    .d-flex:not(.navigation-buttons button) {
+    .d-flex {
         flex-direction: column;
         text-align: center;
     }
