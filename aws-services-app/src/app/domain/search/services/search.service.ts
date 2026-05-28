@@ -25,10 +25,6 @@ export class SearchService {
     this._searchTerm.next(term);
   }
 
-  getSearchTerm(): Observable<string> {
-    return this._searchTerm.asObservable();
-  }
-
   getMetadata(id: FlashCardId): Observable<FlashCardMetadata | undefined | null> {
     return this.allMetadata.pipe(
         map(services => {
@@ -38,12 +34,6 @@ export class SearchService {
           return services.find(s => id.hasValue(s.id));
         }
     ));
-  }
-
-  getAllMetadata(): Observable<FlashCardMetadata[]> {
-    return this.allMetadata.pipe(
-      map(services => services ?? [])
-    );
   }
 
   getFlashCard(id: FlashCardId): Observable<FlashCard> {
