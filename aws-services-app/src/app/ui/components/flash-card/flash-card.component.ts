@@ -41,9 +41,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
 
   service: FlashCardMetadata | undefined;
   markdownContent: string = '';
-  trueFalseQuestions: Question[] = [];
-  multipleChoiceQuestions: Question[] = [];
-  allQuestions: Question[] = [];
+  questions: Question[] = [];
   progressTracker = this.trackProgress();
   highscore: Highscore = Highscore.NONE;
   firstAttempt: boolean = true;
@@ -152,9 +150,9 @@ export class FlashCardComponent implements OnInit, OnDestroy {
         };
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
-        this.trueFalseQuestions = trueFalseQuestions;
-        this.multipleChoiceQuestions = multipleChoiceQuestions;
-        this.allQuestions = [...this.trueFalseQuestions, ...this.multipleChoiceQuestions];
+        // this.trueFalseQuestions = trueFalseQuestions;
+        // this.multipleChoiceQuestions = multipleChoiceQuestions;
+        this.questions = [...trueFalseQuestions, ...multipleChoiceQuestions];
         this.loading = false;
       },
       error: (error) => {
@@ -165,11 +163,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onTrueFalseScoreChange(correct: boolean) {
-    await this.onProgressUpdate(this.progressTracker, correct);
-  }
-
-  async onMultipleChoiceScoreChange(correct: boolean) {
+  async onScoreChange(correct: boolean) {
     await this.onProgressUpdate(this.progressTracker, correct);
   }
 
@@ -179,7 +173,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   }
 
   private trackProgress() {
-    return new ProgressTracker(() => this.allQuestions.length);
+    return new ProgressTracker(() => this.questions.length);
   }
 
   private async onProgressUpdate(tracker: ProgressTracker, correct: boolean) {

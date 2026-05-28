@@ -35,6 +35,12 @@
             <div class="markdown-content" [innerHTML]="markdownContent">
             </div>
 
+            <h3
+              class="my-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              <i class="fas fa-question-circle me-3"></i>
+              Test Your Knowledge
+            </h3>
+
             <div class="quizzes">
               @if (gamification.isEnabled()) {
                   <app-highscore-details
@@ -43,32 +49,12 @@
                   />
               }
 
-              @if (trueFalseQuestions.length > 0) {
+              @if (questions.length > 0) {
                 <div class="mt-5">
-                  <h3
-                    class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    <i class="fas fa-check-circle me-3"></i>
-                    True / False Quiz
-                  </h3>
                   <app-quiz
-                    [questions]="trueFalseQuestions"
+                    [questions]="questions"
                     [onRetry]="resetProgressTracker.bind(this)"
-                    [onAnswer]="onTrueFalseScoreChange.bind(this)"
-                  />
-                </div>
-              }
-
-              @if (multipleChoiceQuestions.length > 0) {
-                <div class="mt-5">
-                  <h3
-                    class="mb-6 text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    <i class="fas fa-list-ul me-2"></i>
-                    Multiple Choice Quiz
-                  </h3>
-                  <app-quiz
-                    [questions]="multipleChoiceQuestions"
-                    [onRetry]="resetProgressTracker.bind(this)"
-                    [onAnswer]="onMultipleChoiceScoreChange.bind(this)"
+                    [onAnswer]="onScoreChange.bind(this)"
                   />
                 </div>
               }
