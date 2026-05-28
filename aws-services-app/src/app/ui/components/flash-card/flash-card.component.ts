@@ -131,25 +131,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     this.flashCardService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
         const { mainContent, trueFalseQuestions, multipleChoiceQuestions } = card;
-
-        const renderer = new marked.Renderer();
-        renderer.table = (token) => {
-          const header = token.header.map(cell => renderer.tablecell(cell)).join('');
-          const body = token.rows.map(row => {
-            return renderer.tablerow({
-              text: row.map(cell => renderer.tablecell(cell)).join('')
-            });
-          }).join('');
-
-          return `
-            <div class="table-responsive">
-              <table class="table">
-                <thead>${renderer.tablerow({ text: header })}</thead>
-                <tbody>${body}</tbody>
-              </table>
-            </div>
-          `;
-        };
+        const renderer = tableRenderer();
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
         this.questions = [...trueFalseQuestions, ...multipleChoiceQuestions];
@@ -227,4 +209,28 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     }
   }
 
+}
+
+function tableRenderer() {
+  const renderer = new marked.Renderer();
+
+  renderer.table = (token) => {
+    const header = token.header.map(cell => renderer.tablecell(cell)).join('');
+    const body = token.rows.map(row => {
+      return renderer.tablerow({
+        text: row.map(cell => renderer.tablecell(cell)).join('')
+      });
+    }).join('');
+
+    return `
+      <div class="table-responsive">
+        <table class="table">
+          <thead>${renderer.tablerow({text: header})}</thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+    `;
+  };
+
+  return renderer;
 }
