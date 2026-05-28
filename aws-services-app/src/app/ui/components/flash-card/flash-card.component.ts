@@ -150,8 +150,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
         };
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
-        // this.trueFalseQuestions = trueFalseQuestions;
-        // this.multipleChoiceQuestions = multipleChoiceQuestions;
         this.questions = [...trueFalseQuestions, ...multipleChoiceQuestions];
         this.loading = false;
       },
@@ -163,8 +161,8 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onScoreChange(correct: boolean) {
-    await this.onProgressUpdate(this.progressTracker, correct);
+  async onProgress(correct: boolean) {
+    await this.updateProgress(this.progressTracker, correct);
   }
 
   resetProgressTracker() {
@@ -176,7 +174,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     return new ProgressTracker(() => this.questions.length);
   }
 
-  private async onProgressUpdate(tracker: ProgressTracker, correct: boolean) {
+  private async updateProgress(tracker: ProgressTracker, correct: boolean) {
     tracker.update(correct);
     const score = tracker.score;
     await this.notifyScore(score);

@@ -54,7 +54,7 @@
                   <app-quiz
                     [questions]="questions"
                     [onRetry]="resetProgressTracker.bind(this)"
-                    [onAnswer]="onScoreChange.bind(this)"
+                    [onAnswer]="onProgress.bind(this)"
                   />
                 </div>
               }
