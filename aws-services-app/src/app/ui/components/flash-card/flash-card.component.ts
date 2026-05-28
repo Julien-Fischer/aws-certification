@@ -1,8 +1,8 @@
-import { Component, Inject, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
-import {ActivatedRoute, RouterLink} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
@@ -11,18 +11,15 @@ import { Question } from '../../../domain/search/models/question';
 import { FlashCard } from '../../../domain/search/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import Highscore from '../../../domain/scoring/models/highscore';
-import { HighscoreEvaluator, saveHighscoreInjectionToken } from '../../../domain/scoring/highscore-evaluator';
-import { ScoreProvider, scoreProviderInjectionToken } from '../../../domain/scoring/score-provider';
 import ProgressTracker from './progress-tracker';
 import { FlashCardId } from "../../../domain/shared/flash-card-id";
 import { Confetti } from "../../animations/confetti";
-import { Gamification, gamificationInjectionToken } from "../../../domain/scoring/gamification";
 import { AppBackToHomeButtonComponent } from "../generic/back-to-home-button.component";
-import { forgetHighscoreInjectionToken, HighscoreEraser } from "../../../domain/scoring/highscore-eraser";
 import { AppTextPopComponent } from "../../animations/text-pop.component";
 import { HighscoreDetailsComponent } from "./highscore-details/highscore-details.component";
 import { FlashCardNavigationComponent } from "./flash-card-navigation.component";
 import { FlashCardHeaderComponent } from "./flash-card-header.component";
+import {ScoringAppService, AnswerResult} from "../../../domain/scoring/scoring-application.service";
 
 @Component({
   selector: 'app-flash-card',
@@ -58,14 +55,11 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private flashCardService: SearchService,
-    @Inject(saveHighscoreInjectionToken) private saveHighscore: HighscoreEvaluator,
-    @Inject(scoreProviderInjectionToken) private scoreProvider: ScoreProvider,
-    @Inject(gamificationInjectionToken) protected gamification: Gamification,
-    @Inject(forgetHighscoreInjectionToken) private forgetHighscore: HighscoreEraser
+    private scoringAppService: ScoringAppService
   ) {}
 
   ngOnInit(): void {
-    this.resetSubscription = this.forgetHighscore.onReset.subscribe(() => {
+    this.resetSubscription = this.scoringAppService.onReset.subscribe(() => {
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
         this.loadHighscore(new FlashCardId(id));
@@ -89,12 +83,8 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     this.resetSubscription?.unsubscribe();
   }
 
-  private serviceId(): FlashCardId {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    if (!idParam) {
-      throw new Error('ID parameter is missing');
-    }
-    return new FlashCardId(idParam);
+  get showHighscoreDetails(): boolean {
+    return this.scoringAppService.isGamificationEnabled();
   }
 
   private loadService(serviceId: FlashCardId): void {
@@ -103,24 +93,20 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   }
 
   private loadHighscore(serviceId: FlashCardId): void {
-    this.highscore = this.scoreProvider.get(serviceId);
-    if (this.highscore.beats(Highscore.NONE)) {
-      this.firstAttempt = false;
-    }
+    this.highscore = this.scoringAppService.getHighscore(serviceId);
+    this.firstAttempt = this.scoringAppService.isFirstAttempt(this.highscore);
   }
 
   private loadContent(serviceId: FlashCardId): void {
-    this.flashCardService.getMetadata(serviceId).subscribe(
-      service => {
-        if (service === null) {
-          this.loading = true;
-          return;
-        }
-        this.service = service;
-        this.loadMarkdownContent(serviceId);
-        this.loading = false;
+    this.flashCardService.getMetadata(serviceId).subscribe(service => {
+      if (service === null) {
+        this.loading = true;
+        return;
       }
-    );
+      this.service = service;
+      this.loadMarkdownContent(serviceId);
+      this.loading = false;
+    });
   }
 
   private loadMarkdownContent(id: FlashCardId): void {
@@ -135,7 +121,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Error loading markdown content:', error);
-        this.markdownContent = '<p>Error loading content. Please try again later.</p>';
+        this.markdownContent = '<p>Error loading Markdown content. Please try again later.</p>';
         this.loading = false;
       }
     });
@@ -161,50 +147,33 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   }
 
   private async notifyScore(score: Score) {
-    const previousHighscore = this.highscore;
-    this.highscore = await this.saveHighscore.submit(this.serviceId(), score);
-    if (this.shouldRewardUser(previousHighscore)) {
-      this.rewardUser();
-    }
+    if (!this.flashcardId) return;
+
+    const result = await this.scoringAppService.submitAnswer(this.flashcardId, score);
+    this.highscore = result.highscore;
     this.firstAttempt = false;
-  }
 
-  private shouldRewardUser(previousHighscore: Highscore) {
-    return this.gamification.isEnabled() && this.isRewardDeserved(previousHighscore);
-  }
-
-  private isRewardDeserved(previousHighscore: Highscore): boolean {
-    return this.highscore.hasBetterAccuracyThan(previousHighscore) && !this.firstAttempt;
-  }
-
-  private rewardUser() {
-    if (this.hasMasteredQuiz()) {
-      Confetti.burst();
-    } else {
-      if (!this.newHighscoreUnlocked) {
-        this.unlockNewHighscore();
-      }
+    if (result.deservesReward) {
+      this.rewardUser(result);
     }
   }
 
-  private hasMasteredQuiz() {
-    return this.highscore.isMaximum();
-  }
-
-  private unlockNewHighscore() {
-    this.textPopComponent.pop();
-    this.newHighscoreUnlocked = true;
+  private rewardUser(result: AnswerResult) {
+    if (result.isMaximum) {
+      Confetti.burst();
+    } else if (!this.newHighscoreUnlocked) {
+      this.textPopComponent.pop();
+      this.newHighscoreUnlocked = true;
+    }
   }
 
   resetHighscore(): void {
-    if (this.service) {
-      this.forgetHighscore.forget(new FlashCardId(this.service.id));
-      this.highscore = Highscore.NONE;
-      this.firstAttempt = true;
-      this.resetProgressTracker();
-    }
+    if (!this.flashcardId) return;
+    this.scoringAppService.resetHighscore(this.flashcardId);
+    this.highscore = Highscore.NONE;
+    this.firstAttempt = true;
+    this.resetProgressTracker();
   }
-
 }
 
 function tableRenderer() {

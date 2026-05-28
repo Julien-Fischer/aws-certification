@@ -26,11 +26,11 @@
             </h3>
 
             <div class="quizzes">
-              @if (gamification.isEnabled()) {
-                  <app-highscore-details
-                    [highscore]="highscore"
-                    (onHighscoreReset)="resetHighscore()"
-                  />
+              @if (showHighscoreDetails) {
+                <app-highscore-details
+                  [highscore]="highscore"
+                  (onHighscoreReset)="resetHighscore()"
+                />
               }
 
               @if (questions.length > 0) {
