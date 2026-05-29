@@ -116,6 +116,29 @@ describe('SendAnswer', () => {
             hasMastered: false
           });
       })
+
+      it('has failed quiz if accuracy < 50%', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aFalseStatement(),
+            aTrueStatement(),
+          ));
+
+        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+
+        expectResult(result)
+          .toHaveProgress(100)
+          .toHaveAccuracy(33.33)
+          .toHaveOutcome({
+            hasFailed: true,
+            hasSucceeded: false,
+            hasMastered: false
+          });
+      })
     })
   })
 
@@ -129,11 +152,11 @@ describe('SendAnswer', () => {
 function expectResult(result: ResultDto) {
   return {
     toHaveAccuracy(value: number) {
-      expect(result.accuracy).toBe(value);
+      expect(result.accuracy).toBeCloseTo(value, 2);
       return this;
     },
     toHaveProgress(value: number) {
-      expect(result.progress).toBe(value);
+      expect(result.progress).toBeCloseTo(value, 2);
       return this;
     },
     toHaveNoOutcome() {
