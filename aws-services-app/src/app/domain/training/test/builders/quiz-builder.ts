@@ -31,8 +31,8 @@ export class QuizBuilder {
   private questions: Question[] = [];
   private id?: QuizId;
 
-  identified(id: string): this {
-    this.id = new QuizId(id);
+  identified(id: string | QuizId): this {
+    this.id = id instanceof QuizId ? id : new QuizId(id);
     return this;
   }
 
