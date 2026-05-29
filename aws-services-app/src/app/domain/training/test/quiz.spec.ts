@@ -335,6 +335,19 @@ describe('Quiz', () => {
       expect(result1.outcome).toBeUndefined();
       expect(result2.outcome).toBeDefined();
     })
+
+    it('has failed when accuracy < 50%', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(true));
+      quiz.submit(new Answer(false));
+      const result3 = quiz.submit(new Answer(false));
+
+      expect(result3.outcome).toBeDefined();
+      expect(result3.outcome?.hasFailed()).toBe(true);
+    })
   })
 
 })
