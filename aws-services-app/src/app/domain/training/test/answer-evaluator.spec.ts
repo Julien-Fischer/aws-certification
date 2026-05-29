@@ -38,12 +38,24 @@ describe('AnswerEvaluator', () => {
       having(
         aQuiz()
           .identified(IAM_QUIZ)
-          .with(aTrueStatement())
+          .with(aTrueStatement(), aFalseStatement())
       );
 
-      const result = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
+      const firstAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
 
-      expectResult(result).toBeCorrect();
+      expectResult(firstAnswer)
+        .toBeCorrect()
+        .toNotBeComplete()
+        .toHaveProgress(50)
+        .toHaveAccuracy(50);
+
+      const lastAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+
+      expectResult(lastAnswer)
+        .toBeCorrect()
+        .toBeComplete()
+        .toHaveProgress(100)
+        .toHaveAccuracy(100);
     })
 
     it('evaluates incorrect answers', () => {
@@ -57,6 +69,9 @@ describe('AnswerEvaluator', () => {
 
       expectResult(result)
         .toBeIncorrect()
+        .toBeComplete()
+        .toHaveAccuracy(0)
+        .toHaveCorrectAnswer(true);
     })
   })
 
