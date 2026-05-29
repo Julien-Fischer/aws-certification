@@ -322,8 +322,14 @@ describe('Quiz', () => {
         .toHaveAccuracy(0);
     })
   })
+
 })
 
 
-
-
+function reverseOrder() {
+  return {
+    shuffle<T>(array: T[]): T[] {
+      return array.reverse();
+    }
+  }
+}

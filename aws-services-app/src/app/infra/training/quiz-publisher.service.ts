@@ -35,15 +35,15 @@ export class QuizPublisher {
   ) { }
 
   start(quizDto: QuizDto) {
-    const quiz = this.toQuiz(quizDto);
-    this.startQuiz.start(quiz);
+    const questions = this.toQuestions(quizDto);
+    this.startQuiz.with(questions);
   }
 
-  private toQuiz(dto: QuizDto): Quiz {
-    return new Quiz([
+  private toQuestions(dto: QuizDto): Question[] {
+    return [
       ...mapBoolean(dto.booleanQuestions),
       ...mapMultipleChoice(dto.multipleChoiceQuestions)
-    ]);
+    ];
   }
 
 }

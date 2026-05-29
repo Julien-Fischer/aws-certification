@@ -5,6 +5,7 @@ import {QuizId} from "../../quiz-id";
 import {Answer} from "../../models/answer";
 import {Option} from "../../models/multiple-choice-question";
 import {anAnswer} from "./answer-builder";
+import {Shuffle} from "../../shuffle";
 
 export function aQuiz(): QuizBuilder {
   return new QuizBuilder();
