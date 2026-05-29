@@ -39,7 +39,7 @@ describe('Quiz', () => {
 
           const result = quiz.submit(new Answer(true));
 
-          expect(result.isCorrect).toBe(true);
+          expectResult(result).toBeCorrect();
         })
 
         it('is false', () => {
@@ -49,7 +49,7 @@ describe('Quiz', () => {
 
           const result = quiz.submit(new Answer(false));
 
-          expect(result.isCorrect).toBe(false);
+          expectResult(result).toBeIncorrect();
         })
       })
 
@@ -61,7 +61,7 @@ describe('Quiz', () => {
 
           const result = quiz.submit(new Answer(false));
 
-          expect(result.isCorrect).toBe(true);
+          expectResult(result).toBeCorrect();
         })
 
         it('is false', () => {
@@ -71,7 +71,7 @@ describe('Quiz', () => {
 
           const result = quiz.submit(new Answer(true));
 
-          expect(result.isCorrect).toBe(false);
+          expectResult(result).toBeIncorrect();
         })
       })
 
@@ -87,7 +87,7 @@ describe('Quiz', () => {
 
         const result = quiz.submit(choice('A. First option'));
 
-        expect(result.isCorrect).toBe(true);
+        expectResult(result).toBeCorrect();
       })
 
       it('is false when incorrect option is selected', () => {
@@ -99,7 +99,7 @@ describe('Quiz', () => {
 
         const result = quiz.submit(choice('B. Second option'));
 
-        expect(result.isCorrect).toBe(false);
+        expectResult(result).toBeIncorrect();
       })
 
       it('is provides the correct answer when incorrect', () => {
