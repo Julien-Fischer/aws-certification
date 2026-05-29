@@ -44,8 +44,9 @@ export function expectResult(result: Result) {
       return this;
     },
 
-    toHaveCorrectAnswer(answer: Answer<any>) {
-      expect(result.correctAnswer.equals(answer));
+    toHaveCorrectAnswer<T extends {toString: () => string}>(answer: T | Answer<any>) {
+      const expected: Answer<any> = answer instanceof Answer ? answer : new Answer(answer);
+      expect(result.correctAnswer.equals(expected));
       return this;
     }
 

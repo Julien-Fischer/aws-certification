@@ -3,7 +3,7 @@ import {QuizId} from "../quiz-id";
 import {Answer} from "../models/answer";
 import {expectResult} from "./expectations/expect-result";
 import {aQuiz, QuizBuilder} from "./builders/quiz-builder";
-import {aTrueStatement} from "./builders/question-builder";
+import {aFalseStatement, aTrueStatement} from "./builders/question-builder";
 import {MockFlashCardProvider} from "../../search/test/mock-flashcard-provider";
 import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../search/services/search.service";
@@ -55,7 +55,8 @@ describe('AnswerEvaluator', () => {
 
       const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
 
-      expectResult(result).toBeIncorrect();
+      expectResult(result)
+        .toBeIncorrect()
     })
   })
 
