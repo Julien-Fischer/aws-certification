@@ -6,14 +6,14 @@ import {QuizId} from "../../domain/training/quiz-id";
 @Injectable({ providedIn: 'root' })
 export class InMemoryQuizRepository implements QuizRepository {
 
-  private quizzes: Map<QuizId, Quiz> = new Map();
+  private quizzes: Map<string, Quiz> = new Map();
 
   get(id: QuizId): Quiz | undefined {
-    return this.quizzes.get(id);
+    return this.quizzes.get(id.toString());
   }
 
   save(quiz: Quiz): void {
-    this.quizzes.set(quiz.id, quiz);
+    this.quizzes.set(quiz.id.toString(), quiz);
   }
 
 }
