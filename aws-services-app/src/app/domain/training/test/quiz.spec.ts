@@ -27,6 +27,16 @@ describe('Quiz', () => {
     expect(quiz.length).toBe(2);
   })
 
+  it('is identified', () => {
+    const quiz = aQuiz()
+      .identified('my-quiz')
+      .with(aQuestion(), aQuestion())
+      .build();
+
+    expect(quiz.id.hasValue('my-quiz'))
+      .toBe(true);
+  })
+
   describe('answer evaluation', () => {
 
     describe('boolean questions', () => {

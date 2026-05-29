@@ -1,6 +1,7 @@
 import {Question} from "./models/question";
 import {Answer} from "./models/answer";
 import Percentage from "./models/percentage";
+import {QuizId} from "./quiz-id";
 
 export class Result {
 
@@ -30,7 +31,8 @@ export class Quiz {
   private readonly _length: number;
 
   constructor(
-    private readonly questions: Question[]
+    private readonly questions: Question[],
+    readonly id: QuizId = QuizId.random()
   ) {
     if (questions.length === 0) {
       throw new Error('No questions provided');
