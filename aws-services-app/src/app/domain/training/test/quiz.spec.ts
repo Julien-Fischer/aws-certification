@@ -7,7 +7,7 @@ import {Option} from "../models/multiple-choice-question";
 
 describe('Quiz', () => {
 
-  it('must have questions', () => {
+  it('must have at least one question', () => {
     expect(() => new Quiz([]))
       .toThrow('No questions provided');
   })
