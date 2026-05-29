@@ -1,6 +1,6 @@
 import {Question} from "./models/question";
 import {Answer} from "./models/answer";
-import Percentage from "../scoring/models/percentage";
+import Percentage from "./models/percentage";
 
 export class Result {
 
