@@ -14,7 +14,7 @@ export class AnswerEvaluator implements SubmitAnswer {
 
   submit(id: QuizId, answer: Answer<any>): Result {
     const quiz = this.quizRepository.get(id);
-    if (quiz == null) throw new Error(`Quiz with id ${id} not found`);
+    if (quiz == null) throw new Error(`Quiz with id '${id}' not found`);
 
     const result = quiz.submit(answer);
     this.quizRepository.save(quiz);

@@ -9,6 +9,7 @@ import {SearchService} from "../../search/services/search.service";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
 import {QuizRepository, quizRepositoryInjectionToken} from "../ports/outbound/quiz-repository";
 import {AnswerEvaluator} from "../answer-evaluator";
+import {anAnswer} from "./builders/answer-builder";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -29,6 +30,15 @@ describe('AnswerEvaluator', () => {
     answerEvaluator = TestBed.inject(AnswerEvaluator);
   });
 
+
+  describe('retrieval', () => {
+    it('throws when quiz is not found', () => {
+      const unknownQuiz = new QuizId('unknown-quiz');
+
+      expect(() => answerEvaluator.submit(unknownQuiz, anAnswer()))
+        .toThrow(`Quiz with id 'unknown-quiz' not found`);
+    })
+  });
 
   describe('evaluation', () => {
     it('evaluates correct answers', () => {
