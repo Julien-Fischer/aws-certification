@@ -2,7 +2,7 @@ import {Inject, Injectable} from "@angular/core";
 import {QuizRepository, quizRepositoryInjectionToken} from "./ports/outbound/quiz-repository";
 import {StartQuiz} from "./ports/inbound/start-quiz";
 import {Quiz} from "./quiz";
-import {NoShuffle, Shuffle} from "./shuffle";
+import {FisherYatesShuffle, Shuffle} from "./shuffle";
 import {Question} from "./models/question";
 import {MultipleChoiceQuestion} from "./models/multiple-choice-question";
 
@@ -13,7 +13,7 @@ export class TrainingSession implements StartQuiz {
     @Inject(quizRepositoryInjectionToken) private quizRepository: QuizRepository
   ) { }
 
-  with(questions: Question[], shuffle: Shuffle = NoShuffle): Quiz {
+  with(questions: Question[], shuffle: Shuffle = FisherYatesShuffle): Quiz {
     const shuffled = this.shuffleAll(questions, shuffle);
     const quiz = new Quiz(shuffled);
     this.quizRepository.save(quiz);

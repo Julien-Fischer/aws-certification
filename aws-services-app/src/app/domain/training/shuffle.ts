@@ -2,7 +2,7 @@ export interface Shuffle {
   shuffle<T>(array: T[]): T[];
 }
 
-export class FisherYatesShuffle implements Shuffle {
+export const FisherYatesShuffle: Shuffle = {
 
   shuffle<T>(array: T[]): T[] {
     const shuffled = [...array];

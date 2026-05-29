@@ -1,14 +1,15 @@
 import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
-import {Quiz} from "../../domain/training/quiz";
 import {Question} from "../../domain/training/models/question";
 import {Answer} from "../../domain/training/models/answer";
 import {BooleanQuestion} from "../../domain/training/models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../../domain/training/models/multiple-choice-question";
+import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 
-interface QuizDto {
-  booleanQuestions: [],
-  multipleChoiceQuestions: []
+export interface QuizDto {
+  booleanQuestions: BooleanQuestionDto[],
+  multipleChoiceQuestions: MultipleChoiceQuestionDto[],
+  shuffle?: boolean
 }
 
 interface BooleanQuestionDto {
@@ -31,12 +32,13 @@ interface OptionDto {
 export class QuizPublisher {
 
   constructor(
-    @Inject(startQuizInjectionToken) private startQuiz: StartQuiz
+    @Inject(startQuizInjectionToken) private startQuiz: StartQuiz,
+    @Inject(shuffleProviderInjectionToken) private shuffleProvider: ShuffleProvider,
   ) { }
 
   start(quizDto: QuizDto) {
     const questions = this.toQuestions(quizDto);
-    this.startQuiz.with(questions);
+    this.startQuiz.with(questions, this.shuffleProvider.get(quizDto.shuffle ?? false));
   }
 
   private toQuestions(dto: QuizDto): Question[] {

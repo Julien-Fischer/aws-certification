@@ -23,6 +23,8 @@ import {InMemoryCarousel} from "./app/domain/search/services/in-memory-carousel.
 import {ForgetHighscoreService} from "./app/domain/scoring/forget-highscore.service";
 import {forgetHighscoreInjectionToken} from "./app/domain/scoring/highscore-eraser";
 import GamificationLocalStorageAccessor, {GAMIFICATION_STORAGE} from "./app/infra/scoring/gamification-local-storage-accessor";
+import {startQuizInjectionToken} from "./app/domain/training/ports/inbound/start-quiz";
+import {QuizPublisher} from "./app/infra/training/quiz-publisher.service";
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -69,6 +71,10 @@ bootstrapApplication(AppComponent, {
     {
       provide: carouselInjectionToken,
       useClass: InMemoryCarousel
+    },
+    {
+      provide: startQuizInjectionToken,
+      useClass: QuizPublisher
     }
   ]
 }).catch(err => console.error(err));

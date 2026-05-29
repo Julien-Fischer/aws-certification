@@ -1,5 +1,4 @@
 import {describe, it, expect, beforeEach} from "vitest";
-import {QuizId} from "../quiz-id";
 import {QuizRepository, quizRepositoryInjectionToken} from "../ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
 import {TestBed} from "@angular/core/testing";
@@ -12,7 +11,6 @@ import {Shuffle} from "../shuffle";
 import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
 import {Question} from "../models/question";
 import {anOption} from "./builders/option-builder";
-import {choice} from "./builders/answer-builder";
 
 describe('AnswerEvaluator', () => {
 
