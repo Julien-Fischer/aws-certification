@@ -200,6 +200,18 @@ describe('Quiz', () => {
       expectResult(result).toHaveProgress(100);
       expectResult(result).toBeOver();
     })
+
+    it('is throws when submitting an answer when quiz is complete', () => {
+      const quiz = aQuiz()
+        .with(aQuestion(), aQuestion())
+        .build();
+
+      quiz.submit(anAnswer());
+      quiz.submit(anAnswer());
+
+      expect(() => quiz.submit(anAnswer()))
+        .toThrow('Quiz is already complete');
+    })
   })
 })
 

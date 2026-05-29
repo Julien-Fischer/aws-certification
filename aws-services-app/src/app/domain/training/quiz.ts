@@ -36,6 +36,9 @@ export class Quiz {
   }
 
   submit(answer: Answer<any>): Result {
+    if (this.isComplete()) {
+      throw new Error('Quiz is already complete');
+    }
     this.progress++;
     const isCorrect = this.isCorrect(answer);
     if (isCorrect) {
@@ -70,6 +73,10 @@ export class Quiz {
 
   private toPercentage(progress: number): Percentage {
     return new Percentage(progress / this.length() * 100);
+  }
+
+  private isComplete(): boolean {
+    return this.cursor === this.length();
   }
 
 }
