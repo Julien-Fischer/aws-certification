@@ -58,8 +58,8 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  withAnswer(answer: Answer<Option>): this {
-    this.answer = answer;
+  withAnswer(answer: string): this {
+    this.answer = new Answer(Option.from(answer));
     return this;
   }
 

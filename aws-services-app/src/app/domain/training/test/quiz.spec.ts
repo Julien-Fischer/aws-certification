@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {aQuiz} from "./builders/quiz-builder";
-import {aFalseStatement, aQuestion, aTrueStatement} from "./builders/question-builder";
+import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
 import {Quiz} from "../quiz";
 import {Answer} from "../models/answer";
+import {Option} from "../models/multiple-choice-question";
 
 describe('Quiz', () => {
 
@@ -69,9 +70,39 @@ describe('Quiz', () => {
 
     })
 
+    describe('multiple choice questions', () => {
+      it('is true when correct option is selected', () => {
+        const quiz = aQuiz()
+          .with(
+            aMultipleChoiceQuestion().withAnswer('A. First option')
+          )
+          .build();
+
+        const result = quiz.submit(anAnswer('A. First option'));
+
+        expect(result.isCorrect).toBe(true);
+      })
+
+      it('is false when incorrect option is selected', () => {
+        const quiz = aQuiz()
+          .with(
+            aMultipleChoiceQuestion().withAnswer('A. First option')
+          )
+          .build();
+
+        const result = quiz.submit(anAnswer('B. Second option'));
+
+        expect(result.isCorrect).toBe(false);
+      })
+    })
+
   })
 
 })
+
+function anAnswer(value: string) {
+  return new Answer(Option.from(value));
+}
 
 
 
