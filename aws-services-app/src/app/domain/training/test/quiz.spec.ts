@@ -420,12 +420,3 @@ describe('Quiz', () => {
   })
 
 })
-
-
-function reverseOrder() {
-  return {
-    shuffle<T>(array: T[]): T[] {
-      return array.reverse();
-    }
-  }
-}
