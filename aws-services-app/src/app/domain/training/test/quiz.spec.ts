@@ -108,6 +108,17 @@ describe('Quiz', () => {
 
       expectResult(result).toHaveProgress(50);
     })
+
+    it('is 100% when complete', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(true));
+      const result = quiz.submit(new Answer(true));
+
+      expectResult(result).toHaveProgress(100);
+    })
   })
 
 })
