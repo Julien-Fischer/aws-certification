@@ -11,6 +11,7 @@ import {Quiz, Result} from "../quiz";
 import {Answer} from "../models/answer";
 import {Option} from "../models/multiple-choice-question";
 import {anOption} from "./builders/option-builder";
+import {expectResult} from "./expectations/expect-result";
 
 describe('Quiz', () => {
 
@@ -313,39 +314,5 @@ function choice(value: string) {
   return new Answer(Option.from(value));
 }
 
-function expectResult(result: Result) {
-  return {
-    toHaveProgress(value: number) {
-      expect(result.progress.hasValue(value), `${value}% !== ${result.progress.toString()}`)
-        .toBe(true);
-      return this;
-    },
-    toHaveAccuracy(value: number) {
-      expect(result.accuracy.hasValue(value), `${value}% !== ${result.accuracy.toString()}`)
-        .toBe(true);
-      return this;
-    },
-    toNotBeComplete() {
-      expect(result.isComplete()).toBe(false);
-      return this;
-    },
-    toBeComplete() {
-      expect(result.isComplete()).toBe(true);
-      return this;
-    },
-    toBeCorrect() {
-      expect(result.isCorrect).toBe(true);
-      return this;
-    },
-    toBeIncorrect() {
-      expect(result.isCorrect).toBe(false);
-      return this;
-    },
-    toHaveCorrectAnswer(answer: Answer<any>) {
-      expect(result.correctAnswer.equals(answer));
-      return this;
-    }
-  }
-}
 
 
