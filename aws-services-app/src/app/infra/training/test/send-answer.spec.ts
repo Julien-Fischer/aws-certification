@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {TestBed} from "@angular/core/testing";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
-import {AnswerDto, ResultDto, SendAnswer} from "../send-answer";
+import {AnswerDto, OutcomeDto, ResultDto, SendAnswer} from "../send-answer";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
@@ -48,9 +48,30 @@ describe('SendAnswer', () => {
       const result = sendAnswer.send(answerDto);
 
       expectResult(result)
-        .toHaveAccuracy(0)
         .toHaveProgress(50)
+        .toHaveAccuracy(0)
         .toHaveNoOutcome();
+    })
+
+    it('receives outcome', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement()
+        ));
+
+      sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+      const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+
+      expectResult(result)
+        .toHaveProgress(100)
+        .toHaveAccuracy(50)
+        .toHaveOutcome({
+          hasFailed: false,
+          hasSucceeded: true,
+          hasMastered: false
+        });
     })
   })
 
@@ -75,5 +96,9 @@ function expectResult(result: ResultDto) {
       expect(result.outcome).toBeUndefined();
       return this;
     },
+    toHaveOutcome(param: OutcomeDto) {
+      expect(result.outcome).toStrictEqual(param);
+      return this;
+    }
   }
 }
