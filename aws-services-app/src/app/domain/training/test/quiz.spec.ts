@@ -24,7 +24,7 @@ describe('Quiz', () => {
       .with(aQuestion(), aQuestion())
       .build();
 
-    expect(quiz.length()).toBe(2);
+    expect(quiz.length).toBe(2);
   })
 
   describe('answer evaluation', () => {

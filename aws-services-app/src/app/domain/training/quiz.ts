@@ -27,6 +27,7 @@ export class Quiz {
   private accuracy = 0;
 
   private cursor = 0;
+  private readonly _length: number;
 
   constructor(
     private readonly questions: Question[]
@@ -34,6 +35,7 @@ export class Quiz {
     if (questions.length === 0) {
       throw new Error('No questions provided');
     }
+    this._length = questions.length;
   }
 
   submit(answer: Answer<any>): Result {
@@ -52,8 +54,8 @@ export class Quiz {
     this.accuracy = 0;
   }
 
-  length(): number {
-    return this.questions.length;
+  get length(): number {
+    return this._length;
   }
 
   private nextQuestion(): Question {
@@ -83,11 +85,11 @@ export class Quiz {
   }
 
   private toPercentage(progress: number): Percentage {
-    return new Percentage(progress / this.length() * 100);
+    return new Percentage(progress / this.length * 100);
   }
 
   private isComplete(): boolean {
-    return this.cursor === this.length();
+    return this.cursor === this.length;
   }
 
 }
