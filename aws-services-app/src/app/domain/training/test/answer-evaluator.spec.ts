@@ -44,6 +44,18 @@ describe('AnswerEvaluator', () => {
     expectResult(result).toBeCorrect();
   })
 
+  it('evaluates incorrect answers', () => {
+    having(
+      aQuiz()
+        .identified(IAM_QUIZ)
+        .with(aTrueStatement())
+    );
+
+    const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+
+    expectResult(result).toBeIncorrect();
+  })
+
   function having(quiz: QuizBuilder) {
       quizRepository.save(quiz.build());
   }
