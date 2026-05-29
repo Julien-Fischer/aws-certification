@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SearchService} from "../../../domain/search/services/search.service";
 import {saveHighscoreInjectionToken} from "../../../domain/scoring/highscore-evaluator";
 import {scoreProviderInjectionToken} from "../../../domain/scoring/score-provider";
-import {of} from "rxjs";
+import {BehaviorSubject, of} from "rxjs";
 import Highscore from "../../../domain/scoring/models/highscore";
 import {carouselInjectionToken} from "../../../domain/search/carousel";
 import {gamificationInjectionToken} from "../../../domain/scoring/gamification";
