@@ -1,6 +1,7 @@
 import Percentage from "../../../domain/scoring/models/percentage";
 import Score from "../../../domain/scoring/models/score";
 
+// TODO: remove once using the new training context
 export default class ProgressTracker {
 
     private correctAnswers = 0;

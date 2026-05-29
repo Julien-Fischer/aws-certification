@@ -1,3 +1,4 @@
+// TODO: remove once using the new training context
 import {Injectable, InjectionToken} from "@angular/core";
 
 export const shufflerInjectionToken = new InjectionToken<Shuffler>('Shuffler');

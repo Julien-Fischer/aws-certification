@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import Percentage from '../../../domain/scoring/models/percentage';
 import ProgressTracker from "./progress-tracker";
 
+// TODO: remove once using the new training context
 describe('ProgressTracker', () => {
 
     const totalAnswers = 10;
