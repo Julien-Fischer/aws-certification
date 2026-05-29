@@ -1,6 +1,5 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import {TestBed} from "@angular/core/testing";
-import {SearchService} from "../../../domain/search/services/search.service";
 import {QuizRequest, QuizPublisher, QuizDto} from "../quiz-publisher.service";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../shuffle-provider";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
@@ -46,7 +45,6 @@ describe('QuizPublisher', () => {
 
     TestBed.configureTestingModule({
       providers: [
-        SearchService,
         {provide: shuffleProviderInjectionToken, useValue: shuffleProvider},
         {provide: startQuizInjectionToken, useClass: TrainingSession},
         {provide: quizRepositoryInjectionToken, useClass: InMemoryQuizRepository}
