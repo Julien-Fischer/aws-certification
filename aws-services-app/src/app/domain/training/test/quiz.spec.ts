@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {aQuiz} from "./builders/quiz-builder";
-import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
+import {
+  aFalseStatement,
+  aMultipleChoiceQuestion,
+  aQuestion,
+  aTrueStatement,
+  QuestionBuilder
+} from "./builders/question-builder";
 import {Quiz, Result} from "../quiz";
 import {Answer} from "../models/answer";
 import {Option} from "../models/multiple-choice-question";
@@ -216,14 +222,8 @@ describe('Quiz', () => {
 
   describe('retry', () => {
     it('can be retried', () => {
-      const quiz = aQuiz()
+      const quiz = aCompletedQuiz()
         .with(aTrueStatement(), aQuestion())
-        .build();
-
-      quiz.submit(anAnswer());
-      const firstTry = quiz.submit(anAnswer());
-
-      expectResult(firstTry).toBeComplete();
 
       quiz.retry();
 
@@ -236,6 +236,23 @@ describe('Quiz', () => {
     })
   })
 })
+
+function aCompletedQuiz() {
+  return {
+    with(...questions: QuestionBuilder[]) {
+      const quiz = aQuiz()
+        .with(...questions)
+        .build();
+
+      quiz.submit(anAnswer());
+      const firstTry = quiz.submit(anAnswer());
+
+      expectResult(firstTry).toBeComplete();
+
+      return quiz;
+    }
+  }
+}
 
 function anAnswer() {
   return choice('A. First option');
