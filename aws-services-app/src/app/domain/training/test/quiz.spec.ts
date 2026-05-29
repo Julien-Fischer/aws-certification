@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {aQuiz} from "./builders/quiz-builder";
 import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
-import {Quiz} from "../quiz";
+import {Quiz, Result} from "../quiz";
 import {Answer} from "../models/answer";
 import {Option} from "../models/multiple-choice-question";
 
@@ -98,11 +98,30 @@ describe('Quiz', () => {
 
   })
 
+  describe('progress', () => {
+    it('is 50% when halfway through', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aQuestion())
+        .build();
+
+      const result = quiz.submit(new Answer(true));
+
+      expectResult(result).toHaveProgress(50);
+    })
+  })
+
 })
 
 function anAnswer(value: string) {
   return new Answer(Option.from(value));
 }
 
+function expectResult(result: Result) {
+  return {
+    toHaveProgress(value: number) {
+      expect(result.progress.hasValue(value)).toBe(true);
+    }
+  }
+}
 
 
