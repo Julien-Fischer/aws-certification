@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {TestBed} from "@angular/core/testing";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
-import {AnswerDto, OutcomeDto, ResultDto, SendAnswer} from "../send-answer";
+import {OutcomeDto, ResultDto, SendAnswer} from "../send-answer";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
@@ -33,9 +33,7 @@ describe('SendAnswer', () => {
 
   describe('sends an answer', () => {
     it('throws when quiz not found', () => {
-      const answerDto: AnswerDto = {quizId: 'unknown-quiz', answer: true};
-
-      expect(() => sendAnswer.send(answerDto))
+      expect(() => sendAnswer.send({quizId: 'unknown-quiz', answer: true}))
         .toThrow(`Quiz with id 'unknown-quiz' not found`);
     })
 
@@ -48,8 +46,9 @@ describe('SendAnswer', () => {
           aFalseStatement()
         ));
 
-      sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
-      const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: 'A. Option 1'});
+      havingSent(false).toQuiz(IAM_QUIZ);
+
+      const result = send('A. Option 1').toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toHaveProgress(66.66)
@@ -65,8 +64,9 @@ describe('SendAnswer', () => {
           aFalseStatement()
         ));
 
-      sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
-      const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+      havingSent(false).toQuiz(IAM_QUIZ);
+
+      const result = send(false).toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toHaveProgress(100)
@@ -87,8 +87,9 @@ describe('SendAnswer', () => {
             aFalseStatement()
           ));
 
-        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: true});
-        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        havingSent(true).toQuiz(IAM_QUIZ);
+
+        const result = send(false).toQuiz(IAM_QUIZ);
 
         expectResult(result)
           .toHaveProgress(100)
@@ -108,8 +109,9 @@ describe('SendAnswer', () => {
             aFalseStatement()
           ));
 
-        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
-        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        havingSent(false).toQuiz(IAM_QUIZ);
+
+        const result = send(false).toQuiz(IAM_QUIZ);
 
         expectResult(result)
           .toHaveProgress(100)
@@ -130,9 +132,10 @@ describe('SendAnswer', () => {
             aTrueStatement(),
           ));
 
-        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
-        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
-        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        havingSent(false).toQuiz(IAM_QUIZ);
+        havingSent(false).toQuiz(IAM_QUIZ);
+
+        const result = send(false).toQuiz(IAM_QUIZ);
 
         expectResult(result)
           .toHaveProgress(100)
@@ -149,6 +152,18 @@ describe('SendAnswer', () => {
 
   function having(quiz: QuizBuilder) {
     quizRepository.save(quiz.build());
+  }
+
+  function havingSent(answer: boolean | string) {
+    return send(answer);
+  }
+
+  function send(answer: boolean | string) {
+    return {
+      toQuiz(quizId: QuizId) {
+        return sendAnswer.send({quizId: quizId.toString(), answer});
+      }
+    }
   }
 
 });
