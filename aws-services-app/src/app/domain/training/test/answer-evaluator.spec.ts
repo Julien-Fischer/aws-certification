@@ -81,6 +81,29 @@ describe('AnswerEvaluator', () => {
     })
   })
 
+  describe('saving', () => {
+    it('saves current quiz state', () => {
+      having(
+        aQuiz()
+          .identified(IAM_QUIZ)
+          .with(aTrueStatement(), aFalseStatement())
+      );
+
+      answerEvaluator.submit(IAM_QUIZ, new Answer(true));
+
+      const retrieved = quizRepository.get(IAM_QUIZ);
+
+      expect(retrieved).toBeDefined();
+
+      const result = retrieved!.submit(new Answer(false));
+
+      expectResult(result)
+        .toBeComplete()
+        .toHaveAccuracy(100);
+    })
+
+  })
+
   function having(quiz: QuizBuilder) {
       quizRepository.save(quiz.build());
   }
