@@ -8,10 +8,10 @@ export class Result {
   readonly #brand = Symbol();
 
   constructor(
-    readonly isCorrect: boolean,
+    readonly isAnswerCorrect: boolean,
     readonly progress: Percentage,
     readonly accuracy: Percentage,
-    readonly correctAnswer: Answer<any>,
+    readonly expectedAnswer: Answer<any>,
     readonly explanation?: string
   ) { }
 
@@ -77,13 +77,13 @@ export class Quiz {
   }
 
   private evaluateAnswer(userAnswer: Answer<any>): Result {
-    const isCorrect = this.isCorrect(userAnswer);
+    const isAnswerCorrect = this.isCorrect(userAnswer);
     const expectedAnswer = this.currentQuestion.answer;
-    if (isCorrect) {
+    if (isAnswerCorrect) {
       this.accuracy++;
     }
     return new Result(
-      isCorrect,
+      isAnswerCorrect,
       this.toPercentage(this.progress),
       this.toPercentage(this.accuracy),
       expectedAnswer,

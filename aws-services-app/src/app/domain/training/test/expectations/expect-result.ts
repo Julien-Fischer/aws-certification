@@ -35,18 +35,18 @@ export function expectResult(result: Result) {
     },
 
     toBeCorrect() {
-      expect(result.isCorrect).toBe(true);
+      expect(result.isAnswerCorrect).toBe(true);
       return this;
     },
 
     toBeIncorrect() {
-      expect(result.isCorrect).toBe(false);
+      expect(result.isAnswerCorrect).toBe(false);
       return this;
     },
 
     toHaveCorrectAnswer<T extends {toString: () => string}>(answer: T | Answer<any>) {
       const expected: Answer<any> = answer instanceof Answer ? answer : new Answer(answer);
-      expect(result.correctAnswer.equals(expected));
+      expect(result.expectedAnswer.equals(expected));
       return this;
     },
 
