@@ -56,6 +56,22 @@ describe('QuizPublisher', () => {
   });
 
   describe('start', () => {
+    it('does not shuffle by default', () => {
+      const dto: QuizDto = {
+        booleanQuestions: [
+          {label: 'statement 1', answer: true},
+          {label: 'statement 2', answer: true}
+        ],
+        multipleChoiceQuestions: [
+          {label: 'question 1', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]},
+          {label: 'question 2', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]}]
+      }
+
+      quizPublisher.start(dto);
+
+      expect(mockShuffle.wasCalled()).toBe(false);
+    })
+
     it('supports shuffling', () => {
       const dto: QuizDto = {
         booleanQuestions: [
