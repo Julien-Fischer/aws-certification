@@ -38,7 +38,10 @@ describe('AnswerEvaluator', () => {
       having(
         aQuiz()
           .identified(IAM_QUIZ)
-          .with(aTrueStatement(), aFalseStatement())
+          .with(
+            aTrueStatement().withExplanation('Explanation for question 1'),
+            aFalseStatement().withExplanation('Explanation for question 2')
+          )
       );
 
       const firstAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
@@ -47,7 +50,8 @@ describe('AnswerEvaluator', () => {
         .toBeCorrect()
         .toNotBeComplete()
         .toHaveProgress(50)
-        .toHaveAccuracy(50);
+        .toHaveAccuracy(50)
+        .toHaveExplanation('Explanation for question 1');
 
       const lastAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
 
@@ -55,14 +59,15 @@ describe('AnswerEvaluator', () => {
         .toBeCorrect()
         .toBeComplete()
         .toHaveProgress(100)
-        .toHaveAccuracy(100);
+        .toHaveAccuracy(100)
+        .toHaveExplanation('Explanation for question 2');
     })
 
     it('evaluates incorrect answers', () => {
       having(
         aQuiz()
           .identified(IAM_QUIZ)
-          .with(aTrueStatement())
+          .with(aTrueStatement().withExplanation('Explanation for question 1'))
       );
 
       const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
@@ -71,7 +76,8 @@ describe('AnswerEvaluator', () => {
         .toBeIncorrect()
         .toBeComplete()
         .toHaveAccuracy(0)
-        .toHaveCorrectAnswer(true);
+        .toHaveCorrectAnswer(true)
+        .toHaveExplanation('Explanation for question 1');
     })
   })
 

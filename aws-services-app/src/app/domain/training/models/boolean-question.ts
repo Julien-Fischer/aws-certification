@@ -7,13 +7,14 @@ export class BooleanQuestion extends Question {
 
   constructor(
     label: string,
-    answer: Answer<boolean>
+    answer: Answer<boolean>,
+    readonly explanation?: string
   ) {
     super(label, answer);
   }
 
   findExplanationFor(answer: Answer<any>): string | undefined {
-    return this.answer.explanation;
+    return this.explanation;
   }
 
 }

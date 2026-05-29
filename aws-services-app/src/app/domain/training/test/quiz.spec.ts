@@ -85,6 +85,21 @@ describe('Quiz', () => {
         })
       })
 
+      it('explanation', () => {
+        const quiz = aQuiz()
+          .with(
+            aFalseStatement().withExplanation('Explanation for false statement'),
+            aTrueStatement().withExplanation('Explanation for true statement')
+          )
+          .build();
+
+        const result = quiz.submit(new Answer(true));
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveExplanation('Explanation for false statement');
+      })
+
     })
 
     describe('multiple choice questions', () => {

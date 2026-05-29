@@ -31,6 +31,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
   private answer: Answer<boolean> = new Answer(true);
+  private explanation?: string;
 
   withLabel(label: string): this {
     this.label = label;
@@ -42,8 +43,13 @@ class BooleanQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
+  withExplanation(explanation: string): this {
+    this.explanation = explanation;
+    return this;
+  }
+
   build(): BooleanQuestion {
-    return new BooleanQuestion(this.label, this.answer);
+    return new BooleanQuestion(this.label, this.answer, this.explanation);
   }
 
 }
@@ -59,8 +65,8 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  withAnswer(answer: string, explanation?: string): this {
-    this.answer = new Answer(Option.from(answer), explanation);
+  withAnswer(answer: string): this {
+    this.answer = new Answer(Option.from(answer));
     return this;
   }
 

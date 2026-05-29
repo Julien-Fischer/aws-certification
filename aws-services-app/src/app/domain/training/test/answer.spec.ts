@@ -27,45 +27,18 @@ describe('Answer', () => {
     });
   })
 
-  describe('explanation is optional', () => {
-    it('has no explanation', () => {
-      const multipleChoiceAnswer = new Answer(Option.from('A. Answer'));
-      const booleanAnswer = new Answer(true);
-
-      expect(multipleChoiceAnswer.isExplained()).toBe(false);
-      expect(booleanAnswer.isExplained()).toBe(false);
-    })
-
-    it('has an explanation', () => {
-      const multipleChoiceAnswer = new Answer(Option.from('A. Answer'), 'explanation');
-      const booleanAnswer = new Answer(true, 'explanation');
-
-      expect(multipleChoiceAnswer.isExplained()).toBe(true);
-      expect(booleanAnswer.isExplained()).toBe(true);
-    })
-  })
-
   describe('equals', () => {
-    describe('multiple-choice', () => {
-      it('is equal', () => {
-        const a = new Answer('An EC2 instance');
-        const b = new Answer('An EC2 instance');
-        const different = new Answer('An S3 bucket');
+    it('multiple-choice', () => {
+      const a = new Answer('An EC2 instance');
+      const b = new Answer('An EC2 instance');
+      const different = new Answer('An S3 bucket');
 
-        expect(a.equals(b)).toBe(true);
-        expect(a.equals(different)).toBe(false);
-      })
-
-      it('is equal regardless of explanation', () => {
-        const withoutExplanation = new Answer('An EC2 instance');
-        const withExplanation = new Answer('An EC2 instance', 'EC2 instances are virtual servers');
-
-        expect(withoutExplanation.equals(withExplanation)).toBe(true);
-      })
+      expect(a.equals(b)).toBe(true);
+      expect(a.equals(different)).toBe(false);
     })
 
     describe('boolean', () => {
-      it('is equal', () => {
+      it('when true', () => {
         const a = new Answer(true);
         const b = new Answer(true);
         const different = new Answer(false);
@@ -74,20 +47,13 @@ describe('Answer', () => {
         expect(a.equals(different)).toBe(false);
       })
 
-      it('is equal', () => {
+      it('when false', () => {
         const a = new Answer(false);
         const b = new Answer(false);
         const different = new Answer(true);
 
         expect(a.equals(b)).toBe(true);
         expect(a.equals(different)).toBe(false);
-      })
-
-      it('is equal regardless of explanation', () => {
-        const withoutExplanation = new Answer(true);
-        const withExplanation = new Answer(true, 'EC2 instances are virtual servers');
-
-        expect(withoutExplanation.equals(withExplanation)).toBe(true);
       })
     })
   })
