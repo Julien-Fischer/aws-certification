@@ -8,7 +8,8 @@ export class Result {
 
   constructor(
     readonly isCorrect: boolean,
-    readonly progress: Percentage
+    readonly progress: Percentage,
+    readonly accuracy: Percentage
   ) { }
 
 }
@@ -17,9 +18,9 @@ export class Quiz {
 
   readonly #brand = Symbol();
 
-  private cursor = 0;
   private currentQuestion = this.questions[0];
   private progress = 0;
+  private accuracy = 0;
 
   constructor(
     readonly questions: Question[]
@@ -32,6 +33,9 @@ export class Quiz {
   submit(answer: Answer<any>): Result {
     this.progress++;
     const isCorrect = this.isCorrect(answer);
+    if (isCorrect) {
+      this.accuracy++;
+    }
     return this.computeResult(isCorrect);
   }
 
@@ -42,7 +46,8 @@ export class Quiz {
   private computeResult(isCorrect: boolean) {
     return new Result(
       isCorrect,
-      this.toPercentage(this.progress)
+      this.toPercentage(this.progress),
+      this.toPercentage(this.accuracy)
     );
   }
 

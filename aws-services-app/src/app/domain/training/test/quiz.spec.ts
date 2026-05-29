@@ -132,6 +132,51 @@ describe('Quiz', () => {
     })
   })
 
+  describe('accuracy', () => {
+    it('is 50% when halfway through', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aQuestion())
+        .build();
+
+      const result = quiz.submit(new Answer(true));
+
+      expectResult(result).toHaveAccuracy(50);
+    })
+
+    it('is 100% when complete', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(true));
+      const result = quiz.submit(new Answer(true));
+
+      expectResult(result).toHaveAccuracy(100);
+    })
+
+    it('is 50% when 1/2 correct answers', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aQuestion())
+        .build();
+
+      quiz.submit(new Answer(true));
+      const result = quiz.submit(new Answer(false));
+
+      expectResult(result).toHaveAccuracy(50);
+    })
+
+    it('increases regardless of accuracy', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(false));
+      const result = quiz.submit(new Answer(false));
+
+      expectResult(result).toHaveAccuracy(0);
+    })
+  })
+
 })
 
 function anAnswer(value: string) {
@@ -142,6 +187,9 @@ function expectResult(result: Result) {
   return {
     toHaveProgress(value: number) {
       expect(result.progress.hasValue(value)).toBe(true);
+    },
+    toHaveAccuracy(value: number) {
+      expect(result.accuracy.hasValue(value)).toBe(true);
     }
   }
 }
