@@ -119,6 +119,17 @@ describe('Quiz', () => {
 
       expectResult(result).toHaveProgress(100);
     })
+
+    it('increases regardless of accuracy', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(false));
+      const result = quiz.submit(new Answer(false));
+
+      expectResult(result).toHaveProgress(100);
+    })
   })
 
 })
