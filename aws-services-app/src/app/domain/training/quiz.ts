@@ -56,6 +56,7 @@ export class Quiz {
 
   private progress = 0;
   private accuracy = 0;
+  private cursor = 0;
 
   private readonly _length: number;
 
@@ -74,12 +75,15 @@ export class Quiz {
     if (this.isComplete()) {
       throw new Error('Quiz is already complete');
     }
-    return this.processAnswer(answer);
+    const result = this.processAnswer(answer);
+    this.cursor++;
+    return result;
   }
 
   retry(): void {
     this.progress = 0;
     this.accuracy = 0;
+    this.cursor = 0;
   }
 
   questions(): Question[] {
@@ -91,11 +95,11 @@ export class Quiz {
   }
 
   private nextQuestion(): Question {
-    return this._questions[this.progress - 1];
+    return this._questions[this.cursor + 1];
   }
 
   private get currentQuestion(): Question {
-    return this._questions[this.progress];
+    return this._questions[this.cursor];
   }
 
   private processAnswer(userAnswer: Answer<any>): Result {

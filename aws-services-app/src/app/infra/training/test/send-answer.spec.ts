@@ -56,7 +56,7 @@ describe('SendAnswer', () => {
         .toHaveNoOutcome();
     })
 
-    it('receives outcome', () => {
+    it('receives outcome on quiz complete', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
@@ -71,11 +71,51 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toHaveProgress(100)
         .toHaveAccuracy(50)
+        .toHaveNoNextQuestion()
         .toHaveOutcome({
           hasFailed: false,
           hasSucceeded: true,
           hasMastered: false
-        });
+        })
+    })
+
+    describe('next question', () => {
+      it('has next question as long as quiz is not complete', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement().labelled('question 1'),
+            aFalseStatement().labelled('question 2'),
+            aTrueStatement().labelled('question 3')
+          ));
+
+        const result1 = send(anAnswer()).toQuiz(IAM_QUIZ);
+        const result2 = send(anAnswer()).toQuiz(IAM_QUIZ);
+        const result3 = send(anAnswer()).toQuiz(IAM_QUIZ);
+
+        expectResult(result1)
+          .toHaveNextQuestion('question 2');
+        expectResult(result2)
+          .toHaveNextQuestion('question 3');
+        expectResult(result3)
+          .toHaveNoNextQuestion();
+      })
+
+      it('has no next question once quiz is complete', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aFalseStatement()
+          ));
+
+        havingSent(anAnswer()).toQuiz(IAM_QUIZ);
+
+        const result = send(anAnswer()).toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toHaveNoNextQuestion();
+      })
     })
 
     describe('outcomes', () => {
@@ -185,6 +225,18 @@ function expectResult(result: ResultDto) {
     toHaveOutcome(param: OutcomeDto) {
       expect(result.outcome).toStrictEqual(param);
       return this;
+    },
+    toHaveNoNextQuestion() {
+      expect(result.nextQuestion).toBeUndefined();
+      return this;
+    },
+    toHaveNextQuestion(label: string) {
+      expect(result.nextQuestion).toBe(label);
+      return this;
     }
   }
+}
+
+function anAnswer(): string | boolean {
+  return 'A. Option 1';
 }

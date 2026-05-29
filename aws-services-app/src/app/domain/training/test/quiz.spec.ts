@@ -384,17 +384,19 @@ describe('Quiz', () => {
     it('returns the next question', () => {
       const quiz = aQuiz()
         .with(
-          aQuestion(),
-          aQuestion().labelled('IAM is an AWS service'),
-          aQuestion()
+          aQuestion().labelled('question 1'),
+          aQuestion().labelled('question 2'),
+          aQuestion().labelled('question 3')
         )
         .build();
 
-      quiz.submit(anAnswer());
-      const result = quiz.submit(anAnswer());
+      const result1 = quiz.submit(anAnswer());
+      const result2 = quiz.submit(anAnswer());
 
-      expectResult(result)
-        .toHaveNextQuestion('IAM is an AWS service');
+      expectResult(result1)
+        .toHaveNextQuestion('question 2');
+      expectResult(result2)
+        .toHaveNextQuestion('question 3');
     })
 
     it('has no next question left', () => {
