@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import {Answer} from "../answer";
-import {BooleanQuestion} from "../boolean-question";
-import {MultipleChoiceQuestion, Option} from "../multiple-choice-question";
+import {Answer} from "../models/answer";
+import {BooleanQuestion} from "../models/boolean-question";
+import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
 
 describe('Question', () => {
 
