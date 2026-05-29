@@ -265,11 +265,13 @@ function choice(value: string) {
 function expectResult(result: Result) {
   return {
     toHaveProgress(value: number) {
-      expect(result.progress.hasValue(value)).toBe(true);
+      expect(result.progress.hasValue(value), `${value}% !== ${result.progress.toString()}`)
+        .toBe(true);
       return this;
     },
     toHaveAccuracy(value: number) {
-      expect(result.accuracy.hasValue(value)).toBe(true);
+      expect(result.accuracy.hasValue(value), `${value}% !== ${result.accuracy.toString()}`)
+        .toBe(true);
       return this;
     },
     toNotBeComplete() {

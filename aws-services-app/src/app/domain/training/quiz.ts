@@ -40,11 +40,7 @@ export class Quiz {
       throw new Error('Quiz is already complete');
     }
     this.progress++;
-    const isCorrect = this.isCorrect(answer);
-    if (isCorrect) {
-      this.accuracy++;
-    }
-    const result = this.computeResult(isCorrect);
+    const result = this.evaluateAnswer(answer);
     this.nextQuestion();
     return result;
   }
@@ -65,7 +61,11 @@ export class Quiz {
     return this.currentQuestion;
   }
 
-  private computeResult(isCorrect: boolean) {
+  private evaluateAnswer(answer: Answer<any>): Result {
+    const isCorrect = this.isCorrect(answer);
+    if (isCorrect) {
+      this.accuracy++;
+    }
     return new Result(
       isCorrect,
       this.toPercentage(this.progress),
