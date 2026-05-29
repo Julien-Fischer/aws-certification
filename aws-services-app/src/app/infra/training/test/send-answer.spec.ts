@@ -74,25 +74,48 @@ describe('SendAnswer', () => {
         });
     })
 
-    it('has mastered quiz if accuracy = 100%', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aTrueStatement(),
-          aFalseStatement()
-        ));
+    describe('outcomes', () => {
+      it('has mastered quiz if accuracy = 100%', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aFalseStatement()
+          ));
 
-      sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: true});
-      const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: true});
+        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
 
-      expectResult(result)
-        .toHaveProgress(100)
-        .toHaveAccuracy(100)
-        .toHaveOutcome({
-          hasFailed: false,
-          hasSucceeded: true,
-          hasMastered: true
-        });
+        expectResult(result)
+          .toHaveProgress(100)
+          .toHaveAccuracy(100)
+          .toHaveOutcome({
+            hasFailed: false,
+            hasSucceeded: true,
+            hasMastered: true
+          });
+      })
+
+      it('has succeeded quiz if accuracy >= 50%', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aFalseStatement()
+          ));
+
+        sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+        const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+
+        expectResult(result)
+          .toHaveProgress(100)
+          .toHaveAccuracy(50)
+          .toHaveOutcome({
+            hasFailed: false,
+            hasSucceeded: true,
+            hasMastered: false
+          });
+      })
     })
   })
 
