@@ -78,7 +78,7 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(anAnswer('A. First option'));
+        const result = quiz.submit(choice('A. First option'));
 
         expect(result.isCorrect).toBe(true);
       })
@@ -90,7 +90,7 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(anAnswer('B. Second option'));
+        const result = quiz.submit(choice('B. Second option'));
 
         expect(result.isCorrect).toBe(false);
       })
@@ -177,9 +177,25 @@ describe('Quiz', () => {
     })
   })
 
+  describe('over', () => {
+    it('is not over when progress < 100', () => {
+      const quiz = aQuiz()
+        .with(aQuestion(), aQuestion())
+        .build();
+
+      const result = quiz.submit(anAnswer());
+
+      expectResult(result).toHaveProgress(50);
+      expectResult(result).toNotBeOver();
+    })
+  })
 })
 
-function anAnswer(value: string) {
+function anAnswer() {
+  return choice('A. First option');
+}
+
+function choice(value: string) {
   return new Answer(Option.from(value));
 }
 
@@ -190,6 +206,9 @@ function expectResult(result: Result) {
     },
     toHaveAccuracy(value: number) {
       expect(result.accuracy.hasValue(value)).toBe(true);
+    },
+    toNotBeOver() {
+      expect(result.isOver).toBe(false);
     }
   }
 }
