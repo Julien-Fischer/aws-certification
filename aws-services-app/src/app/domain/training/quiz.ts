@@ -25,6 +25,8 @@ export class Quiz {
 
   readonly #brand = Symbol();
 
+  readonly _questions: Question[];
+
   private progress = 0;
   private accuracy = 0;
 
@@ -32,13 +34,14 @@ export class Quiz {
   private readonly _length: number;
 
   constructor(
-    private readonly questions: Question[],
+    questions: Question[],
     readonly id: QuizId = QuizId.random()
   ) {
     if (questions.length === 0) {
       throw new Error('No questions provided');
     }
     this._length = questions.length;
+    this._questions = [...questions];
   }
 
   submit(answer: Answer<any>): Result {
@@ -57,16 +60,20 @@ export class Quiz {
     this.accuracy = 0;
   }
 
+  questions(): Question[] {
+    return [...this._questions];
+  }
+
   get length(): number {
     return this._length;
   }
 
   private nextQuestion(): Question {
-    return this.questions[this.cursor++];
+    return this._questions[this.cursor++];
   }
 
   private get currentQuestion(): Question {
-    return this.questions[this.cursor];
+    return this._questions[this.cursor];
   }
 
   private evaluateAnswer(userAnswer: Answer<any>): Result {

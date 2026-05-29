@@ -4,6 +4,7 @@ import {StartQuiz} from "./ports/inbound/start-quiz";
 import {Quiz} from "./quiz";
 import {NoShuffle, Shuffle} from "./shuffle";
 import {Question} from "./models/question";
+import {MultipleChoiceQuestion} from "./models/multiple-choice-question";
 
 @Injectable({ providedIn: 'root' })
 export class TrainingSession implements StartQuiz {
@@ -19,8 +20,14 @@ export class TrainingSession implements StartQuiz {
     return quiz;
   }
 
-  private shuffleAll(questions: Question[], shuffle: Shuffle): Question[] {
-    return shuffle.shuffle(questions);
+  private shuffleAll(questions: Question[], strategy: Shuffle): Question[] {
+    const shuffled = strategy.shuffle(questions);
+    for (let question of shuffled) {
+      if (question instanceof MultipleChoiceQuestion) {
+        question.shuffle(question.options, strategy);
+      }
+    }
+    return shuffled;
   }
 
 }

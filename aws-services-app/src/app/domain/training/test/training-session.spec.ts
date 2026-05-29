@@ -9,8 +9,10 @@ import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} fro
 import {Answer} from "../models/answer";
 import {expectResult} from "./expectations/expect-result";
 import {Shuffle} from "../shuffle";
-import {MultipleChoiceQuestion} from "../models/multiple-choice-question";
+import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
 import {Question} from "../models/question";
+import {anOption} from "./builders/option-builder";
+import {choice} from "./builders/answer-builder";
 
 describe('AnswerEvaluator', () => {
 
@@ -70,14 +72,40 @@ describe('AnswerEvaluator', () => {
 
         const quiz = startQuiz.with(questions, reverseOrder());
 
-        const answer1 = quiz.submit(new Answer('C. Third option'));
-        expectResult(answer1).toBeCorrect();
+        const shuffled: MultipleChoiceQuestion[] = cast(quiz.questions());
+        const answers = shuffled.map(question => question.answer.toString());
 
-        const answer2 = quiz.submit(new Answer('B. Second option'));
-        expectResult(answer2).toBeCorrect();
+        expect(answers).toEqual([
+          'C. Third option',
+          'B. Second option',
+          'A. First option',
+        ]);
+      })
 
-        const answer3 = quiz.submit(new Answer('A. First option'));
-        expectResult(answer3).toBeCorrect();
+      it('shuffles questions and their options', () => {
+        const questions = [
+          aMultipleChoiceQuestion().withAnswer('A. IAM Question Answer')
+            .withOptions(
+              anOption().withValue('A. IAM Question Answer'),
+              anOption().withValue('B. IAM Question Option 2'),
+            ).build(),
+          aMultipleChoiceQuestion().withAnswer('B. EC2 Question Answer')
+            .withOptions(
+              anOption().withValue('A. EC2 Question Option 1'),
+              anOption().withValue('B. EC2 Question Answer'),
+            ).build()
+        ];
+
+        const quiz = startQuiz.with(questions, reverseOrder());
+
+        const shuffled: MultipleChoiceQuestion[] = cast(quiz.questions());
+        const answers = shuffled.map(question => question.answer.toString());
+        const ec2Options = optionNames(shuffled[0]);
+        const iamOptions = optionNames(shuffled[1]);
+
+        expect(answers).toEqual(['B. EC2 Question Answer', 'A. IAM Question Answer']);
+        expect(ec2Options).toEqual(['B', 'A']);
+        expect(iamOptions).toEqual(['B', 'A']);
       })
     })
   })
@@ -100,4 +128,12 @@ function aQuestionWithAnswer(answerText: string): MultipleChoiceQuestion {
 
 function anyQuestion(): Question {
   return aQuestion().build();
+}
+
+function cast<T>(value: any): T {
+  return value as T;
+}
+
+function optionNames(question: MultipleChoiceQuestion): string[] {
+  return question.options.map(option => option.prefix);
 }

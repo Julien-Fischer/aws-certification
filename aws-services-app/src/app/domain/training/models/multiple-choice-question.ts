@@ -1,5 +1,6 @@
 import {Answer} from "./answer";
 import {Question} from "./question";
+import {Shuffle} from "../shuffle";
 
 export class MultipleChoiceQuestion extends Question {
 
@@ -19,6 +20,12 @@ export class MultipleChoiceQuestion extends Question {
       ?.explanation;
   }
 
+  shuffle(options: Option[], strategy: Shuffle) {
+    const shuffled = strategy.shuffle(options);
+    for (let i = 0; i < shuffled.length; i++) {
+      this.options[i] = shuffled[i];
+    }
+  }
 }
 
 export class Option {
