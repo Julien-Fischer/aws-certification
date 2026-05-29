@@ -38,12 +38,19 @@ export class Quiz {
     if (isCorrect) {
       this.accuracy++;
     }
-    return this.computeResult(isCorrect);
+    const result = this.computeResult(isCorrect);
+    this.nextQuestion();
+    return result;
   }
 
 
   length(): number {
     return this.questions.length;
+  }
+
+  private nextQuestion(): Question {
+    this.currentQuestion = this.questions[this.cursor++];
+    return this.currentQuestion;
   }
 
   private computeResult(isCorrect: boolean) {

@@ -188,6 +188,18 @@ describe('Quiz', () => {
       expectResult(result).toHaveProgress(50);
       expectResult(result).toNotBeOver();
     })
+
+    it('is over when progress is 100', () => {
+      const quiz = aQuiz()
+        .with(aQuestion(), aQuestion())
+        .build();
+
+      quiz.submit(anAnswer());
+      const result = quiz.submit(anAnswer());
+
+      expectResult(result).toHaveProgress(100);
+      expectResult(result).toBeOver();
+    })
   })
 })
 
@@ -209,6 +221,9 @@ function expectResult(result: Result) {
     },
     toNotBeOver() {
       expect(result.isOver).toBe(false);
+    },
+    toBeOver() {
+      expect(result.isOver).toBe(true);
     }
   }
 }
