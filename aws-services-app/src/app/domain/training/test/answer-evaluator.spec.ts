@@ -32,28 +32,31 @@ describe('AnswerEvaluator', () => {
     answerEvaluator = TestBed.inject(AnswerEvaluator);
   });
 
-  it('evaluates correct answers', () => {
-    having(
-      aQuiz()
-        .identified(IAM_QUIZ)
-        .with(aTrueStatement())
-    );
 
-    const result = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
+  describe('evaluation', () => {
+    it('evaluates correct answers', () => {
+      having(
+        aQuiz()
+          .identified(IAM_QUIZ)
+          .with(aTrueStatement())
+      );
 
-    expectResult(result).toBeCorrect();
-  })
+      const result = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
 
-  it('evaluates incorrect answers', () => {
-    having(
-      aQuiz()
-        .identified(IAM_QUIZ)
-        .with(aTrueStatement())
-    );
+      expectResult(result).toBeCorrect();
+    })
 
-    const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+    it('evaluates incorrect answers', () => {
+      having(
+        aQuiz()
+          .identified(IAM_QUIZ)
+          .with(aTrueStatement())
+      );
 
-    expectResult(result).toBeIncorrect();
+      const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+
+      expectResult(result).toBeIncorrect();
+    })
   })
 
   function having(quiz: QuizBuilder) {
