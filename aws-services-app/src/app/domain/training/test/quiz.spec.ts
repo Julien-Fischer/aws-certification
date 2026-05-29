@@ -363,6 +363,19 @@ describe('Quiz', () => {
       expect(result2.outcome?.hasMastered()).toBe(false);
     })
 
+    it('has mastered when accuracy = 100%', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(true));
+      const result2 = quiz.submit(new Answer(true));
+
+      expect(result2.outcome).toBeDefined();
+      expect(result2.outcome?.hasFailed()).toBe(false);
+      expect(result2.outcome?.hasSucceeded()).toBe(true);
+      expect(result2.outcome?.hasMastered()).toBe(true);
+    })
 
   })
 
