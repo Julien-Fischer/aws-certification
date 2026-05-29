@@ -109,8 +109,3 @@ describe('AnswerEvaluator', () => {
   }
 
 })
-
-
-function aQuizId(): QuizId {
-  return QuizId.random();
-}
