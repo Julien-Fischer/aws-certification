@@ -9,9 +9,12 @@ export class Result {
   constructor(
     readonly isCorrect: boolean,
     readonly progress: Percentage,
-    readonly accuracy: Percentage,
-    readonly isOver: boolean
+    readonly accuracy: Percentage
   ) { }
+
+  isComplete(): boolean {
+    return this.progress.isMaximum();
+  }
 
 }
 
@@ -57,8 +60,7 @@ export class Quiz {
     return new Result(
       isCorrect,
       this.toPercentage(this.progress),
-      this.toPercentage(this.accuracy),
-      this.isOver()
+      this.toPercentage(this.accuracy)
     );
   }
 
@@ -68,10 +70,6 @@ export class Quiz {
 
   private toPercentage(progress: number): Percentage {
     return new Percentage(progress / this.length() * 100);
-  }
-
-  private isOver(): boolean {
-    return this.cursor === this.length() - 1;
   }
 
 }

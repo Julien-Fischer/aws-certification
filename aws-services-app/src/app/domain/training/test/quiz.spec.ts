@@ -220,10 +220,10 @@ function expectResult(result: Result) {
       expect(result.accuracy.hasValue(value)).toBe(true);
     },
     toNotBeOver() {
-      expect(result.isOver).toBe(false);
+      expect(result.isComplete()).toBe(false);
     },
     toBeOver() {
-      expect(result.isOver).toBe(true);
+      expect(result.isComplete()).toBe(true);
     }
   }
 }
