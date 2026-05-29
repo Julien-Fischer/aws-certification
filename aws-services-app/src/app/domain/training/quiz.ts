@@ -23,7 +23,7 @@ export class QuizOutcome {
   }
 
   hasMastered(): boolean {
-    return this.progress.isMaximum();
+    return this.accuracy.isMaximum();
   }
 
 }

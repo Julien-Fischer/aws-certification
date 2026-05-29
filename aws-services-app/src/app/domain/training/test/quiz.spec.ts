@@ -348,6 +348,22 @@ describe('Quiz', () => {
       expect(result3.outcome).toBeDefined();
       expect(result3.outcome?.hasFailed()).toBe(true);
     })
+
+    it('has succeeded when accuracy >= 50%', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aTrueStatement())
+        .build();
+
+      quiz.submit(new Answer(true));
+      const result2 = quiz.submit(new Answer(false));
+
+      expect(result2.outcome).toBeDefined();
+      expect(result2.outcome?.hasFailed()).toBe(false);
+      expect(result2.outcome?.hasSucceeded()).toBe(true);
+      expect(result2.outcome?.hasMastered()).toBe(false);
+    })
+
+
   })
 
 })
