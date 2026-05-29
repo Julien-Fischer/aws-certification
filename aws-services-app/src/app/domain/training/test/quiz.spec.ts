@@ -102,7 +102,7 @@ describe('Quiz', () => {
         expect(result.isCorrect).toBe(false);
       })
 
-      it('is provides the correct answer', () => {
+      it('is provides the correct answer when incorrect', () => {
         const quiz = aQuiz()
           .with(
             aMultipleChoiceQuestion()
@@ -119,6 +119,26 @@ describe('Quiz', () => {
 
         expectResult(result)
           .toBeIncorrect()
+          .toHaveCorrectAnswer(choice('B. Correct answer'));
+      })
+
+      it('is provides the correct answer when correct', () => {
+        const quiz = aQuiz()
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer('B. Correct answer')
+              .withOptions(
+                anOption().withValue('A. Incorrect option 1'),
+                anOption().withValue('B. Correct Answer'),
+                anOption().withValue('C. Incorrect option 2'),
+              )
+          )
+          .build();
+
+        const result = quiz.submit(choice('B. Correct answer'));
+
+        expectResult(result)
+          .toBeCorrect()
           .toHaveCorrectAnswer(choice('B. Correct answer'));
       })
     })
@@ -301,6 +321,10 @@ function expectResult(result: Result) {
     },
     toBeComplete() {
       expect(result.isComplete()).toBe(true);
+      return this;
+    },
+    toBeCorrect() {
+      expect(result.isCorrect).toBe(true);
       return this;
     },
     toBeIncorrect() {
