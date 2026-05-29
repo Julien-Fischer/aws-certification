@@ -1,6 +1,7 @@
 import {Result} from "../../quiz";
 import {expect} from "vitest";
 import {Answer} from "../../models/answer";
+import {Question} from "../../models/question";
 
 export function expectResult(result: Result) {
 
@@ -52,6 +53,17 @@ export function expectResult(result: Result) {
 
     toHaveExplanation(expected: string) {
       expect(result.explanation).toBe(expected);
+      return this;
+    },
+
+    toHaveNoNextQuestion() {
+      expect(result.nextQuestion).toBeUndefined();
+      return this;
+    },
+
+    toHaveNextQuestion(expected: string) {
+      expect(result.nextQuestion).toBeDefined();
+      expect(result.nextQuestion?.label).toEqual(expected);
       return this;
     }
   }

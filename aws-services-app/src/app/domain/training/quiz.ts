@@ -38,6 +38,7 @@ export class Result {
     readonly accuracy: Percentage,
     readonly expectedAnswer: Answer<any>,
     readonly explanation?: string,
+    readonly nextQuestion?: Question,
     readonly outcome?: QuizOutcome
   ) { }
 
@@ -56,7 +57,6 @@ export class Quiz {
   private progress = 0;
   private accuracy = 0;
 
-  private cursor = 0;
   private readonly _length: number;
 
   constructor(
@@ -71,17 +71,13 @@ export class Quiz {
   }
 
   submit(answer: Answer<any>): Result {
-    if (this.isAlreadyComplete()) {
+    if (this.isComplete()) {
       throw new Error('Quiz is already complete');
     }
-    this.progress++;
-    const result = this.evaluateAnswer(answer);
-    this.nextQuestion();
-    return result;
+    return this.processAnswer(answer);
   }
 
   retry(): void {
-    this.cursor = 0;
     this.progress = 0;
     this.accuracy = 0;
   }
@@ -95,28 +91,35 @@ export class Quiz {
   }
 
   private nextQuestion(): Question {
-    return this._questions[this.cursor++];
+    return this._questions[this.progress - 1];
   }
 
   private get currentQuestion(): Question {
-    return this._questions[this.cursor];
+    return this._questions[this.progress];
   }
 
-  private evaluateAnswer(userAnswer: Answer<any>): Result {
+  private processAnswer(userAnswer: Answer<any>): Result {
     const isAnswerCorrect = this.isCorrect(userAnswer);
     const expectedAnswer = this.currentQuestion.answer;
+    const explanation = this.getExplanationFor(userAnswer);
+
     if (isAnswerCorrect) {
       this.accuracy++;
     }
+    this.progress++;
+
     const progress = this.toPercentage(this.progress);
     const accuracy = this.toPercentage(this.accuracy);
+    const over = this.isComplete();
+
     return new Result(
       isAnswerCorrect,
       progress,
       accuracy,
       expectedAnswer,
-      this.getExplanationFor(userAnswer),
-      this.isComplete() ? new QuizOutcome(progress, accuracy) : undefined
+      explanation,
+      over ? undefined : this.nextQuestion(),
+      over ? new QuizOutcome(progress, accuracy) : undefined
     );
   }
 
@@ -132,12 +135,8 @@ export class Quiz {
     return new Percentage(progress / this.length * 100);
   }
 
-  private isAlreadyComplete(): boolean {
-    return this.cursor === this.length;
-  }
-
   private isComplete(): boolean {
-    return this.cursor === this.length - 1;
+    return this.progress === this.length;
   }
 
 }

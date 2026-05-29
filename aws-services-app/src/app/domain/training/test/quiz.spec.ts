@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {aCompletedQuiz, aQuiz} from "./builders/quiz-builder";
 import {
+  aBooleanQuestion,
   aFalseStatement,
   aMultipleChoiceQuestion,
   aQuestion,
   aTrueStatement,
 } from "./builders/question-builder";
-import {Quiz, QuizOutcome} from "../quiz";
+import {Quiz} from "../quiz";
 import {Answer} from "../models/answer";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
@@ -377,6 +378,45 @@ describe('Quiz', () => {
       expect(result2.outcome?.hasMastered()).toBe(true);
     })
 
+  })
+
+  describe('next question', () => {
+    it('returns the next question', () => {
+      const quiz = aQuiz()
+        .with(
+          aQuestion(),
+          aQuestion().labelled('IAM is an AWS service'),
+          aQuestion()
+        )
+        .build();
+
+      quiz.submit(anAnswer());
+      const result = quiz.submit(anAnswer());
+
+      expectResult(result)
+        .toHaveNextQuestion('IAM is an AWS service');
+    })
+
+    it('has no next question left', () => {
+      const quiz = aQuiz()
+        .with(aQuestion())
+        .build();
+
+      const result = quiz.submit(anAnswer());
+
+      expectResult(result).toHaveNoNextQuestion();
+    })
+
+    it('has no next question left', () => {
+      const quiz = aQuiz()
+        .with(aMultipleChoiceQuestion(), aBooleanQuestion().labelled('IAM is an AWS service'))
+        .build();
+
+      quiz.submit(anAnswer());
+      const result = quiz.submit(anAnswer());
+
+      expectResult(result).toHaveNoNextQuestion();
+    })
   })
 
 })

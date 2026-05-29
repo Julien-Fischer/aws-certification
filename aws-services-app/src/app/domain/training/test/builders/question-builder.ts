@@ -33,7 +33,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
   private answer: Answer<boolean> = new Answer(true);
   private explanation?: string;
 
-  withLabel(label: string): this {
+  labelled(label: string): this {
     this.label = label;
     return this;
   }
