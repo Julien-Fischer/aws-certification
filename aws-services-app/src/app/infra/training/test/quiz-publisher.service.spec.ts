@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../../domain/search/services/search.service";
-import {QuizDto, QuizPublisher} from "../quiz-publisher.service";
+import {QuizRequest, QuizPublisher, QuizDto} from "../quiz-publisher.service";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../shuffle-provider";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
@@ -55,16 +55,17 @@ describe('QuizPublisher', () => {
     quizPublisher = TestBed.inject(QuizPublisher);
   });
 
-  describe('start', () => {
+  describe('shuffle', () => {
     it('does not shuffle by default', () => {
-      const dto: QuizDto = {
+      const dto: QuizRequest = {
         booleanQuestions: [
           {label: 'statement 1', answer: true},
           {label: 'statement 2', answer: true}
         ],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]},
-          {label: 'question 2', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]}]
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+        ]
       }
 
       quizPublisher.start(dto);
@@ -73,20 +74,60 @@ describe('QuizPublisher', () => {
     })
 
     it('supports shuffling', () => {
-      const dto: QuizDto = {
+      const dto: QuizRequest = {
+        shuffle: true,
         booleanQuestions: [
           {label: 'statement 1', answer: true},
           {label: 'statement 2', answer: true}
         ],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]},
-          {label: 'question 2', answer: {value: 'option 1'}, options: [{value: 'option 1'}, {value: 'option 2'}]}],
-        shuffle: true
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+        ]
       }
 
       quizPublisher.start(dto);
 
       expect(mockShuffle.wasCalled()).toBe(true);
+    })
+  })
+
+  describe('start', () => {
+    it('returns created quiz with boolean questions first', () => {
+      const dto: QuizRequest = {
+        booleanQuestions: [
+          {label: 'statement 1', answer: true},
+          {label: 'statement 2', answer: true}
+        ],
+        multipleChoiceQuestions: [
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+        ]
+      }
+
+      const quiz: QuizDto = quizPublisher.start(dto);
+
+      expect(quiz).toBeDefined();
+      expect(quiz!.id).toBeDefined();
+      expect(quiz.questions).toBe(4);
+      expect(quiz.firstQuestion).toStrictEqual({label: 'statement 1'})
+    })
+
+    it('returns created quiz with a multiple choice question', () => {
+      const dto: QuizRequest = {
+        booleanQuestions: [],
+        multipleChoiceQuestions: [
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+        ]
+      }
+
+      const quiz: QuizDto = quizPublisher.start(dto);
+
+      expect(quiz).toBeDefined();
+      expect(quiz!.id).toBeDefined();
+      expect(quiz.questions).toBe(2);
+      expect(quiz.firstQuestion).toStrictEqual({label: 'question 1', options: ['A. option 1', 'B. option 2']})
     })
   })
 

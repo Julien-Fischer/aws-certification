@@ -5,8 +5,20 @@ import {Answer} from "../../domain/training/models/answer";
 import {BooleanQuestion} from "../../domain/training/models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../../domain/training/models/multiple-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
+import {Quiz} from "../../domain/training/quiz";
 
 export interface QuizDto {
+  id: string;
+  questions: number;
+  firstQuestion: QuestionDto;
+}
+
+export interface QuestionDto {
+  label: string;
+  options?: string[];
+}
+
+export interface QuizRequest {
   booleanQuestions: BooleanQuestionDto[],
   multipleChoiceQuestions: MultipleChoiceQuestionDto[],
   shuffle?: boolean
@@ -36,12 +48,13 @@ export class QuizPublisher {
     @Inject(shuffleProviderInjectionToken) private shuffleProvider: ShuffleProvider,
   ) { }
 
-  start(quizDto: QuizDto) {
+  start(quizDto: QuizRequest): QuizDto {
     const questions = this.toQuestions(quizDto);
-    this.startQuiz.with(questions, this.shuffleProvider.get(quizDto.shuffle ?? false));
+    const quiz = this.startQuiz.with(questions, this.shuffleProvider.get(quizDto.shuffle ?? false));
+    return response(quiz);
   }
 
-  private toQuestions(dto: QuizDto): Question[] {
+  private toQuestions(dto: QuizRequest): Question[] {
     return [
       ...mapBoolean(dto.booleanQuestions),
       ...mapMultipleChoice(dto.multipleChoiceQuestions)
@@ -74,3 +87,22 @@ function mapOptions(optionDtos: OptionDto[]): Option[] {
 function mapOption(optionDto: OptionDto): Option {
   return Option.from(optionDto.value, optionDto.explanation);
 }
+
+function response(quiz: Quiz): QuizDto {
+  return {
+    id: quiz.id.toString(),
+    questions: quiz.length,
+    firstQuestion: toQuestionDto(quiz.questions()[0])
+  };
+}
+
+function toQuestionDto(question: Question): QuestionDto {
+  const questionDto: Partial<QuestionDto> = {
+    label: question.label
+  };
+  if (question instanceof MultipleChoiceQuestion) {
+    questionDto.options = question.options.map(option => option.toString());
+  }
+  return questionDto as QuestionDto;
+}
+
