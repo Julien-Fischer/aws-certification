@@ -1,4 +1,4 @@
-import {QuizRepository} from "../../domain/training/quiz-repository";
+import {QuizRepository} from "../../domain/training/ports/outbound/quiz-repository";
 import {Quiz} from "../../domain/training/quiz";
 import {Injectable} from "@angular/core";
 import {QuizId} from "../../domain/training/quiz-id";

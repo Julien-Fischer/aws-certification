@@ -1,8 +1,8 @@
-import {SubmitAnswer} from "./submit-answer";
+import {SubmitAnswer} from "./ports/inbound/submit-answer";
 import {Answer} from "./models/answer";
 import {Quiz, Result} from "./quiz";
 import {Inject, Injectable} from "@angular/core";
-import {QuizRepository, quizRepositoryInjectionToken} from "./quiz-repository";
+import {QuizRepository, quizRepositoryInjectionToken} from "./ports/outbound/quiz-repository";
 import {QuizId} from "./quiz-id";
 
 @Injectable({ providedIn: 'root' })

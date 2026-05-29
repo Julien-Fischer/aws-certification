@@ -1,7 +1,7 @@
-import {Answer} from "./models/answer";
-import {Result} from "./quiz";
+import {Answer} from "../../models/answer";
+import {Result} from "../../quiz";
 import {InjectionToken} from "@angular/core";
-import {QuizId} from "./quiz-id";
+import {QuizId} from "../../quiz-id";
 
 export const submitAnswerInjectionToken = new InjectionToken<SubmitAnswer>('SubmitAnswer');
 
