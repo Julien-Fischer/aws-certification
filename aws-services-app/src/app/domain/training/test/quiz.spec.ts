@@ -6,7 +6,7 @@ import {
   aQuestion,
   aTrueStatement,
 } from "./builders/question-builder";
-import {Quiz} from "../quiz";
+import {Quiz, QuizOutcome} from "../quiz";
 import {Answer} from "../models/answer";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
@@ -320,6 +320,20 @@ describe('Quiz', () => {
         .toNotBeComplete()
         .toHaveProgress(50)
         .toHaveAccuracy(0);
+    })
+  })
+
+  describe('outcome', () => {
+    it('returns the outcome once completed', () => {
+      const quiz = aQuiz()
+        .with(aQuestion(), aQuestion())
+        .build();
+
+      const result1 = quiz.submit(anAnswer());
+      const result2 = quiz.submit(anAnswer());
+
+      expect(result1.outcome).toBeUndefined();
+      expect(result2.outcome).toBeDefined();
     })
   })
 

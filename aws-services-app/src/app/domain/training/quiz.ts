@@ -3,6 +3,31 @@ import {Answer} from "./models/answer";
 import Percentage from "./models/percentage";
 import {QuizId} from "./quiz-id";
 
+export class QuizOutcome {
+
+  private static readonly SUCCESS_THRESHOLD = Percentage.FIFTY;
+
+  readonly #brand = Symbol();
+
+  constructor(
+    readonly progress: Percentage,
+    readonly accuracy: Percentage
+  ) { }
+
+  hasFailed(): boolean {
+    return this.accuracy.isLessThan(QuizOutcome.SUCCESS_THRESHOLD);
+  }
+
+  hasSucceeded(): boolean {
+    return !this.hasFailed();
+  }
+
+  hasMastered(): boolean {
+    return this.progress.isMaximum();
+  }
+
+}
+
 export class Result {
 
   readonly #brand = Symbol();
@@ -12,7 +37,8 @@ export class Result {
     readonly progress: Percentage,
     readonly accuracy: Percentage,
     readonly expectedAnswer: Answer<any>,
-    readonly explanation?: string
+    readonly explanation?: string,
+    readonly outcome?: QuizOutcome
   ) { }
 
   isComplete(): boolean {
@@ -45,7 +71,7 @@ export class Quiz {
   }
 
   submit(answer: Answer<any>): Result {
-    if (this.isComplete()) {
+    if (this.isAlreadyComplete()) {
       throw new Error('Quiz is already complete');
     }
     this.progress++;
@@ -82,12 +108,15 @@ export class Quiz {
     if (isAnswerCorrect) {
       this.accuracy++;
     }
+    const progress = this.toPercentage(this.progress);
+    const accuracy = this.toPercentage(this.accuracy);
     return new Result(
       isAnswerCorrect,
-      this.toPercentage(this.progress),
-      this.toPercentage(this.accuracy),
+      progress,
+      accuracy,
       expectedAnswer,
-      this.getExplanationFor(userAnswer)
+      this.getExplanationFor(userAnswer),
+      this.isComplete() ? new QuizOutcome(progress, accuracy) : undefined
     );
   }
 
@@ -103,8 +132,12 @@ export class Quiz {
     return new Percentage(progress / this.length * 100);
   }
 
-  private isComplete(): boolean {
+  private isAlreadyComplete(): boolean {
     return this.cursor === this.length;
+  }
+
+  private isComplete(): boolean {
+    return this.cursor === this.length - 1;
   }
 
 }
