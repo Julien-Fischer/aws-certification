@@ -4,14 +4,11 @@ import {Answer} from "../models/answer";
 import {expectResult} from "./expectations/expect-result";
 import {aQuiz, QuizBuilder} from "./builders/quiz-builder";
 import {aFalseStatement, aTrueStatement} from "./builders/question-builder";
-import {MockFlashCardProvider} from "../../search/test/mock-flashcard-provider";
 import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../search/services/search.service";
-import {flashCardProviderInjectionToken} from "../../search/flash-card-provider";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
 import {QuizRepository, quizRepositoryInjectionToken} from "../ports/outbound/quiz-repository";
 import {AnswerEvaluator} from "../answer-evaluator";
-import {submitAnswerInjectionToken} from "../ports/inbound/submit-answer";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
