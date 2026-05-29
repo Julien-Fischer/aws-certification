@@ -29,7 +29,7 @@ export class Quiz {
   private accuracy = 0;
 
   constructor(
-    readonly questions: Question[]
+    private readonly questions: Question[]
   ) {
     if (questions.length === 0) {
       throw new Error('No questions provided');
