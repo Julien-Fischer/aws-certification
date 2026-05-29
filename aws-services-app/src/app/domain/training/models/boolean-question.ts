@@ -11,4 +11,9 @@ export class BooleanQuestion extends Question {
   ) {
     super(label, answer);
   }
+
+  findExplanationFor(answer: Answer<any>): string | undefined {
+    return this.answer.explanation;
+  }
+
 }

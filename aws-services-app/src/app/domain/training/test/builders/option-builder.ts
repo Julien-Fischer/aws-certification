@@ -9,6 +9,7 @@ export class OptionBuilder {
   private prefix: string = 'A';
   private label: string = 'Option Label';
   private value?: Option;
+  private explanation?: string;
 
   withPrefix(prefix: string): this {
     this.prefix = prefix;
@@ -25,10 +26,18 @@ export class OptionBuilder {
     return this;
   }
 
-  build(label: string): Option {
-    return this.value == null
-      ? new Option(this.prefix, label)
-      : this.value;
+  build(): Option {
+    let prefix = this.prefix;
+    let label = this.label;
+    if (this.value != null) {
+      prefix = this.value.prefix;
+      label = this.value.label;
+    }
+    return new Option(prefix, label, this.explanation);
   }
 
+  withExplanation(explanation: string) {
+    this.explanation = explanation;
+    return this;
+  }
 }

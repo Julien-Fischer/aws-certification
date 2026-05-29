@@ -59,13 +59,13 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  withAnswer(answer: string): this {
-    this.answer = new Answer(Option.from(answer));
+  withAnswer(answer: string, explanation?: string): this {
+    this.answer = new Answer(Option.from(answer), explanation);
     return this;
   }
 
   withOptions(...options: OptionBuilder[]): this {
-    this.options = options.map(option => option.build(this.label));
+    this.options = options.map(option => option.build());
     return this;
   }
 

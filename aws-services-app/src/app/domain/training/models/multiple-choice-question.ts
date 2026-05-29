@@ -12,14 +12,21 @@ export class MultipleChoiceQuestion extends Question {
   ) {
     super(label, answer);
   }
+
+  findExplanationFor(answer: Answer<any>): string | undefined {
+    return this.options
+      .find((option) => option.matches(answer))
+      ?.explanation;
+  }
+
 }
 
 export class Option {
 
-  public static from(value: string): Option {
+  public static from(value: string, explanation?: string): Option {
     const parts = value.split(/\. */);
     const [prefix, label] = parts;
-    return new Option(prefix, label);
+    return new Option(prefix, label, explanation);
   }
 
   readonly #brand = Symbol();
@@ -27,7 +34,12 @@ export class Option {
   constructor(
     readonly prefix: string,
     readonly label: string,
+    readonly explanation?: string
   ) {
+  }
+
+  matches(answer: Answer<Option>): boolean {
+    return answer.value.hasPrefix(this.prefix);
   }
 
   hasPrefix(prefix: string): boolean {

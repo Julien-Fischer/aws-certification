@@ -11,7 +11,8 @@ export class Result {
     readonly isCorrect: boolean,
     readonly progress: Percentage,
     readonly accuracy: Percentage,
-    readonly correctAnswer: Answer<any>
+    readonly correctAnswer: Answer<any>,
+    readonly explanation?: string
   ) { }
 
   isComplete(): boolean {
@@ -68,9 +69,9 @@ export class Quiz {
     return this.questions[this.cursor];
   }
 
-  private evaluateAnswer(answer: Answer<any>): Result {
-    const isCorrect = this.isCorrect(answer);
-    const correctAnswer = this.currentQuestion.answer;
+  private evaluateAnswer(userAnswer: Answer<any>): Result {
+    const isCorrect = this.isCorrect(userAnswer);
+    const expectedAnswer = this.currentQuestion.answer;
     if (isCorrect) {
       this.accuracy++;
     }
@@ -78,12 +79,17 @@ export class Quiz {
       isCorrect,
       this.toPercentage(this.progress),
       this.toPercentage(this.accuracy),
-      correctAnswer
+      expectedAnswer,
+      this.getExplanationFor(userAnswer)
     );
   }
 
   private isCorrect(answer: Answer<any>): boolean {
     return this.currentQuestion.hasAnswer(answer);
+  }
+
+  private getExplanationFor(answer: Answer<any>): string | undefined {
+    return this.currentQuestion.findExplanationFor(answer);
   }
 
   private toPercentage(progress: number): Percentage {

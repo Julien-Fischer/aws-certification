@@ -151,6 +151,27 @@ describe('Quiz', () => {
           .toBeCorrect()
           .toHaveCorrectAnswer(choice('B. Correct answer'));
       })
+
+      it('explanation', () => {
+        const quiz = aQuiz()
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer('B. Correct answer')
+              .withOptions(
+                anOption().withValue('A. Incorrect option 1').withExplanation('Explanation for incorrect option 1'),
+                anOption().withValue('B. Correct Answer'),
+                anOption().withValue('C. Incorrect option 2'),
+              )
+          )
+          .build();
+
+        const result = quiz.submit(choice('A. Incorrect option 1'));
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveCorrectAnswer(choice('B. Correct answer'))
+          .toHaveExplanation('Explanation for incorrect option 1');
+      })
     })
 
   })

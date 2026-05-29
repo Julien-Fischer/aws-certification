@@ -48,8 +48,12 @@ export function expectResult(result: Result) {
       const expected: Answer<any> = answer instanceof Answer ? answer : new Answer(answer);
       expect(result.correctAnswer.equals(expected));
       return this;
-    }
+    },
 
+    toHaveExplanation(expected: string) {
+      expect(result.explanation).toBe(expected);
+      return this;
+    }
   }
 
 }

@@ -13,4 +13,6 @@ export abstract class Question {
     return this.answer.equals(answer);
   }
 
+  abstract findExplanationFor(answer: Answer<any>): string | undefined;
+
 }
