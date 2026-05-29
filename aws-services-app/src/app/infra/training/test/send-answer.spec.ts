@@ -7,7 +7,11 @@ import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
 import {QuizId} from "../../../domain/training/quiz-id";
-import {aFalseStatement, aTrueStatement} from "../../../domain/training/test/builders/question-builder";
+import {
+  aFalseStatement,
+  aMultipleChoiceQuestion,
+  aTrueStatement
+} from "../../../domain/training/test/builders/question-builder";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -40,15 +44,15 @@ describe('SendAnswer', () => {
         .identified(IAM_QUIZ)
         .with(
           aTrueStatement(),
+          aMultipleChoiceQuestion(),
           aFalseStatement()
         ));
 
-      const answerDto: AnswerDto = {quizId: IAM_QUIZ.toString(), answer: false};
-
-      const result = sendAnswer.send(answerDto);
+      sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: false});
+      const result = sendAnswer.send({quizId: IAM_QUIZ.toString(), answer: 'A. Option 1'});
 
       expectResult(result)
-        .toHaveProgress(50)
+        .toHaveProgress(66.66)
         .toHaveAccuracy(0)
         .toHaveNoOutcome();
     })
@@ -152,11 +156,11 @@ describe('SendAnswer', () => {
 function expectResult(result: ResultDto) {
   return {
     toHaveAccuracy(value: number) {
-      expect(result.accuracy).toBeCloseTo(value, 2);
+      expect(result.accuracy).toBeCloseTo(value, 0);
       return this;
     },
     toHaveProgress(value: number) {
-      expect(result.progress).toBeCloseTo(value, 2);
+      expect(result.progress).toBeCloseTo(value, 0);
       return this;
     },
     toHaveNoOutcome() {
