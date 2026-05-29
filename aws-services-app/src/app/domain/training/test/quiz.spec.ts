@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {aQuiz} from "./builders/quiz-builder";
+import {aCompletedQuiz, aQuiz} from "./builders/quiz-builder";
 import {
   aFalseStatement,
   aMultipleChoiceQuestion,
@@ -12,6 +12,7 @@ import {Answer} from "../models/answer";
 import {Option} from "../models/multiple-choice-question";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
+import {anAnswer, choice} from "./builders/answer-builder";
 
 describe('Quiz', () => {
 
@@ -289,30 +290,6 @@ describe('Quiz', () => {
   })
 })
 
-function aCompletedQuiz() {
-  return {
-    with(...questions: QuestionBuilder[]) {
-      const quiz = aQuiz()
-        .with(...questions)
-        .build();
-
-      quiz.submit(anAnswer());
-      const firstTry = quiz.submit(anAnswer());
-
-      expectResult(firstTry).toBeComplete();
-
-      return quiz;
-    }
-  }
-}
-
-function anAnswer() {
-  return choice('A. First option');
-}
-
-function choice(value: string) {
-  return new Answer(Option.from(value));
-}
 
 
 
