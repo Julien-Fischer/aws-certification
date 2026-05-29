@@ -9,7 +9,8 @@ export class Result {
   constructor(
     readonly isCorrect: boolean,
     readonly progress: Percentage,
-    readonly accuracy: Percentage
+    readonly accuracy: Percentage,
+    readonly correctAnswer: Answer<any>
   ) { }
 
   isComplete(): boolean {
@@ -63,13 +64,15 @@ export class Quiz {
 
   private evaluateAnswer(answer: Answer<any>): Result {
     const isCorrect = this.isCorrect(answer);
+    const correctAnswer = this.currentQuestion.answer;
     if (isCorrect) {
       this.accuracy++;
     }
     return new Result(
       isCorrect,
       this.toPercentage(this.progress),
-      this.toPercentage(this.accuracy)
+      this.toPercentage(this.accuracy),
+      correctAnswer
     );
   }
 

@@ -10,6 +10,7 @@ import {
 import {Quiz, Result} from "../quiz";
 import {Answer} from "../models/answer";
 import {Option} from "../models/multiple-choice-question";
+import {anOption} from "./builders/option-builder";
 
 describe('Quiz', () => {
 
@@ -99,6 +100,26 @@ describe('Quiz', () => {
         const result = quiz.submit(choice('B. Second option'));
 
         expect(result.isCorrect).toBe(false);
+      })
+
+      it('is provides the correct answer', () => {
+        const quiz = aQuiz()
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer('B. Correct answer')
+              .withOptions(
+                anOption().withValue('A. Incorrect option 1'),
+                anOption().withValue('B. Correct Answer'),
+                anOption().withValue('C. Incorrect option 2'),
+              )
+          )
+          .build();
+
+        const result = quiz.submit(choice('C. Incorrect option 2'));
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveCorrectAnswer(choice('B. Correct answer'));
       })
     })
 
@@ -280,6 +301,14 @@ function expectResult(result: Result) {
     },
     toBeComplete() {
       expect(result.isComplete()).toBe(true);
+      return this;
+    },
+    toBeIncorrect() {
+      expect(result.isCorrect).toBe(false);
+      return this;
+    },
+    toHaveCorrectAnswer(answer: Answer<any>) {
+      expect(result.correctAnswer.equals(answer));
       return this;
     }
   }

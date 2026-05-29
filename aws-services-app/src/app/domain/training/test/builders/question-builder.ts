@@ -1,6 +1,7 @@
 import {Answer} from "../../models/answer";
 import {BooleanQuestion} from "../../models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../../models/multiple-choice-question";
+import {OptionBuilder} from "./option-builder";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -63,8 +64,8 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  withOptions(...options: Option[]): this {
-    this.options = options;
+  withOptions(...options: OptionBuilder[]): this {
+    this.options = options.map(option => option.build(this.label));
     return this;
   }
 
