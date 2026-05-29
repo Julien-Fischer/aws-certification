@@ -5,11 +5,9 @@ import {
   aMultipleChoiceQuestion,
   aQuestion,
   aTrueStatement,
-  QuestionBuilder
 } from "./builders/question-builder";
-import {Quiz, Result} from "../quiz";
+import {Quiz} from "../quiz";
 import {Answer} from "../models/answer";
-import {Option} from "../models/multiple-choice-question";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
 import {anAnswer, choice} from "./builders/answer-builder";
