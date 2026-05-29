@@ -23,10 +23,10 @@ export class Quiz {
 
   readonly #brand = Symbol();
 
-  private cursor = 0;
-  private currentQuestion = this.questions[0];
   private progress = 0;
   private accuracy = 0;
+
+  private cursor = 0;
 
   constructor(
     private readonly questions: Question[]
@@ -48,7 +48,6 @@ export class Quiz {
 
   retry(): void {
     this.cursor = 0;
-    this.currentQuestion = this.questions[0];
     this.progress = 0;
     this.accuracy = 0;
   }
@@ -58,8 +57,11 @@ export class Quiz {
   }
 
   private nextQuestion(): Question {
-    this.currentQuestion = this.questions[this.cursor++];
-    return this.currentQuestion;
+    return this.questions[this.cursor++];
+  }
+
+  private get currentQuestion(): Question {
+    return this.questions[this.cursor];
   }
 
   private evaluateAnswer(answer: Answer<any>): Result {
