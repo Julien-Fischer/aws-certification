@@ -186,7 +186,7 @@ describe('Quiz', () => {
       const result = quiz.submit(anAnswer());
 
       expectResult(result).toHaveProgress(50);
-      expectResult(result).toNotBeOver();
+      expectResult(result).toNotBeComplete();
     })
 
     it('is over when progress is 100', () => {
@@ -198,7 +198,7 @@ describe('Quiz', () => {
       const result = quiz.submit(anAnswer());
 
       expectResult(result).toHaveProgress(100);
-      expectResult(result).toBeOver();
+      expectResult(result).toBeComplete();
     })
 
     it('is throws when submitting an answer when quiz is complete', () => {
@@ -211,6 +211,28 @@ describe('Quiz', () => {
 
       expect(() => quiz.submit(anAnswer()))
         .toThrow('Quiz is already complete');
+    })
+  })
+
+  describe('retry', () => {
+    it('can be retried', () => {
+      const quiz = aQuiz()
+        .with(aTrueStatement(), aQuestion())
+        .build();
+
+      quiz.submit(anAnswer());
+      const firstTry = quiz.submit(anAnswer());
+
+      expectResult(firstTry).toBeComplete();
+
+      quiz.retry();
+
+      const secondTry = quiz.submit(new Answer(false));
+
+      expectResult(secondTry)
+        .toNotBeComplete()
+        .toHaveProgress(50)
+        .toHaveAccuracy(0);
     })
   })
 })
@@ -227,15 +249,19 @@ function expectResult(result: Result) {
   return {
     toHaveProgress(value: number) {
       expect(result.progress.hasValue(value)).toBe(true);
+      return this;
     },
     toHaveAccuracy(value: number) {
       expect(result.accuracy.hasValue(value)).toBe(true);
+      return this;
     },
-    toNotBeOver() {
+    toNotBeComplete() {
       expect(result.isComplete()).toBe(false);
+      return this;
     },
-    toBeOver() {
+    toBeComplete() {
       expect(result.isComplete()).toBe(true);
+      return this;
     }
   }
 }

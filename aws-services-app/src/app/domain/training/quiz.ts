@@ -49,6 +49,12 @@ export class Quiz {
     return result;
   }
 
+  retry(): void {
+    this.cursor = 0;
+    this.currentQuestion = this.questions[0];
+    this.progress = 0;
+    this.accuracy = 0;
+  }
 
   length(): number {
     return this.questions.length;
