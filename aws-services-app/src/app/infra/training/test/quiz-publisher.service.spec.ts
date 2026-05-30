@@ -7,6 +7,9 @@ import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/st
 import {TrainingSession} from "../../../domain/training/training-session";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
+import {QuizId} from "../../../domain/training/quiz-id";
+import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
+import {Quiz} from "../../../domain/training/quiz";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -38,16 +41,18 @@ describe('QuizPublisher', () => {
   let quizPublisher: QuizPublisher;
   let shuffleProvider: ShuffleProvider;
   let mockShuffle: MockShuffle;
+  let quizRepository: InMemoryQuizRepository;
 
   beforeEach(() => {
     mockShuffle = new MockShuffle();
     shuffleProvider = new DeterministicShuffleProvider(mockShuffle);
+    quizRepository = new InMemoryQuizRepository();
 
     TestBed.configureTestingModule({
       providers: [
         {provide: shuffleProviderInjectionToken, useValue: shuffleProvider},
         {provide: startQuizInjectionToken, useClass: TrainingSession},
-        {provide: quizRepositoryInjectionToken, useClass: InMemoryQuizRepository}
+        {provide: quizRepositoryInjectionToken, useValue: quizRepository}
       ]
     });
     quizPublisher = TestBed.inject(QuizPublisher);
@@ -127,6 +132,96 @@ describe('QuizPublisher', () => {
       expect(quiz.questions).toBe(2);
       expect(quiz.firstQuestion).toStrictEqual({label: 'question 1', options: ['A. option 1', 'B. option 2']})
     })
+
+
+    describe('lifecycle', () => {
+
+      it('handles optional explanations', () => {
+        const dto: QuizRequest = {
+          booleanQuestions: [
+            {label: 'statement 1', answer: true, explanation: 'Explanation 1'},
+            {label: 'statement 2', answer: true}
+          ],
+          multipleChoiceQuestions: [
+            {
+              label: 'question 1',
+              answer: {value: 'A. option 1'},
+              options: [
+                {value: 'A. option 1', explanation: 'Explanation 2'},
+                {value: 'B. option 2'}
+              ]
+            },
+            {
+              label: 'question 2',
+              answer: {value: 'A. option 1'},
+              options: [
+                {value: 'A. option 1'},
+                {value: 'B. option 2', explanation: 'Explanation 3'}
+              ]
+            }
+          ]
+        }
+
+        const quiz: Quiz = havingPublished(dto);
+
+        const result = quiz.submit(aUserAnswer());
+
+        expect(result).toBeDefined();
+        expect(result?.explanation).toBe('Explanation 1');
+      })
+
+      it('handles optional explanations', () => {
+        const dto: QuizRequest = {
+          booleanQuestions: [
+            {label: 'statement 1', answer: true, explanation: 'Explanation 1'},
+            {label: 'statement 2', answer: true}
+          ],
+          multipleChoiceQuestions: [
+            {
+              label: 'question 1',
+              answer: {value: 'A. option 1'},
+              options: [
+                {value: 'A. option 1', explanation: 'Explanation 2'},
+                {value: 'B. option 2'}
+              ]
+            },
+            {
+              label: 'question 2',
+              answer: {value: 'A. option 1'},
+              options: [
+                {value: 'A. option 1'},
+                {value: 'B. option 2', explanation: 'Explanation 3'}
+              ]
+            }
+          ]
+        }
+
+        const quiz: Quiz = havingPublished(dto);
+
+        quiz.submit(aUserAnswer());
+        quiz.submit(aUserAnswer());
+
+        const result = quiz.submit(aUserAnswer());
+
+        expect(result).toBeDefined();
+        expect(result?.explanation).toBe('Explanation 2');
+      })
+
+    })
+
+    function havingPublished(dto: QuizRequest): Quiz {
+      const quiz: QuizDto = quizPublisher.start(dto);
+      return getPersistedQuiz(quiz.id);
+    }
+
+    function getPersistedQuiz(id: string): Quiz {
+      const quiz = quizRepository.get(new QuizId(id));
+      if (quiz == null) {
+        throw new Error(`Quiz with id ${id} not found`);
+      }
+      return quiz;
+    }
+
   })
 
 });

@@ -27,6 +27,7 @@ export interface QuizRequest {
 interface BooleanQuestionDto {
   label: string;
   answer: boolean;
+  explanation?: string;
 }
 
 interface MultipleChoiceQuestionDto {
@@ -67,7 +68,8 @@ function mapBoolean(questions: BooleanQuestionDto[]): Question[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
-      new ExpectedAnswer<boolean>(question.answer)
+      new ExpectedAnswer<boolean>(question.answer),
+      question.explanation
     ));
 }
 
