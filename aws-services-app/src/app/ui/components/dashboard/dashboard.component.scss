@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .container {
   max-width: 1200px;
 }
@@ -69,8 +71,8 @@
     color: #232f3e; // Dark blue for contrast on light-blue in dark mode if needed, or white
 
     &:hover {
-      background-color: lighten(#ff9900, 5%);
-      border-color: lighten(#ff9900, 5%);
+      background-color: color.adjust(#ff9900, $lightness: 5%);
+      border-color: color.adjust(#ff9900, $lightness: 5%);
     }
   }
 }
