@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy, Inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 
@@ -6,20 +6,19 @@ import {ActivatedRoute} from '@angular/router';
 import { SearchService } from '../../../domain/search/services/search.service';
 import { FlashCardMetadata } from '../../../domain/search/models/metadata';
 import { marked } from 'marked';
-import { QuizComponent } from '../quiz/quiz.component';
-import { Question } from '../../../domain/search/models/question';
+import {ProgressUpdate, QuizComponent} from '../quiz/quiz.component';
 import { FlashCard } from '../../../domain/search/models/flash-card';
 import Score from '../../../domain/scoring/models/score';
 import Highscore from '../../../domain/scoring/models/highscore';
-import ProgressTracker from './progress-tracker';
 import { FlashCardId } from "../../../domain/shared/flash-card-id";
-import { Confetti } from "../../animations/confetti";
+import {Confetti, confettiInjectionToken} from "../../animations/confetti";
 import { AppBackToHomeButtonComponent } from "../generic/back-to-home-button.component";
 import { AppTextPopComponent } from "../../animations/text-pop.component";
 import { HighscoreDetailsComponent } from "./highscore-details/highscore-details.component";
 import { FlashCardNavigationComponent } from "./flash-card-navigation.component";
 import { FlashCardHeaderComponent } from "./flash-card-header.component";
 import {ScoringAppService, AnswerResult} from "../../../domain/scoring/scoring-application.service";
+import {Question} from "../../../domain/search/models/question";
 
 @Component({
   selector: 'app-flash-card',
@@ -38,24 +37,24 @@ import {ScoringAppService, AnswerResult} from "../../../domain/scoring/scoring-a
 })
 export class FlashCardComponent implements OnInit, OnDestroy {
 
-  service: FlashCardMetadata | undefined;
+  flashCard: FlashCardMetadata | undefined;
   markdownContent: string = '';
-  questions: Question[] = [];
-  progressTracker = this.trackProgress();
   highscore: Highscore = Highscore.NONE;
   firstAttempt: boolean = true;
   newHighscoreUnlocked = false;
 
   protected flashcardId: FlashCardId | undefined = undefined;
-  protected loading: boolean = true;
+  loading: boolean = true;
   @ViewChild(AppTextPopComponent) textPopComponent!: AppTextPopComponent;
 
   private resetSubscription: Subscription | undefined;
+  protected questions: Question[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private flashCardService: SearchService,
-    private scoringAppService: ScoringAppService
+    private scoringAppService: ScoringAppService,
+    @Inject(confettiInjectionToken) private confetti: Confetti
   ) {}
 
   ngOnInit(): void {
@@ -70,7 +69,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
       const id = params.get('id');
       if (id) {
         this.loading = true;
-        this.resetProgressTracker();
         this.flashcardId = new FlashCardId(id);
         this.loadService(this.flashcardId);
       } else {
@@ -103,7 +101,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
         this.loading = true;
         return;
       }
-      this.service = service;
+      this.flashCard = service;
       this.loadMarkdownContent(serviceId);
       this.loading = false;
     });
@@ -112,11 +110,14 @@ export class FlashCardComponent implements OnInit, OnDestroy {
   private loadMarkdownContent(id: FlashCardId): void {
     this.flashCardService.getFlashCard(id).subscribe({
       next: (card: FlashCard) => {
-        const { mainContent, trueFalseQuestions, multipleChoiceQuestions } = card;
+        if (!card) {
+          return;
+        }
+        const { mainContent, booleanQuestions, multipleChoiceQuestions } = card;
         const renderer = tableRenderer();
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
-        this.questions = [...trueFalseQuestions, ...multipleChoiceQuestions];
+        this.questions = [...booleanQuestions, ...multipleChoiceQuestions];
         this.loading = false;
       },
       error: (error) => {
@@ -127,23 +128,8 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     });
   }
 
-  async onProgress(correct: boolean) {
-    await this.updateProgress(this.progressTracker, correct);
-  }
-
-  resetProgressTracker() {
-    this.progressTracker = this.trackProgress();
-    this.newHighscoreUnlocked = false;
-  }
-
-  private trackProgress() {
-    return new ProgressTracker(() => this.questions.length);
-  }
-
-  private async updateProgress(tracker: ProgressTracker, correct: boolean) {
-    tracker.update(correct);
-    const score = tracker.score;
-    await this.notifyScore(score);
+  async onProgress(progressUpdate: ProgressUpdate) {
+    await this.notifyScore(progressUpdate.score);
   }
 
   private async notifyScore(score: Score) {
@@ -160,7 +146,7 @@ export class FlashCardComponent implements OnInit, OnDestroy {
 
   private rewardUser(result: AnswerResult) {
     if (result.isMaximum) {
-      Confetti.burst();
+      this.confetti.burst();
     } else if (!this.newHighscoreUnlocked) {
       this.textPopComponent.pop();
       this.newHighscoreUnlocked = true;
@@ -172,7 +158,6 @@ export class FlashCardComponent implements OnInit, OnDestroy {
     this.scoringAppService.resetHighscore(this.flashcardId);
     this.highscore = Highscore.NONE;
     this.firstAttempt = true;
-    this.resetProgressTracker();
   }
 }
 

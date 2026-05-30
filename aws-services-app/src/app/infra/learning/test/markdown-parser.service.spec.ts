@@ -226,7 +226,7 @@ describe('MarkdownParserService', () => {
             const parsed = service.parse(markdown);
 
             expectFlashCard(parsed)
-                .toHaveTrueFalseQuestions([
+                .toHaveBooleanQuestions([
                     {
                         question: 'A true statement.',
                         answer: new Answer(true)
@@ -244,7 +244,7 @@ describe('MarkdownParserService', () => {
             const parsed = service.parse(markdown);
 
             expectFlashCard(parsed)
-                .toHaveTrueFalseQuestions([
+                .toHaveBooleanQuestions([
                     {
                         question: 'A true statement.',
                         answer: new Answer(true)
@@ -379,7 +379,7 @@ describe('MarkdownParserService', () => {
             const parsed = service.parse(markdown);
 
             expectFlashCard(parsed)
-                .toHaveTrueFalseQuestions([
+                .toHaveBooleanQuestions([
                     {
                         question: 'A true statement',
                         answer: new Answer(true, explanation)
@@ -399,7 +399,7 @@ describe('MarkdownParserService', () => {
                 const parsed = service.parse(markdown);
 
                 expectFlashCard(parsed)
-                    .toHaveTrueFalseQuestions([
+                    .toHaveBooleanQuestions([
                         {
                             question: 'A true statement',
                             answer: new Answer(true, 'explanation')
@@ -422,7 +422,7 @@ describe('MarkdownParserService', () => {
                 const parsed = service.parse(markdown);
 
                 expectFlashCard(parsed)
-                    .toHaveTrueFalseQuestions([
+                    .toHaveBooleanQuestions([
                         {
                             question: 'A true statement',
                             answer: new Answer(true, 'inline explanation')
@@ -458,7 +458,7 @@ interface QuestionStringBuilder {
     build(): string;
 }
 
-class TrueFalseQuestionStringBuilder implements QuestionStringBuilder {
+class BooleanQuestionStringBuilder implements QuestionStringBuilder {
     private questionText = 'The question text';
     private answer: boolean = false;
     private explanation = '';
@@ -588,15 +588,15 @@ class FlashCardStringBuilder {
     }
 }
 
-function aTrueStatement(): TrueFalseQuestionStringBuilder {
+function aTrueStatement(): BooleanQuestionStringBuilder {
     return aBooleanStatement().thatIs(true);
 }
-function aFalseStatement(): TrueFalseQuestionStringBuilder {
+function aFalseStatement(): BooleanQuestionStringBuilder {
     return aBooleanStatement().thatIs(false);
 }
 
-function aBooleanStatement(): TrueFalseQuestionStringBuilder {
-    return new TrueFalseQuestionStringBuilder();
+function aBooleanStatement(): BooleanQuestionStringBuilder {
+    return new BooleanQuestionStringBuilder();
 }
 
 function aMultiChoiceQuestion(): MultiChoiceQuestionStringBuilder {
@@ -613,7 +613,7 @@ interface ExpectedMultipleChoiceQuestion {
     answer: Answer<Option>;
 }
 
-interface ExpectedTrueFalseQuestion {
+interface ExpectedBooleanQuestion {
     question: string;
     answer: Answer<boolean>;
 }
@@ -634,8 +634,8 @@ class FlashCardExpectation {
         return this;
     }
 
-    toHaveTrueFalseQuestions(expected: ExpectedTrueFalseQuestion[]): this {
-        expect(this.flashCard.trueFalseQuestions)
+    toHaveBooleanQuestions(expected: ExpectedBooleanQuestion[]): this {
+        expect(this.flashCard.booleanQuestions)
             .toStrictEqual(expected)
         return this;
     }

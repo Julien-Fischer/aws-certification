@@ -8,7 +8,7 @@ export interface MultipleChoiceQuestion extends Question {
     answer: Answer<Option>;
 }
 
-export interface TrueFalseQuestion extends Question {
+export interface BooleanQuestion extends Question {
     answer: Answer<boolean>;
 }
 

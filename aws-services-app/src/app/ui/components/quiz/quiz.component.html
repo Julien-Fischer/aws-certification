@@ -1,13 +1,19 @@
 <div class="quiz-container mt-4 md:p-6 md:border md:border-[var(--aws-orange)] md:border-1 rounded shadow-sm bg-light-theme">
     @if (!quizCompleted && questions.length > 0) {
         <div class="progress mb-4 bg-gray-200 dark:bg-gray-600" style="height: 10px;">
-            <div class="progress-bar" role="progressbar"
-                 [style.width]="progress + '%'"></div>
+            <div class="progress-bar"
+                 role="progressbar"
+                 [style.width]="progress.toFixed(0) + '%'"
+            ></div>
         </div>
 
         <div class="question-section mb-4">
-            <h5 class="mb-3 text-secondary-theme">Question {{ currentIndex + 1 }} of {{ questions.length }}</h5>
-            <p class="lead fw-bold">{{ currentQuestion.question }}</p>
+            <h5 data-test-id="question-index" class="mb-3 text-secondary-theme">
+              Question {{ questionIndex + 1 }} of {{ questionCount }}
+            </h5>
+            <p data-test-id="question-text" class="lead fw-bold">
+              {{ currentQuestion.question }}
+            </p>
         </div>
 
         <div class="options-section mb-4">
@@ -17,11 +23,12 @@
                          [class.selected]="selectedOption === option"
                          [class.correct]="showFeedback && matchesAnswer(option)"
                          [class.wrong]="showFeedback && selectedOption === option && !matchesAnswer(option)"
-                         class="option-card p-3 mb-2 border rounded transition {{showFeedback ? 'disabled' : ''}}">
+                         class="option-card p-3 mb-2 border rounded transition {{showFeedback ? 'disabled' : ''}}"
+                    >
                         <div class="d-flex align-items-center">
                             <div class="option-indicator me-3 bg-gray-500 dark:bg-gray-700 text-white
                             rounded-circle d-flex align-items-center justify-content-center font-weight-bold">
-                                {{ prefixFor(index) }}
+                                {{ option.prefix }}
                             </div>
                             <div class="option-label">{{ option.label }}</div>
                         </div>
@@ -59,7 +66,7 @@
                     <i class="fas me-2" [class.fa-check-circle]="isCorrect" [class.fa-times-circle]="!isCorrect"></i>
                     <span class="fw-bold">{{ isCorrect ? 'Correct!' : 'Incorrect' }}</span>
                 </div>
-                @if (!isCorrect && currentQuestion.answer.explanation) {
+                @if (!isCorrect && explanation) {
                     <div class="explanation-section mt-3 p-3 rounded">
                         <div class="mb-0 explanation-text" [innerHTML]="renderedExplanation"></div>
                     </div>
@@ -77,7 +84,7 @@
             } @else {
                 <button class="btn main-button"
                         (click)="nextQuestion()">
-                    {{ currentIndex === questions.length - 1 ? 'Finish Quiz' : 'Next Question' }}
+                    {{ isLastQuestion() ? 'Finish Quiz' : 'Next Question' }}
                 </button>
             }
         </div>
@@ -91,10 +98,19 @@
                 } @else {
                     <i class="fas fa-thumbs-down fa-4x text-danger mb-3"></i>
                 }
-                <h3>Quiz Completed!</h3>
-                <p class="lead">Your score: <span class="fw-bold">{{ score }}</span> / {{ questions.length }}</p>
+                <h3 data-test-id="completed-header">
+                  Quiz Complete!
+                </h3>
+                <p class="lead">
+                  Your score:
+                  <span data-test-id="completed-accuracy" class="fw-bold">
+                    {{ lastResult?.accuracy?.toFixed(0) }}
+                  </span>%
+                </p>
             </div>
-            <button class="btn btn-primary" (click)="resetQuiz()">Try Again</button>
+            <button class="btn btn-primary" (click)="resetQuiz()">
+              Try Again
+            </button>
         </div>
     }
 

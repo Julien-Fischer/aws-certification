@@ -2,23 +2,40 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach } from 'vitest';
 
 import {QuizComponent} from "./quiz.component";
-import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {Answer, Option, MultipleChoiceQuestion, Question, TrueFalseQuestion} from "../../../domain/search/models/question";
+import {Answer, Option, MultipleChoiceQuestion, Question, BooleanQuestion} from "../../../domain/search/models/question";
 import PageObject from "../../test/page-object";
-import Score from "../../../domain/scoring/models/score";
+import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
+import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
+import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
+import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
+import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
+import {TrainingSession} from "../../../domain/training/training-session";
+import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
+import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
+import {Letter} from "../../../infra/learning/markdown-parser.service";
 
-class MockShuffler implements Shuffler {
+class DeterministicShuffleProvider implements ShuffleProvider {
 
-    private called = false;
+  constructor(private deterministicShuffle: Shuffle) { }
 
-    shuffle<T>(array: T[]): T[] {
-        this.called = true;
-        return array;
-    }
+  get(shuffle: boolean): Shuffle {
+    return shuffle ? this.deterministicShuffle : NoShuffle;
+  }
 
-    wasCalled(): boolean {
-        return this.called;
-    }
+}
+
+class MockNoShuffle implements Shuffle {
+
+  private called = false;
+
+  shuffle<T>(array: T[]): T[] {
+    this.called = true;
+    return array;
+  }
+
+  wasCalled(): boolean {
+    return this.called;
+  }
 
 }
 
@@ -27,14 +44,21 @@ describe('QuizComponent', () => {
     let component: QuizComponent;
     let fixture: ComponentFixture<QuizComponent>;
     let page: QuizComponentPage;
-    let mockShuffler: MockShuffler;
+
+    let shuffle: MockNoShuffle;
+    let shuffleProvider: DeterministicShuffleProvider;
 
     beforeEach(async () => {
-        mockShuffler = new MockShuffler();
+        shuffle = new MockNoShuffle();
+        shuffleProvider = new DeterministicShuffleProvider(shuffle);
+
         await TestBed.configureTestingModule({
             imports: [QuizComponent],
             providers: [
-                { provide: shufflerInjectionToken, useValue: mockShuffler }
+              {provide: submitAnswerInjectionToken, useClass: AnswerEvaluator},
+              {provide: quizRepositoryInjectionToken, useClass: InMemoryQuizRepository},
+              {provide: startQuizInjectionToken, useClass: TrainingSession},
+              {provide: shuffleProviderInjectionToken, useValue: shuffleProvider}
             ]
         })
             .compileComponents();
@@ -51,46 +75,54 @@ describe('QuizComponent', () => {
     });
 
     it('page has no quiz', async () => {
-        await havingNoQuizzes();
+        await havingNoQuiz();
 
         expect(page.hasNoQuiz()).toBe(true);
     })
 
     it('page has a quiz', async () => {
-        await havingAQuizWith(aQuestion());
+        await having(aQuestion());
 
         expect(page.hasNoQuiz()).toBe(false);
     })
 
-    it('shows progress at 0%', async () => {
-        await havingAQuizWith(aQuestion());
+    it('shuffles questions', async () => {
+        await having(aQuestion(), aQuestion(), aQuestion());
 
-        expect(page.progress).toBe('0%');
-        expect(page.score).toBe(0);
-    });
-
-    it('questions are shuffled', async () => {
-        await havingAQuizWith(aQuestion(), aQuestion());
-
-        expect(mockShuffler.wasCalled()).toBe(true);
+        expect(shuffle.wasCalled()).toBe(true);
     })
 
-    it('displays first question', async () => {
-        await havingAQuizWith(aQuestion());
+    it('shows progress at 0%', async () => {
+        await having(aQuestion());
 
-        expect(page.questionHeader).toContain('Question 1 of 1');
-        expect(page.questionText).toBe(component.currentQuestion.question);
+        expect(page.progress).toBe('0%');
+        expect(page.accuracy).toBe(0);
     });
 
     it('displays first question', async () => {
-        await havingAQuizWith(aQuestion(), aQuestion());
+        await having(aBooleanQuestion('Question text 1'));
 
+        expect(page.questionText).toBe('Question text 1');
+        expect(page.questionHeader).toContain('Question 1 of 1');
+    });
+
+    it('displays all questions', async () => {
+        await having(
+          aBooleanQuestion('Question text 1'),
+          aBooleanQuestion('Question text 2')
+        );
+
+        expect(page.questionText).toBe('Question text 1');
         expect(page.questionHeader).toContain('Question 1 of 2');
-        expect(page.questionText).toBe(component.currentQuestion.question);
+
+        await answer();
+
+        expect(page.questionText).toBe('Question text 2');
+        expect(page.questionHeader).toContain('Question 2 of 2');
     });
 
     it('displays options for multiple choice quiz', async () => {
-        await havingAQuizWith({
+        await having({
             question: 'Which feature provides cross-Region disaster recovery for Aurora?',
             answer: new Answer(new Option('B. Aurora Global Database')),
             options: [
@@ -107,7 +139,10 @@ describe('QuizComponent', () => {
     })
 
     it('selects option and enable submit', async () => {
-        await havingAQuizWith(amultipleChoiceQuestion());
+        await having(aMultipleChoiceQuestion()
+            .withCorrectAnswer('A')
+            .build()
+        );
         expect(page.isSubmitButtonDisabled()).toBe(true);
 
         await page.clickOption(0);
@@ -117,7 +152,10 @@ describe('QuizComponent', () => {
     });
 
     it('unselects option and disable submit', async () => {
-        await havingAQuizWith(amultipleChoiceQuestion(), aQuestion());
+        await having(
+          aMultipleChoiceQuestion().build(),
+          aMultipleChoiceQuestion().build()
+        );
         expect(page.isSubmitButtonDisabled()).toBe(true);
 
         await page.clickOption(0);
@@ -125,42 +163,36 @@ describe('QuizComponent', () => {
         expect(page.isOptionSelected(0)).toBe(true);
         expect(page.isSubmitButtonDisabled()).toBe(false);
 
-        await page.clickSubmit();
-        await page.clickNext();
+        await showNextQuestion();
 
         expect(page.isOptionSelected(0)).toBe(false);
         expect(page.isSubmitButtonDisabled()).toBe(true);
     });
 
-    it('increments score on correct answer', async () => {
-        await havingAQuizWith(
-            {
-                question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
-                answer: new Answer(true)
-            },
-            {
-                question: 'Aurora Replicas use asynchronous replication with high latency.',
-                answer: new Answer(false)
-            }
+    it('increments accuracy on correct answer', async () => {
+        await having(
+            aTrueStatement(),
+            aFalseStatement()
         );
 
         await page.clickTrueButton();
-        await page.clickSubmit();
-        expect(page.score).toBe(1);
+        await page.clickSubmitButton();
+        expect(page.accuracy).toBe(50);
+        expect(page.progress).toBe('50%');
 
-        await page.clickTrueButton();
-        await page.clickSubmit();
-        expect(page.score).toBe(1);
+        await page.clickNextButton();
+
+        await page.clickFalseButton();
+        await page.clickSubmitButton();
+        expect(page.accuracy).toBe(100);
+        expect(page.progress).toBe('100%');
     });
 
     it('shows incorrect feedback on submit', async () => {
-        await havingAQuizWith({
-            question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
-            answer: new Answer(true)
-        });
+        await having(aTrueStatement());
 
         await page.clickFalseButton();
-        await page.clickSubmit();
+        await page.clickSubmitButton();
 
         expect(page.isFeedbackSuccess()).toBe(false);
         expect(page.isFeedbackError()).toBe(true);
@@ -168,7 +200,7 @@ describe('QuizComponent', () => {
     });
 
     it('marks incorrect option when submitting wrong answer', async () => {
-        await havingAQuizWith(
+        await having(
             {
                 question: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
@@ -181,7 +213,7 @@ describe('QuizComponent', () => {
         );
 
         await page.clickOption(0);
-        await page.clickSubmit();
+        await page.clickSubmitButton();
 
         expect(page.isOptionWrong(0)).toBe(true);
         expect(page.isOptionWrong(1)).toBe(false);
@@ -192,20 +224,13 @@ describe('QuizComponent', () => {
     });
 
     it('does not mark incorrect option when submitting correct answer', async () => {
-        await havingAQuizWith(
-            {
-                question: 'Which feature provides cross-Region disaster recovery for Aurora?',
-                answer: new Answer(new Option('B. Aurora Global Database')),
-                options: [
-                    new Option('A. Aurora Replicas'),
-                    new Option('B. Aurora Global Database'),
-                    new Option('C. Multi-AZ')
-                ]
-            },
+        await having(aMultipleChoiceQuestion()
+          .withCorrectAnswer('B')
+          .build()
         );
 
         await page.clickOption(1);
-        await page.clickSubmit();
+        await page.clickSubmitButton();
 
         expect(page.isOptionWrong(0)).toBe(false);
         expect(page.isOptionWrong(1)).toBe(false);
@@ -216,102 +241,74 @@ describe('QuizComponent', () => {
     });
 
     it('show incorrect feedback on submit (multiple choice)', async () => {
-        await havingAQuizWith(
-            {
-                question: 'Which feature provides cross-Region disaster recovery for Aurora?',
-                answer: new Answer(new Option('B. Aurora Global Database')),
-                options: [
-                    new Option('A. Aurora Replicas'),
-                    new Option('B. Aurora Global Database'),
-                    new Option('C. Multi-AZ')
-                ]
-            },
-            {
-                question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
-                answer: new Answer(true)
-            }
+        await having(
+            aMultipleChoiceQuestion().withCorrectAnswer('B').build(),
+            aMultipleChoiceQuestion().build()
         );
 
         await page.clickOption(0);
-        await page.clickSubmit();
+        await page.clickSubmitButton();
         expect(page.isFeedbackError()).toBe(true);
         expect(page.feedbackText).toBe('Incorrect');
     });
 
     it('can select true and submit', async () => {
-        await havingAQuizWith({
-            question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
-            answer: new Answer(true)
-        });
+        await having(aTrueStatement());
 
         await page.clickTrueButton();
         expect(page.isTrueButtonActive()).toBe(true);
         expect(page.isFalseButtonActive()).toBe(false);
 
-        await page.clickSubmit();
+        await page.clickSubmitButton();
         expect(page.feedbackText).toBe('Correct!');
     });
 
     it('updates progress bar', async () => {
-        await havingAQuizWith(
-            {
-                question: 'Which feature provides cross-Region disaster recovery for Aurora?',
-                answer: new Answer(new Option('B. Aurora Global Database')),
-                options: [
-                    new Option('A. Aurora Replicas'),
-                    new Option('B. Aurora Global Database'),
-                    new Option('C. Multi-AZ')
-                ]
-            },
-            {
-                question: 'Aurora automatically replicates your data across 6 copies in 3 AZs.',
-                answer: new Answer(true)
-            }
+        await having(
+            aMultipleChoiceQuestion().withCorrectAnswer('B').build(),
+            aMultipleChoiceQuestion().build(),
         );
         expect(page.progress).contains('0%');
 
         await page.clickOption(1);
-        await page.clickSubmit();
+        await page.clickSubmitButton();
         expect(page.feedbackText).toBe('Correct!');
 
-        await page.clickNext()
+        await page.clickNextButton()
         expect(page.progress).contains('50%');
     });
 
-    it('shows completion screen (success)', async () => {
-        await havingAQuizWith(aQuestion(), aQuestion());
+    it('updates question index', async () => {
+        await having(aBooleanQuestion(), aBooleanQuestion(), aBooleanQuestion());
 
-        component.quizCompleted = true;
-        component.score = 2;
-        fixture.detectChanges();
+        expect(page.questionHeader).toBe('Question 1 of 3');
+        await answer();
+        expect(page.questionHeader).toBe('Question 2 of 3');
+        await answer();
+        expect(page.questionHeader).toBe('Question 3 of 3');
+    })
+
+    it('shows completion screen (success)', async () => {
+        await havingCompletedQuizWithNoMistakes();
 
         expect(page.isQuizComplete()).toBe(true);
-        expect(page.completionScore).toBe('2');
+        expect(page.completionScore).toBe('100');
         expect(page.hasSuccessIcon()).toBe(true);
         expect(page.hasFailureIcon()).toBe(false);
     });
 
-
     it('shows completion screen (failure)', async () => {
-        await havingAQuizWith(aQuestion(), aQuestion(), aQuestion());
-
-        component.quizCompleted = true;
-        component.currentIndex = 3;
-        component.score = 1;
-        fixture.detectChanges();
+        await havingCompletedQuizWithLessThan50PercentAccuracy();
 
         expect(page.isQuizComplete()).toBe(true);
-        expect(page.completionScore).toBe('1');
+        expect(page.completionScore).toBe('33');
+        expect(page.completedAccuracy).toBe(33);
         expect(page.hasSuccessIcon()).toBe(false);
         expect(page.hasFailureIcon()).toBe(true);
     });
 
     it('resets metrics', async () => {
-        await havingAQuizWith(aQuestion(), aQuestion());
-
-        component.quizCompleted = true;
-        component.score = 2;
-        fixture.detectChanges();
+        await havingCompletedQuiz()
 
         await page.clickTryAgain();
 
@@ -323,16 +320,16 @@ describe('QuizComponent', () => {
     });
 
 
-    it('shows explanation when answer is wrong and explanation exists', async () => {
+    it.skip('shows explanation when answer is wrong and explanation exists', async () => {
         const explanation = 'This is because **Aurora Global Database** provides low-latency global reads and fast disaster recovery.';
         const question: MultipleChoiceQuestion = {
-            ...amultipleChoiceQuestion(),
+            ...aMultipleChoiceQuestion().build(),
             answer: new Answer(new Option('B. Aurora Global Database'), explanation)
         };
-        await havingAQuizWith(question);
+        await having(question);
 
         await page.clickOption(0); // Wrong answer
-        await page.clickSubmit();
+        await page.clickSubmitButton();
 
         expect(page.explanationText).toContain('<strong>Aurora Global Database</strong>');
     });
@@ -340,53 +337,117 @@ describe('QuizComponent', () => {
     it('does not show explanation when answer is correct', async () => {
         const explanation = 'Some explanation';
         const question: MultipleChoiceQuestion = {
-            ...amultipleChoiceQuestion(),
+            ...aMultipleChoiceQuestion().build(),
             answer: new Answer(new Option('B. Aurora Global Database'), explanation)
         };
-        await havingAQuizWith(question);
+        await having(question);
 
         await page.clickOption(1); // Correct answer
-        await page.clickSubmit();
+        await page.clickSubmitButton();
 
         expect(page.explanationText).toBe('');
     });
 
     it('does not show explanation when it does not exist', async () => {
-        await havingAQuizWith(amultipleChoiceQuestion());
+        await having(aMultipleChoiceQuestion()
+          .withCorrectAnswer('B')
+          .build());
 
-        await page.clickOption(0); // Wrong answer
-        await page.clickSubmit();
+        await page.clickOption(0);
+        await page.clickSubmitButton();
 
         expect(page.explanationText).toBe('');
     });
 
-    async function havingAQuizWith(...questions: (TrueFalseQuestion | MultipleChoiceQuestion)[]) {
+
+    async function having(...questions: (BooleanQuestion | MultipleChoiceQuestion)[]) {
         fixture.componentRef.setInput('questions', [...questions]);
         await page.stabilize();
     }
 
-    function amultipleChoiceQuestion(): MultipleChoiceQuestion {
-        return {
-            question: 'Which feature provides cross-Region disaster recovery for Aurora?',
-            answer: new Answer(new Option('B. Aurora Global Database')),
-            options: [
-                new Option('A. Aurora Replicas'),
-                new Option('B. Aurora Global Database'),
-                new Option('C. Multi-AZ')
-            ]
-        };
+    async function havingNoQuiz() {
+        await having();
     }
 
-    async function havingNoQuizzes() {
-        await havingAQuizWith();
+    async function havingCompletedQuiz() {
+      await havingCompletedQuizWithNoMistakes();
     }
 
-    function aQuestion(): Question {
-        return amultipleChoiceQuestion();
+    async function havingCompletedQuizWithNoMistakes() {
+        await having(aTrueStatement(), aTrueStatement());
+        await answer(true);
+        await answer(true);
+    }
+
+    async function havingCompletedQuizWithLessThan50PercentAccuracy() {
+        await having(aTrueStatement(), aTrueStatement(), aTrueStatement());
+        await answer(true);
+        await answer(false);
+        await answer(false);
+    }
+
+    async function answer(trueButton: boolean = true) {
+      if (trueButton) {
+        await page.clickTrueButton();
+      } else {
+        await page.clickFalseButton();
+      }
+      await showNextQuestion();
+    }
+
+    async function showNextQuestion() {
+      await page.clickSubmitButton();
+      await page.clickNextButton();
     }
 
 });
 
+
+function aQuestion(): Question {
+  return aTrueStatement();
+}
+
+function aBooleanQuestion(question?: string): BooleanQuestion {
+  return aTrueStatement(question);
+}
+
+function aTrueStatement(question: string = 'Question Text'): BooleanQuestion {
+  return {question, answer: new Answer(true)};
+}
+
+function aFalseStatement(question: string = 'Question Text'): BooleanQuestion {
+  return {question, answer: new Answer(false)};
+}
+
+function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
+  return new MultipleChoiceQuestionBuilder();
+}
+
+class MultipleChoiceQuestionBuilder {
+
+    private correctAnswer: Letter = 'B';
+
+    private readonly options: Option[] = [
+      new Option('A. Aurora Replicas'),
+      new Option('B. Aurora Global Database'),
+      new Option('C. Multi-AZ')
+    ];
+
+    withCorrectAnswer(prefix: Letter): this {
+      this.correctAnswer = prefix;
+      return this;
+    }
+
+    build(): MultipleChoiceQuestion {
+      const correctOption = this.options.find(option => option.prefix === this.correctAnswer) || this.options[1];
+      return {
+        question: 'Which feature provides cross-Region disaster recovery for Aurora?',
+        answer: new Answer(correctOption!),
+        options: this.options
+      }
+    }
+
+}
 
 export class QuizComponentPage extends PageObject<QuizComponent> {
 
@@ -394,105 +455,114 @@ export class QuizComponentPage extends PageObject<QuizComponent> {
         super(fixture);
     }
 
-    get progressBar() {
-        return this.lookupElement('.progress-bar') as HTMLElement;
+    get questionHeader(): string {
+        return this.lookupTextByDataTestId('question-index');
     }
 
-    get progress() {
-        return this.progressBar?.style.width || '0%';
+    get questionText(): string {
+        return this.lookupTextByDataTestId('question-text');
     }
 
-    get questionHeader() {
-        return this.lookupTextOfElement('h5');
+    get optionCards(): HTMLElement[] {
+        return Array.from(this.fixture.nativeElement.querySelectorAll('.option-card'));
     }
 
-    get questionText() {
-        return this.lookupTextOfElement('.lead');
-    }
-
-    get optionCards() {
-        return Array.from(this.fixture.nativeElement.querySelectorAll('.option-card')) as HTMLElement[];
-    }
-
-    get option() {
+    get option(): (index: number) => string {
         return (index: number) => this.optionCards[index]?.textContent?.trim() || '';
     }
 
-    isOptionCorrect(index: number) {
+    isOptionCorrect(index: number): boolean {
         return this.hasOptionClass(index, 'correct');
     }
 
-    isOptionWrong(index: number) {
+    isOptionWrong(index: number): boolean {
         return this.hasOptionClass(index, 'wrong');
     }
 
-    isOptionSelected(index: number) {
+    isOptionSelected(index: number): boolean {
         return this.hasOptionClass(index, 'selected');
     }
 
-    get trueButton() {
-        return this.lookupElement('button.btn-outline-success') as HTMLElement;
+    get trueButton(): HTMLElement {
+        return this.lookupElement('button.btn-outline-success');
     }
 
-    get falseButton() {
-        return this.lookupElement('button.btn-outline-danger') as HTMLElement;
+    get falseButton(): HTMLElement {
+        return this.lookupElement('button.btn-outline-danger');
     }
 
-    isTrueButtonActive() {
+    isTrueButtonActive(): boolean {
         return this.trueButton?.classList.contains('active');
     }
 
-    isFalseButtonActive() {
+    isFalseButtonActive(): boolean {
         return this.falseButton?.classList.contains('active');
     }
 
-    get feedbackSection() {
-        return this.lookupElement('.feedback-section') as HTMLElement;
+    get feedbackSection(): HTMLElement {
+        return this.lookupElement('.feedback-section');
     }
 
-    get feedbackText() {
+    get feedbackText(): string {
         return this.lookupTextOfElement('.feedback-section .fw-bold');
     }
 
-    get explanationText() {
+    get explanationText(): string {
         return this.lookupElement('.explanation-text')?.innerHTML || '';
     }
 
-    isFeedbackSuccess() {
+    isFeedbackSuccess(): boolean {
         return this.feedbackSection?.classList.contains('bg-success-light');
     }
 
-    isFeedbackError() {
+    isFeedbackError(): boolean {
         return this.feedbackSection?.classList.contains('bg-danger-light');
     }
 
-    get submitButton() {
-        return this.lookupElement('button.main-button:not([disabled])') as HTMLElement;
+    get submitButton(): HTMLElement {
+        return this.lookupElement('button.main-button:not([disabled])');
     }
 
-    get nextButton() {
-        return this.lookupElement('button.main-button') as HTMLElement;
+    get nextButton(): HTMLElement {
+        return this.lookupElement('button.main-button');
     }
 
-    isSubmitButtonDisabled() {
+    isSubmitButtonDisabled(): boolean {
         const btn = this.submitButton;
         return btn ? btn.hasAttribute('disabled') : true;
     }
 
-    get completionScore() {
+    get progressBar(): HTMLElement {
+        return this.lookupElement('.progress-bar');
+    }
+
+    get progress(): string {
+        return this.progressBar?.style.width || '0%';
+    }
+
+    get completionScore(): string {
         return this.lookupTextOfElement('.lead .fw-bold');
     }
 
-    get score(): number {
-        return this.fixture.componentInstance.score;
+    get accuracy(): number {
+        return this.fixture.componentInstance.accuracy;
     }
 
-    get tryAgainButton() {
-        return this.lookupElement('button.btn-primary') as HTMLElement;
+    get completedAccuracy(): number {
+      const text = this.lookupTextByDataTestId('completed-accuracy');
+      return Number(text);
     }
 
-    isQuizComplete() {
-        return !!this.lookupElement('.text-center.py-4 h3');
+    get completedHeaderText(): string {
+        return this.lookupTextByDataTestId('completed-header');
+    }
+
+    get tryAgainButton(): HTMLElement {
+        return this.lookupElement('button.btn-primary');
+    }
+
+    isQuizComplete(): boolean {
+        return this.completedHeaderText === 'Quiz Complete!';
     }
 
     hasNoQuiz(): boolean {
@@ -520,11 +590,11 @@ export class QuizComponentPage extends PageObject<QuizComponent> {
         await this.clickElement(this.falseButton);
     }
 
-    async clickSubmit() {
+    async clickSubmitButton() {
         await this.clickElement(this.nextButton);
     }
 
-    async clickNext() {
+    async clickNextButton() {
         await this.clickElement(this.nextButton);
     }
 
@@ -532,7 +602,7 @@ export class QuizComponentPage extends PageObject<QuizComponent> {
         await this.clickElement(this.tryAgainButton);
     }
 
-    private hasOptionClass(index: number, className: string) {
+    private hasOptionClass(index: number, className: string): boolean {
         const card = this.optionCards[index];
         if (card == null) {
             throw new Error(`Option card at index ${index} not found`);

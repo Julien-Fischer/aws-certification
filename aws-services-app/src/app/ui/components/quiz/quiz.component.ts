@@ -1,10 +1,15 @@
-import {Component, Inject, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import {Shuffler, shufflerInjectionToken} from "../../services/shuffler";
-import {MultipleChoiceQuestion, Option, Question} from "../../../domain/search/models/question";
-import Ratio from "../../../domain/scoring/models/ratio";
-import {Letter, LETTERS} from "../../../infra/learning/markdown-parser.service";
+import {MultipleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
+import {ResultDto, SendAnswer} from "../../../infra/training/send-answer";
+import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/quiz-publisher.service";
+import Score from "../../../domain/scoring/models/score";
+import Percentage from "../../../domain/scoring/models/percentage";
+
+export interface ProgressUpdate {
+  score: Score;
+}
 
 @Component({
   selector: 'app-quiz',
@@ -13,28 +18,36 @@ import {Letter, LETTERS} from "../../../infra/learning/markdown-parser.service";
   templateUrl: './quiz.component.html',
   styleUrl: './quiz.component.scss'
 })
-export class QuizComponent implements OnInit {
+export class QuizComponent {
 
-  private static readonly SUCCESS_THRESHOLD = Ratio.HALF;
+  accuracy: number = 0;
+  progress: number = 0;
 
+  protected questionIndex: number = 0;
+  protected questionCount: number = 0;
+  protected selectedOption: string | Option | null = null;
+  protected showFeedback: boolean = false;
+  protected isCorrect: boolean = false;
+  protected lastResult: ResultDto | null = null;
+  protected quizCompleted: boolean = false;
+  protected explanation: string | undefined = undefined;
+
+  private currentIndex: number = 0;
   private _questions: Question[] = [];
 
   constructor(
-      @Inject(shufflerInjectionToken) private shuffler: Shuffler
+      private sendAnswer: SendAnswer,
+      private createQuiz: CreateQuiz
   ) {
   }
 
-  @Input() onAnswer: (isCorrect: boolean) => void = () => {};
+  quiz: QuizDto | undefined;
+  @Output() onAnswer = new EventEmitter<ProgressUpdate>();
   @Input() onRetry: () => void = () => {};
 
   @Input()
   set questions(value: Question[]) {
-    this._questions = this.shuffler.shuffle(value.map(question => {
-      if (this.hasMultipleChoice(question)) {
-        return this.suffleOptions(question as MultipleChoiceQuestion);
-      }
-      return question;
-    }));
+    this._questions = value;
     this.resetQuiz();
   }
 
@@ -42,52 +55,94 @@ export class QuizComponent implements OnInit {
     return this._questions;
   }
 
-  currentIndex: number = 0;
-  selectedOption: string | null = null;
-  showFeedback: boolean = false;
-  isCorrect: boolean = false;
-  quizCompleted: boolean = false;
-  score: number = 0;
-  progress: number = 0;
+  private startQuiz(): void {
+    const booleanQuestions = this._questions.filter(question => !('options' in question)) as BooleanQuestion[];
+    const multipleChoiceQuestions = this._questions.filter(q => 'options' in q) as MultipleChoiceQuestion[];
 
-  ngOnInit(): void {
+    const request: QuizRequest = {
+      booleanQuestions: booleanQuestions.map(question => ({
+        label: question.question,
+        answer: question.answer.value,
+        explanation: question.answer.explanation
+      })),
+      multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
+        label: question.question,
+        answer: {
+          value: question.answer.value.prefix,
+          explanation: question.answer.explanation
+        },
+        options: question.options.map((option: Option) => ({
+          value: `${option.prefix}.${option.label}`
+        }))
+      })),
+      shuffle: true
+    };
+    const dto = this.createQuiz.publish(request);
+    this.quiz = dto;
+    this.questionCount = dto.questions;
+    const index = this.questions.findIndex(q => q.question === this.quiz?.firstQuestion.label);
+    if (index !== -1) {
+      this.currentIndex = index;
+    }
   }
 
   resetQuiz(): void {
-    this.currentIndex = 0;
     this.selectedOption = null;
     this.showFeedback = false;
     this.isCorrect = false;
+    this.lastResult = null;
     this.quizCompleted = false;
-    this.score = 0;
+    this.accuracy = 0;
     this.progress = 0;
-    this.onRetry();
+    this.questionIndex = 0;
+    this.explanation = undefined;
+
+    if (this.questions.length > 0) {
+      this.startQuiz();
+      this.onRetry();
+    }
   }
 
-  selectOption(option: string): void {
+  selectOption(option: string | Option): void {
     if (this.showFeedback) return;
-    this.selectedOption = option;
+    this.selectedOption = option as any;
   }
 
   checkAnswer(): void {
     if (!this.selectedOption) return;
 
-    const currentQuestion = this.questions[this.currentIndex];
-    this.isCorrect = this.selectedOption.toString() === currentQuestion.answer.toString();
-    if (this.isCorrect) {
-      this.score++;
-    }
-    this.progress = Math.round((this.currentIndex + 1) / this.questions.length * 100);
+    const answerValue = (typeof this.selectedOption === 'string')
+      ? (this.selectedOption === 'true')
+      : (this.selectedOption as Option).prefix;
+
+    const result: ResultDto = this.sendAnswer.send({
+      quizId: this.quiz!.id,
+      answer: answerValue
+    });
+
+    this.lastResult = result;
+    this.accuracy = result.accuracy;
+    this.progress = result.progress;
+    this.explanation = result.explanation;
     this.showFeedback = true;
-    this.onAnswer(this.isCorrect);
+    this.isCorrect = result.isAnswerCorrect;
+    this.onAnswer.emit(toScore(result));
   }
 
   nextQuestion(): void {
-    if (this.currentIndex < this.questions.length - 1) {
-      this.currentIndex++;
-      this.selectedOption = null;
-      this.showFeedback = false;
-      this.isCorrect = false;
+    if (this.lastResult?.nextQuestion) {
+      const nextIndex = this.questions.findIndex(q => q.question === this.lastResult?.nextQuestion);
+      if (nextIndex !== -1) {
+        this.currentIndex = nextIndex;
+        this.selectedOption = null;
+        this.showFeedback = false;
+        this.isCorrect = false;
+        this.lastResult = null;
+        this.questionIndex++;
+      } else {
+        console.error('Next question not found in the list', this.lastResult.nextQuestion);
+        this.quizCompleted = true;
+      }
     } else {
       this.quizCompleted = true;
     }
@@ -98,41 +153,35 @@ export class QuizComponent implements OnInit {
   }
 
   get renderedExplanation(): string {
-    const explanation = this.currentQuestion.answer.explanation;
+    const explanation = this.explanation;
     return explanation ? (marked(explanation) as string) : '';
   }
 
   hasSucceeded(): boolean {
-    return QuizComponent.SUCCESS_THRESHOLD.isLessThan(this.correctAnswersRatio());
+    return this.lastResult!.outcome!.hasSucceeded;
   }
 
   matchesAnswer(candidate: string): boolean;
   matchesAnswer(candidate: Option): boolean;
   matchesAnswer(candidate: string | Option): boolean {
-    if (typeof candidate === 'string') {
-      return this.currentQuestion.answer.toString() === candidate;
-    }
-    return this.currentQuestion.answer.value.hasPrefix(candidate.prefix);
+    const expected = this.lastResult?.expectedAnswer;
+    const actual = (typeof candidate === 'string') ? candidate : candidate.prefix;
+    return expected === actual;
   }
 
-  private correctAnswersRatio(): Ratio {
-    return new Ratio(this.score / this.questions.length);
-  }
-
-  private hasMultipleChoice(question: Question | (Question & { options: unknown })) {
-    return 'options' in question && Array.isArray(question.options);
-  }
-
-  private suffleOptions(question: MultipleChoiceQuestion) {
-    return {
-      ...question,
-      options: this.shuffler.shuffle([...question.options])
-    } as MultipleChoiceQuestion;
-  }
-
-  protected prefixFor(index: number): Letter {
-    return LETTERS[index];
+  protected isLastQuestion(): boolean {
+    return this.questionIndex === this.questionCount - 1;
   }
 
   protected readonly Array = Array;
+}
+
+
+function toScore(result: ResultDto): ProgressUpdate {
+  return {
+    score: new Score(
+      new Percentage(result.progress),
+      new Percentage(result.accuracy)
+    )
+  }
 }

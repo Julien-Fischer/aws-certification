@@ -20,7 +20,7 @@ import Percentage from "../../../domain/scoring/models/percentage";
         <div class="indicator-label text-secondary-theme small uppercase fw-bold">
           {{ label }}
         </div>
-        <div class="indicator-value value h4 mb-0 text-primary-theme">
+        <div data-test-id="value" class="indicator-value value h4 mb-0 text-primary-theme">
           {{ percentage.toFixed(0) }}
         </div>
       </div>

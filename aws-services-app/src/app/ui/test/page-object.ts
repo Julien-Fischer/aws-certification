@@ -28,4 +28,26 @@ export default abstract class PageObject<T> {
         return this.lookupElement(searchString)?.textContent?.trim() || '';
     }
 
+  /**
+   * Looks up an element by its data-test-id attribute.
+   * Supports any level of nesting.
+   *
+   * @example
+   * lookupByDataTestId('container')
+   * lookupByDataTestId('container button span')
+   */
+    protected lookupByDataTestId(testIds: string): HTMLElement {
+      const selector = testIds
+        .trim()
+        .split(/\s+/)
+        .map((id) => `[data-test-id="${id}"]`)
+        .join(' ');
+
+      return this.lookupElement(selector);
+    }
+
+    protected lookupTextByDataTestId(dataTestId: string): string {
+        return this.lookupByDataTestId(dataTestId)?.textContent?.trim() || '';
+    }
+
 }

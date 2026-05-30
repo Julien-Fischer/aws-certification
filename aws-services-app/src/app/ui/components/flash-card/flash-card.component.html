@@ -1,5 +1,5 @@
-@if (service) {
-  <div class="container mt-4">
+@if (flashCard) {
+  <div data-test-id="flash-card" class="container mt-4">
 
     <app-text-pop />
 
@@ -13,10 +13,10 @@
       <div class="col-12">
         <div class="card border-0 shadow-lg aws-card-static">
 
-          <app-flash-card-header [service]="service" />
+          <app-flash-card-header [service]="flashCard" />
 
           <div class="card-body pt-0">
-            <div class="markdown-content" [innerHTML]="markdownContent">
+            <div data-test-id="markdown-content" class="markdown-content" [innerHTML]="markdownContent">
             </div>
 
             <h3
@@ -37,8 +37,7 @@
                 <div class="mt-5">
                   <app-quiz
                     [questions]="questions"
-                    [onRetry]="resetProgressTracker.bind(this)"
-                    [onAnswer]="onProgress.bind(this)"
+                    (onAnswer)="onProgress($event)"
                   />
                 </div>
               }
@@ -53,8 +52,8 @@
   </div>
 }
 
-@if (!service && !loading) {
-  <div class="container mt-12">
+@if (!flashCard && !loading) {
+  <div class="container mt-12" data-test-id="not-found">
     <div class="row">
       <div class="col-12 text-center text-md-start flex flex-col gap-3">
         <h2 class="text-6xl text-center">404</h2>
@@ -68,7 +67,7 @@
 }
 
 @if (loading) {
-  <div class="container mt-4">
+  <div data-test-id="spinner" class="container mt-4">
     <div class="row">
       <div class="col-12 text-center">
         <div class="spinner-border text-primary" role="status">

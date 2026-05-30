@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/search/models/question";
+import {Answer, MultipleChoiceQuestion, Option, BooleanQuestion} from "../../domain/search/models/question";
 import {FlashCard} from "../../domain/search/models/flash-card";
 
 export type Letter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
@@ -10,24 +10,24 @@ export const LETTERS: Letter[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 })
 export class MarkdownParserService {
 
-    private multipleChoiceParser = new MultipleChoiceParser()
-    private trueFalseParser = new TrueFalseParser();
+    private multipleChoiceQuestionsParser = new MultipleChoiceQuestionParser()
+    private booleanQuestionsParser = new BooleanQuestionParser();
 
     parse(content: string): FlashCard {
         const quizSection = this.extractQuizSection(content);
         const mainContent = this.extractMainContent(content, quizSection);
 
         if (!quizSection) {
-            return {mainContent, multipleChoiceQuestions: [], trueFalseQuestions: []};
+            return {mainContent, multipleChoiceQuestions: [], booleanQuestions: []};
         }
 
-        const {multipleChoiceQuestions, trueFalseQuestions} = this.parseAllQuizzesFrom(quizSection);
+        const {multipleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
 
-        if (this.hasNoQuizzes(multipleChoiceQuestions, trueFalseQuestions)) {
+        if (this.hasNoQuizzes(multipleChoiceQuestions, booleanQuestions)) {
             throw new Error('No valid questions found in this quiz');
         }
 
-        return {mainContent, multipleChoiceQuestions, trueFalseQuestions};
+        return {mainContent, multipleChoiceQuestions, booleanQuestions};
     }
 
     private extractQuizSection(content: string): string | null {
@@ -54,63 +54,63 @@ export class MarkdownParserService {
 
     private parseAllQuizzesFrom(quizContent: string): {
         multipleChoiceQuestions: MultipleChoiceQuestion[];
-        trueFalseQuestions: TrueFalseQuestion[];
+        booleanQuestions: BooleanQuestion[];
     } {
-        const {multipleChoiceContent, trueFalseContent} = this.splitQuizIntoMcAndTf(quizContent);
+        const {multipleChoiceContent, booleanContent} = this.splitQuizIntoMcAndTf(quizContent);
 
-        const multipleChoiceQuestions = this.multipleChoiceParser.parse(multipleChoiceContent);
-        const trueFalseQuestions = this.trueFalseParser.parse(trueFalseContent);
+        const multipleChoiceQuestions = this.multipleChoiceQuestionsParser.parse(multipleChoiceContent);
+        const booleanQuestions = this.booleanQuestionsParser.parse(booleanContent);
 
-        return {multipleChoiceQuestions, trueFalseQuestions};
+        return {multipleChoiceQuestions, booleanQuestions};
     }
 
     private splitQuizIntoMcAndTf(quizContent: string): {
         multipleChoiceContent: string;
-        trueFalseContent: string;
+        booleanContent: string;
     } {
-        const trueFalseHeader = /### 🔹 True \/ False/i;
-        const match = quizContent.match(trueFalseHeader);
+        const booleanQuizHeader = /### 🔹 True \/ False/i;
+        const match = quizContent.match(booleanQuizHeader);
 
         if (!match || match.index === undefined) {
             return {
                 multipleChoiceContent: quizContent,
-                trueFalseContent: '',
+                booleanContent: '',
             };
         }
 
         const tfIndex = match.index;
         return {
             multipleChoiceContent: quizContent.substring(0, tfIndex),
-            trueFalseContent: quizContent.substring(tfIndex),
+            booleanContent: quizContent.substring(tfIndex),
         };
     }
 
     private hasNoQuizzes(
         multipleChoiceQuestions: MultipleChoiceQuestion[],
-        trueFalseQuestions: TrueFalseQuestion[]
+        booleanQuestions: BooleanQuestion[]
     ): boolean {
         return (
             multipleChoiceQuestions.length === 0 &&
-            trueFalseQuestions.length === 0
+            booleanQuestions.length === 0
         );
     }
 }
 
 
-class TrueFalseParser {
+class BooleanQuestionParser {
 
-    parse(tfContent: string): TrueFalseQuestion[] {
-        if (!tfContent.trim()) return [];
+    parse(booleanContent: string): BooleanQuestion[] {
+        if (!booleanContent.trim()) return [];
 
-        const rawQuestions = this.splitTrueFalseBlocks(tfContent);
-        return rawQuestions.map((q) => this.parseTrueFalseBlock(q));
+        const rawQuestions = this.splitBooleanQuestionsBlocks(booleanContent);
+        return rawQuestions.map((q) => this.parseBooleanBlock(q));
     }
 
-    private splitTrueFalseBlocks(tfContent: string): string[] {
-        return tfContent.split(/\*\*Q\d+\.\*\*/).slice(1);
+    private splitBooleanQuestionsBlocks(booleanContent: string): string[] {
+        return booleanContent.split(/\*\*Q\d+\.\*\*/).slice(1);
     }
 
-    private parseTrueFalseBlock(block: string): TrueFalseQuestion {
+    private parseBooleanBlock(block: string): BooleanQuestion {
         const allLines = block.split('\n').map(l => l.trim());
         const lines = allLines.filter(line => line !== '');
         const questionLine = lines[0];
@@ -125,12 +125,12 @@ class TrueFalseParser {
         const answerLineIndex = allLines.indexOf(answerLine);
         const explanation = findExplanation(allLines, answerLineIndex);
 
-        const answer = this.parseTrueFalseAnswerLine(answerLine, explanation);
+        const answer = this.parseBooleanAnswerLine(answerLine, explanation);
 
         return {question: questionText, answer};
     }
 
-    private parseTrueFalseAnswerLine(line: string, explanation?: string): Answer<boolean> {
+    private parseBooleanAnswerLine(line: string, explanation?: string): Answer<boolean> {
         let value: boolean;
         if (line.includes('True')) {
             value = true;
@@ -153,7 +153,7 @@ class TrueFalseParser {
 }
 
 
-class MultipleChoiceParser {
+class MultipleChoiceQuestionParser {
 
     parse(mcContent: string): MultipleChoiceQuestion[] {
         if (!mcContent.trim()) return [];

@@ -1,9 +1,9 @@
-import {MultipleChoiceQuestion, TrueFalseQuestion} from "./question";
+import {MultipleChoiceQuestion, BooleanQuestion} from "./question";
 
 export type FlashCard = {
 
     mainContent: string;
     multipleChoiceQuestions: MultipleChoiceQuestion[];
-    trueFalseQuestions: TrueFalseQuestion[];
+    booleanQuestions: BooleanQuestion[];
 
 };

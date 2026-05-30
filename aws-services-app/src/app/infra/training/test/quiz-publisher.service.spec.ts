@@ -1,6 +1,6 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import {TestBed} from "@angular/core/testing";
-import {QuizRequest, QuizPublisher, QuizDto} from "../quiz-publisher.service";
+import {QuizRequest, CreateQuiz, QuizDto, QuestionDto} from "../quiz-publisher.service";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../shuffle-provider";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
@@ -10,6 +10,7 @@ import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
 import {QuizId} from "../../../domain/training/quiz-id";
 import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
 import {Quiz} from "../../../domain/training/quiz";
+import {Option} from "../../../domain/search/models/question";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -38,7 +39,7 @@ class MockShuffle implements Shuffle {
 
 describe('QuizPublisher', () => {
 
-  let quizPublisher: QuizPublisher;
+  let quizPublisher: CreateQuiz;
   let shuffleProvider: ShuffleProvider;
   let mockShuffle: MockShuffle;
   let quizRepository: InMemoryQuizRepository;
@@ -55,7 +56,7 @@ describe('QuizPublisher', () => {
         {provide: quizRepositoryInjectionToken, useValue: quizRepository}
       ]
     });
-    quizPublisher = TestBed.inject(QuizPublisher);
+    quizPublisher = TestBed.inject(CreateQuiz);
   });
 
   describe('shuffle', () => {
@@ -71,7 +72,7 @@ describe('QuizPublisher', () => {
         ]
       }
 
-      quizPublisher.start(dto);
+      quizPublisher.publish(dto);
 
       expect(mockShuffle.wasCalled()).toBe(false);
     })
@@ -89,7 +90,7 @@ describe('QuizPublisher', () => {
         ]
       }
 
-      quizPublisher.start(dto);
+      quizPublisher.publish(dto);
 
       expect(mockShuffle.wasCalled()).toBe(true);
     })
@@ -108,7 +109,7 @@ describe('QuizPublisher', () => {
         ]
       }
 
-      const quiz: QuizDto = quizPublisher.start(dto);
+      const quiz: QuizDto = quizPublisher.publish(dto);
 
       expect(quiz).toBeDefined();
       expect(quiz!.id).toBeDefined();
@@ -125,12 +126,19 @@ describe('QuizPublisher', () => {
         ]
       }
 
-      const quiz: QuizDto = quizPublisher.start(dto);
+      const quiz: QuizDto = quizPublisher.publish(dto);
 
       expect(quiz).toBeDefined();
       expect(quiz!.id).toBeDefined();
       expect(quiz.questions).toBe(2);
-      expect(quiz.firstQuestion).toStrictEqual({label: 'question 1', options: ['A. option 1', 'B. option 2']})
+      const expectedFirstQuestion: QuestionDto = {
+        label: 'question 1',
+        options: [
+          new Option('A. option 1'),
+          new Option('B. option 2')
+        ]
+      };
+      expect(quiz.firstQuestion).toStrictEqual(expectedFirstQuestion)
     })
 
 
@@ -210,7 +218,7 @@ describe('QuizPublisher', () => {
     })
 
     function havingPublished(dto: QuizRequest): Quiz {
-      const quiz: QuizDto = quizPublisher.start(dto);
+      const quiz: QuizDto = quizPublisher.publish(dto);
       return getPersistedQuiz(quiz.id);
     }
 

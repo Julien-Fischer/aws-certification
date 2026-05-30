@@ -22,7 +22,11 @@ export class MockFlashCardProvider implements FlashCardProvider {
     }
 
     getCard(id: FlashCardId): Observable<FlashCard> {
-        return new BehaviorSubject(this.cards.get(id.toString())!).asObservable();
+        const card = this.cards.get(id.toString());
+        if (!card) {
+            return new BehaviorSubject<FlashCard>(null as any).asObservable();
+        }
+        return new BehaviorSubject(card).asObservable();
     }
 
 }

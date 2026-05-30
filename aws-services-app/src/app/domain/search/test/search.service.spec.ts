@@ -288,7 +288,7 @@ function aFlashCard() {
       return {
         mainContent: content,
         multipleChoiceQuestions: [],
-        trueFalseQuestions: []
+        booleanQuestions: []
       }
     }
   }

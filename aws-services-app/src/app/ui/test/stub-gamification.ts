@@ -19,7 +19,7 @@ export class StubGamificationService implements Gamification {
     }
 
     toggle() {
-      this._isEnabled = !this._isEnabled;
+      this.setEnabled(!this.isEnabled());
     }
 
     setProgressEnabled(enabled: boolean): void {
@@ -36,6 +36,10 @@ export class StubGamificationService implements Gamification {
 
     toggleScore(): void {
       this._isScoresEnabled = !this._isScoresEnabled;
+    }
+
+    setEnabled(enabled: boolean): void {
+      this._isEnabled = enabled;
     }
 
 }
