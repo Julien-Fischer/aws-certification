@@ -19,18 +19,18 @@ export interface QuestionDto {
 }
 
 export interface QuizRequest {
-  booleanQuestions: BooleanQuestionDto[],
-  multipleChoiceQuestions: MultipleChoiceQuestionDto[],
+  booleanQuestions: BooleanQuestionRequest[],
+  multipleChoiceQuestions: MultipleChoiceQuestionRequest[],
   shuffle?: boolean
 }
 
-interface BooleanQuestionDto {
+interface BooleanQuestionRequest {
   label: string;
   answer: boolean;
   explanation?: string;
 }
 
-interface MultipleChoiceQuestionDto {
+interface MultipleChoiceQuestionRequest {
   label: string;
   answer: OptionDto;
   options: OptionDto[];
@@ -64,7 +64,7 @@ export class QuizPublisher {
 
 }
 
-function mapBoolean(questions: BooleanQuestionDto[]): Question[] {
+function mapBoolean(questions: BooleanQuestionRequest[]): Question[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
@@ -73,7 +73,7 @@ function mapBoolean(questions: BooleanQuestionDto[]): Question[] {
     ));
 }
 
-function mapMultipleChoice(questions: MultipleChoiceQuestionDto[]): Question[] {
+function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
   return questions
     .map(question => new MultipleChoiceQuestion(
       question.label,
