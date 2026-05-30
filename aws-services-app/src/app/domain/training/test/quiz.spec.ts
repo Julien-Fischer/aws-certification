@@ -11,6 +11,7 @@ import {Quiz} from "../quiz";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
 import {aUserAnswer} from "./builders/answer-builder";
+import {UserAnswer} from "../models/user-answer";
 
 describe('Quiz', () => {
 
@@ -207,7 +208,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(true);
+      havingSent(true).to(quiz);
+
       const result = quiz.submit(true);
 
       expectResult(result).toHaveProgress(100);
@@ -218,7 +220,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(false);
+      havingSent(false).to(quiz);
+
       const result = quiz.submit(false);
 
       expectResult(result).toHaveProgress(100);
@@ -241,7 +244,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(true);
+      havingSent(true).to(quiz);
+
       const result = quiz.submit(true);
 
       expectResult(result).toHaveAccuracy(100);
@@ -252,7 +256,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aQuestion())
         .build();
 
-      quiz.submit(true);
+      havingSent(true).to(quiz);
+
       const result = quiz.submit(false);
 
       expectResult(result).toHaveAccuracy(50);
@@ -263,7 +268,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(false);
+      havingSent(false).to(quiz);
+
       const result = quiz.submit(false);
 
       expectResult(result).toHaveAccuracy(0);
@@ -287,7 +293,8 @@ describe('Quiz', () => {
         .with(aQuestion(), aQuestion())
         .build();
 
-      quiz.submit(aUserAnswer());
+      havingSentAnAnswer().to(quiz);
+
       const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveProgress(100);
@@ -341,12 +348,13 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(true);
-      quiz.submit(false);
-      const result3 = quiz.submit(false);
+      havingSent(true).to(quiz);
+      havingSent(false).to(quiz);
 
-      expect(result3.outcome).toBeDefined();
-      expect(result3.outcome?.hasFailed()).toBe(true);
+      const result = quiz.submit(false);
+
+      expect(result.outcome).toBeDefined();
+      expect(result.outcome?.hasFailed()).toBe(true);
     })
 
     it('has succeeded when accuracy >= 50%', () => {
@@ -354,7 +362,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(true);
+      havingSent(true).to(quiz);
+
       const result2 = quiz.submit(false);
 
       expect(result2.outcome).toBeDefined();
@@ -368,7 +377,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(true);
+      havingSent(true).to(quiz);
+
       const result2 = quiz.submit(true);
 
       expect(result2.outcome).toBeDefined();
@@ -413,11 +423,28 @@ describe('Quiz', () => {
         .with(aMultipleChoiceQuestion(), aBooleanQuestion().labelled('IAM is an AWS service'))
         .build();
 
-      quiz.submit(aUserAnswer());
+      havingSentAnAnswer().to(quiz);
+
       const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveNoNextQuestion();
     })
   })
+
+  function havingSent(userAnswer: UserAnswer) {
+    return {
+      to(quiz: Quiz) {
+        quiz.submit(userAnswer);
+      }
+    }
+  }
+
+  function havingSentAnAnswer() {
+    return {
+      to(quiz: Quiz) {
+        quiz.submit(aUserAnswer());
+      }
+    }
+  }
 
 })
