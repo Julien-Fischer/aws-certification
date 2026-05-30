@@ -1,10 +1,11 @@
 import {Inject, Injectable} from "@angular/core";
 import {SubmitAnswer, submitAnswerInjectionToken} from "../../domain/training/ports/inbound/submit-answer";
 import {QuizId} from "../../domain/training/quiz-id";
-import {Answer} from "../../domain/training/models/answer";
 import {QuizOutcome, Result} from "../../domain/training/quiz";
 import {Option} from "../../domain/training/models/multiple-choice-question";
 import {Question} from "../../domain/training/models/question";
+import {UserAnswer} from "../../domain/training/models/user-answer";
+import {ExpectedAnswer} from "../../domain/training/models/expected-answer";
 
 export interface OutcomeDto {
   hasFailed: boolean;
@@ -42,11 +43,8 @@ export class SendAnswer {
 
 }
 
-function toAnswer(answerDto: AnswerDto): Answer<any> {
-  const value = typeof answerDto.answer === 'boolean'
-    ? answerDto.answer
-    : Option.from(answerDto.answer);
-  return new Answer(value);
+function toAnswer(answerDto: AnswerDto): UserAnswer {
+  return answerDto.answer;
 }
 
 function toDto(result: Result): ResultDto {
@@ -73,7 +71,7 @@ function nextQuestionText(nextQuestion?: Question): string | undefined {
   return nextQuestion == null ? undefined : nextQuestion.label;
 }
 
-function toExpectedAnswer(expectedAnswer: Answer<any>): string | boolean {
+function toExpectedAnswer(expectedAnswer: ExpectedAnswer<any>): string | boolean {
   return expectedAnswer.value instanceof Option
     ? expectedAnswer.value.prefix
     : expectedAnswer.value;

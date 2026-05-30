@@ -1,7 +1,8 @@
 import {Question} from "./models/question";
-import {Answer} from "./models/answer";
 import Percentage from "./models/percentage";
 import {QuizId} from "./quiz-id";
+import {ExpectedAnswer} from "./models/expected-answer";
+import {UserAnswer} from "./models/user-answer";
 
 export class QuizOutcome {
 
@@ -36,7 +37,7 @@ export class Result {
     readonly isAnswerCorrect: boolean,
     readonly progress: Percentage,
     readonly accuracy: Percentage,
-    readonly expectedAnswer: Answer<any>,
+    readonly expectedAnswer: ExpectedAnswer<any>,
     readonly explanation?: string,
     readonly nextQuestion?: Question,
     readonly outcome?: QuizOutcome
@@ -71,7 +72,7 @@ export class Quiz {
     this._questions = [...questions];
   }
 
-  submit(answer: Answer<any>): Result {
+  submit(answer: UserAnswer): Result {
     if (this.isComplete()) {
       throw new Error('Quiz is already complete');
     }
@@ -102,7 +103,7 @@ export class Quiz {
     return this._questions[this.cursor];
   }
 
-  private processAnswer(userAnswer: Answer<any>): Result {
+  private processAnswer(userAnswer: UserAnswer): Result {
     const isAnswerCorrect = this.isCorrect(userAnswer);
     const expectedAnswer = this.currentQuestion.answer;
     const explanation = this.getExplanationFor(userAnswer);
@@ -127,11 +128,11 @@ export class Quiz {
     );
   }
 
-  private isCorrect(answer: Answer<any>): boolean {
+  private isCorrect(answer: UserAnswer): boolean {
     return this.currentQuestion.hasAnswer(answer);
   }
 
-  private getExplanationFor(answer: Answer<any>): string | undefined {
+  private getExplanationFor(answer: UserAnswer): string | undefined {
     return this.currentQuestion.findExplanationFor(answer);
   }
 

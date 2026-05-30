@@ -5,10 +5,9 @@ import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../search/services/search.service";
 import {TrainingSession} from "../training-session";
 import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
-import {Answer} from "../models/answer";
 import {expectResult} from "./expectations/expect-result";
 import {Shuffle} from "../shuffle";
-import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
+import {MultipleChoiceQuestion} from "../models/multiple-choice-question";
 import {Question} from "../models/question";
 import {anOption} from "./builders/option-builder";
 
@@ -52,10 +51,10 @@ describe('AnswerEvaluator', () => {
 
         const quiz = startQuiz.with(questions, reverseOrder());
 
-        const answer1 = quiz.submit(new Answer(false));
+        const answer1 = quiz.submit(false);
         expectResult(answer1).toBeCorrect();
 
-        const answer2 = quiz.submit(new Answer(true));
+        const answer2 = quiz.submit(true);
         expectResult(answer2).toBeCorrect();
       })
     })

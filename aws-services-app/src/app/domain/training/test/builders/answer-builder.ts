@@ -1,11 +1,15 @@
-import {Answer} from "../../models/answer";
 import {Option} from "../../models/multiple-choice-question";
+import {ExpectedAnswer} from "../../models/expected-answer";
+import {UserAnswer} from "../../models/user-answer";
 
-export function anAnswer() {
+export function aUserAnswer(): UserAnswer {
+  return 'A';
+}
+
+export function anAnswer(): ExpectedAnswer<any> {
   return choice('A. First option');
 }
 
-export function choice(value: string) {
-  return new Answer(Option.from(value));
+export function choice(value: string): ExpectedAnswer<any> {
+  return new ExpectedAnswer(Option.from(value));
 }
-

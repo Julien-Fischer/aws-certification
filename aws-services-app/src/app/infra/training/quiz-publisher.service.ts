@@ -1,11 +1,11 @@
 import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
 import {Question} from "../../domain/training/models/question";
-import {Answer} from "../../domain/training/models/answer";
 import {BooleanQuestion} from "../../domain/training/models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../../domain/training/models/multiple-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
+import {ExpectedAnswer} from "../../domain/training/models/expected-answer";
 
 export interface QuizDto {
   id: string;
@@ -67,7 +67,7 @@ function mapBoolean(questions: BooleanQuestionDto[]): Question[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
-      new Answer<boolean>(question.answer)
+      new ExpectedAnswer<boolean>(question.answer)
     ));
 }
 
@@ -75,7 +75,7 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionDto[]): Question[] {
   return questions
     .map(question => new MultipleChoiceQuestion(
       question.label,
-      new Answer<Option>(mapOption(question.answer)),
+      new ExpectedAnswer<Option>(mapOption(question.answer)),
       mapOptions(question.options)
     ));
 }

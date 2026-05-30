@@ -53,7 +53,7 @@ describe('SendAnswer', () => {
             )
         ));
 
-      const result = send('C. Option 3').toQuiz(IAM_QUIZ);
+      const result = send('C').toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toBeCorrect()

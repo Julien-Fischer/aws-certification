@@ -1,6 +1,7 @@
-import {Answer} from "./answer";
 import {Question} from "./question";
 import {Shuffle} from "../shuffle";
+import {UserAnswer} from "./user-answer";
+import {ExpectedAnswer} from "./expected-answer";
 
 export class MultipleChoiceQuestion extends Question {
 
@@ -8,13 +9,13 @@ export class MultipleChoiceQuestion extends Question {
 
   constructor(
     label: string,
-    answer: Answer<Option>,
+    answer: ExpectedAnswer<Option>,
     readonly options: Option[]
   ) {
     super(label, answer);
   }
 
-  findExplanationFor(answer: Answer<any>): string | undefined {
+  findExplanationFor(answer: UserAnswer): string | undefined {
     return this.options
       .find((option) => option.matches(answer))
       ?.explanation;
@@ -45,8 +46,8 @@ export class Option {
   ) {
   }
 
-  matches(answer: Answer<Option>): boolean {
-    return answer.value.hasPrefix(this.prefix);
+  matches(answer: UserAnswer): boolean {
+    return answer === this.prefix;
   }
 
   hasPrefix(prefix: string): boolean {

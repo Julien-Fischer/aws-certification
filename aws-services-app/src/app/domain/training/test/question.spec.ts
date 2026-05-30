@@ -1,33 +1,33 @@
 import { describe, it, expect } from 'vitest';
-import {Answer} from "../models/answer";
 import {BooleanQuestion} from "../models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
+import {ExpectedAnswer} from "../models/expected-answer";
 
 describe('BooleanQuestion', () => {
   it('has a correct answer', () => {
-    const question = new BooleanQuestion(`IAM stands for 'Identity and Access Management'`, new Answer(true));
+    const question = new BooleanQuestion(`IAM stands for 'Identity and Access Management'`, new ExpectedAnswer(true));
 
-    expect(question.hasAnswer(new Answer(true))).toBe(true);
-    expect(question.hasAnswer(new Answer(false))).toBe(false);
+    expect(question.hasAnswer(true)).toBe(true);
+    expect(question.hasAnswer(false)).toBe(false);
   })
 
   it('has a correct answer', () => {
-    const question = new BooleanQuestion(`IAM stands for 'I Accidentally Managed'`, new Answer(false));
+    const question = new BooleanQuestion(`IAM stands for 'I Accidentally Managed'`, new ExpectedAnswer(false));
 
-    expect(question.hasAnswer(new Answer(false))).toBe(true);
-    expect(question.hasAnswer(new Answer(true))).toBe(false);
+    expect(question.hasAnswer(false)).toBe(true);
+    expect(question.hasAnswer(true)).toBe(false);
   })
 
   it('finds explanation for an answer', () => {
     const question = new BooleanQuestion(
       `IAM stands for 'It's Always Misconfigured'`,
-      new Answer(false),
+      new ExpectedAnswer(false),
       'Is this supposed to be a joke?'
     );
 
-    expect(question.findExplanationFor(new Answer(true)))
+    expect(question.findExplanationFor(true))
       .toBe('Is this supposed to be a joke?');
-    expect(question.findExplanationFor(new Answer(false)))
+    expect(question.findExplanationFor(false))
       .toBe('Is this supposed to be a joke?');
   })
 })
@@ -36,7 +36,7 @@ describe('MultipleChoiceQuestion', () => {
   it('has a correct answer', () => {
     const question = new MultipleChoiceQuestion(
       `What does IAM stand for?`,
-      new Answer(Option.from('C. Identity and Access Management')),
+      new ExpectedAnswer(Option.from('C. Identity and Access Management')),
       [
         Option.from(`A. I Accidentally Managed`),
         Option.from(`B. It's Always Misconfigured`),
@@ -45,15 +45,15 @@ describe('MultipleChoiceQuestion', () => {
       ]
     );
 
-    expect(question.hasAnswer(new Answer(Option.from(`C. Identity and Access Management`)))).toBe(true);
-    expect(question.hasAnswer(new Answer(Option.from(`B. It's Always Misconfigured`)))).toBe(false);
+    expect(question.hasAnswer('C')).toBe(true);
+    expect(question.hasAnswer('B')).toBe(false);
   })
 
   describe('findExplanationFor', () => {
     it('finds explanation for any answer', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new Answer(Option.from('C. Correct Option')),
+        new ExpectedAnswer(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),
@@ -62,17 +62,17 @@ describe('MultipleChoiceQuestion', () => {
         ]
       );
 
-      expect(question.findExplanationFor(option('C')))
+      expect(question.findExplanationFor('C'))
         .toBe('Explanation for Option C');
 
-      expect(question.findExplanationFor(option('D')))
+      expect(question.findExplanationFor('D'))
         .toBe('Explanation for Option D');
     })
 
-    it('supports multiple prefix format', () => {
+    it('is optional', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new Answer(Option.from('C. Correct Option')),
+        new ExpectedAnswer(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),
@@ -81,18 +81,8 @@ describe('MultipleChoiceQuestion', () => {
         ]
       );
 
-      expect(question.findExplanationFor(option('C. Correct Option')))
-        .toBe('Explanation for Option C');
-      expect(question.findExplanationFor(option('C.')))
-        .toBe('Explanation for Option C');
-      expect(question.findExplanationFor(option('C')))
-        .toBe('Explanation for Option C');
+      expect(question.findExplanationFor('B'))
+        .toBeUndefined();
     })
   })
 })
-
-
-
-function option(prefix: string) {
-  return new Answer(Option.from(prefix));
-}

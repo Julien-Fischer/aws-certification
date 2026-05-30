@@ -1,4 +1,5 @@
-import {Answer} from "./answer";
+import {ExpectedAnswer} from "./expected-answer";
+import {UserAnswer} from "./user-answer";
 
 export abstract class Question {
 
@@ -6,13 +7,13 @@ export abstract class Question {
 
   protected constructor(
     readonly label: string,
-    readonly answer: Answer<any>
+    readonly answer: ExpectedAnswer<any>
   ) { }
 
-  hasAnswer(answer: Answer<any>): boolean {
-    return this.answer.equals(answer);
+  hasAnswer(answer: UserAnswer): boolean {
+    return this.answer.accepts(answer);
   }
 
-  abstract findExplanationFor(answer: Answer<any>): string | undefined;
+  abstract findExplanationFor(answer: UserAnswer): string | undefined;
 
 }

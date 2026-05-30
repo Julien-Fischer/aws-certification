@@ -1,6 +1,5 @@
 import {describe, it, expect, beforeEach} from "vitest";
 import {QuizId} from "../quiz-id";
-import {Answer} from "../models/answer";
 import {expectResult} from "./expectations/expect-result";
 import {aQuiz, QuizBuilder} from "./builders/quiz-builder";
 import {aFalseStatement, aTrueStatement} from "./builders/question-builder";
@@ -9,7 +8,7 @@ import {SearchService} from "../../search/services/search.service";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
 import {QuizRepository, quizRepositoryInjectionToken} from "../ports/outbound/quiz-repository";
 import {AnswerEvaluator} from "../answer-evaluator";
-import {anAnswer} from "./builders/answer-builder";
+import {aUserAnswer} from "./builders/answer-builder";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -35,7 +34,7 @@ describe('AnswerEvaluator', () => {
     it('throws when quiz is not found', () => {
       const unknownQuiz = new QuizId('unknown-quiz');
 
-      expect(() => answerEvaluator.submit(unknownQuiz, anAnswer()))
+      expect(() => answerEvaluator.submit(unknownQuiz, aUserAnswer()))
         .toThrow(`Quiz with id 'unknown-quiz' not found`);
     })
   });
@@ -51,7 +50,7 @@ describe('AnswerEvaluator', () => {
           )
       );
 
-      const firstAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(true));
+      const firstAnswer = answerEvaluator.submit(IAM_QUIZ, true);
 
       expectResult(firstAnswer)
         .toBeCorrect()
@@ -60,7 +59,7 @@ describe('AnswerEvaluator', () => {
         .toHaveAccuracy(50)
         .toHaveExplanation('Explanation for question 1');
 
-      const lastAnswer = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+      const lastAnswer = answerEvaluator.submit(IAM_QUIZ, false);
 
       expectResult(lastAnswer)
         .toBeCorrect()
@@ -77,7 +76,7 @@ describe('AnswerEvaluator', () => {
           .with(aTrueStatement().withExplanation('Explanation for question 1'))
       );
 
-      const result = answerEvaluator.submit(IAM_QUIZ, new Answer(false));
+      const result = answerEvaluator.submit(IAM_QUIZ, false);
 
       expectResult(result)
         .toBeIncorrect()
@@ -96,13 +95,13 @@ describe('AnswerEvaluator', () => {
           .with(aTrueStatement(), aFalseStatement())
       );
 
-      answerEvaluator.submit(IAM_QUIZ, new Answer(true));
+      answerEvaluator.submit(IAM_QUIZ, true);
 
       const retrieved = quizRepository.get(IAM_QUIZ);
 
       expect(retrieved).toBeDefined();
 
-      const result = retrieved!.submit(new Answer(false));
+      const result = retrieved!.submit(false);
 
       expectResult(result)
         .toBeComplete()

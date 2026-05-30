@@ -1,7 +1,6 @@
 import {Result} from "../../quiz";
 import {expect} from "vitest";
-import {Answer} from "../../models/answer";
-import {Question} from "../../models/question";
+import {UserAnswer} from "../../models/user-answer";
 
 export function expectResult(result: Result) {
 
@@ -45,9 +44,8 @@ export function expectResult(result: Result) {
       return this;
     },
 
-    toHaveCorrectAnswer<T extends {toString: () => string}>(answer: T | Answer<any>) {
-      const expected: Answer<any> = answer instanceof Answer ? answer : new Answer(answer);
-      expect(result.expectedAnswer.equals(expected));
+    toHaveCorrectAnswer(answer: UserAnswer) {
+      expect(result.expectedAnswer.accepts(answer));
       return this;
     },
 

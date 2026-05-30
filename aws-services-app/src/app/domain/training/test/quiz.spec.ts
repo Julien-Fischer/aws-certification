@@ -8,10 +8,9 @@ import {
   aTrueStatement,
 } from "./builders/question-builder";
 import {Quiz} from "../quiz";
-import {Answer} from "../models/answer";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
-import {anAnswer, choice} from "./builders/answer-builder";
+import {aUserAnswer} from "./builders/answer-builder";
 
 describe('Quiz', () => {
 
@@ -48,7 +47,7 @@ describe('Quiz', () => {
             .with(aTrueStatement())
             .build();
 
-          const result = quiz.submit(new Answer(true));
+          const result = quiz.submit(true);
 
           expectResult(result).toBeCorrect();
         })
@@ -58,7 +57,7 @@ describe('Quiz', () => {
             .with(aTrueStatement())
             .build();
 
-          const result = quiz.submit(new Answer(false));
+          const result = quiz.submit(false);
 
           expectResult(result).toBeIncorrect();
         })
@@ -70,7 +69,7 @@ describe('Quiz', () => {
             .with(aFalseStatement())
             .build();
 
-          const result = quiz.submit(new Answer(false));
+          const result = quiz.submit(false);
 
           expectResult(result).toBeCorrect();
         })
@@ -80,7 +79,7 @@ describe('Quiz', () => {
             .with(aFalseStatement())
             .build();
 
-          const result = quiz.submit(new Answer(true));
+          const result = quiz.submit(true);
 
           expectResult(result).toBeIncorrect();
         })
@@ -94,7 +93,7 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(new Answer(true));
+        const result = quiz.submit(true);
 
         expectResult(result)
           .toBeIncorrect()
@@ -111,7 +110,7 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(choice('A. First option'));
+        const result = quiz.submit('A');
 
         expectResult(result).toBeCorrect();
       })
@@ -123,7 +122,7 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(choice('B. Second option'));
+        const result = quiz.submit('B');
 
         expectResult(result).toBeIncorrect();
       })
@@ -141,11 +140,11 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(choice('C. Incorrect option 2'));
+        const result = quiz.submit('C');
 
         expectResult(result)
           .toBeIncorrect()
-          .toHaveCorrectAnswer(choice('B. Correct answer'));
+          .toHaveCorrectAnswer('B');
       })
 
       it('is provides the correct answer when correct', () => {
@@ -161,11 +160,11 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(choice('B. Correct answer'));
+        const result = quiz.submit('B');
 
         expectResult(result)
           .toBeCorrect()
-          .toHaveCorrectAnswer(choice('B. Correct answer'));
+          .toHaveCorrectAnswer('B');
       })
 
       it('explanation', () => {
@@ -181,11 +180,11 @@ describe('Quiz', () => {
           )
           .build();
 
-        const result = quiz.submit(choice('A. Incorrect option 1'));
+        const result = quiz.submit('A');
 
         expectResult(result)
           .toBeIncorrect()
-          .toHaveCorrectAnswer(choice('B. Correct answer'))
+          .toHaveCorrectAnswer('B')
           .toHaveExplanation('Explanation for incorrect option 1');
       })
     })
@@ -198,7 +197,7 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aQuestion())
         .build();
 
-      const result = quiz.submit(new Answer(true));
+      const result = quiz.submit(true);
 
       expectResult(result).toHaveProgress(50);
     })
@@ -208,8 +207,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(true));
-      const result = quiz.submit(new Answer(true));
+      quiz.submit(true);
+      const result = quiz.submit(true);
 
       expectResult(result).toHaveProgress(100);
     })
@@ -219,8 +218,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(false));
-      const result = quiz.submit(new Answer(false));
+      quiz.submit(false);
+      const result = quiz.submit(false);
 
       expectResult(result).toHaveProgress(100);
     })
@@ -232,7 +231,7 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aQuestion())
         .build();
 
-      const result = quiz.submit(new Answer(true));
+      const result = quiz.submit(true);
 
       expectResult(result).toHaveAccuracy(50);
     })
@@ -242,8 +241,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(true));
-      const result = quiz.submit(new Answer(true));
+      quiz.submit(true);
+      const result = quiz.submit(true);
 
       expectResult(result).toHaveAccuracy(100);
     })
@@ -253,8 +252,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aQuestion())
         .build();
 
-      quiz.submit(new Answer(true));
-      const result = quiz.submit(new Answer(false));
+      quiz.submit(true);
+      const result = quiz.submit(false);
 
       expectResult(result).toHaveAccuracy(50);
     })
@@ -264,8 +263,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(false));
-      const result = quiz.submit(new Answer(false));
+      quiz.submit(false);
+      const result = quiz.submit(false);
 
       expectResult(result).toHaveAccuracy(0);
     })
@@ -277,7 +276,7 @@ describe('Quiz', () => {
         .with(aQuestion(), aQuestion())
         .build();
 
-      const result = quiz.submit(anAnswer());
+      const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveProgress(50);
       expectResult(result).toNotBeComplete();
@@ -288,8 +287,8 @@ describe('Quiz', () => {
         .with(aQuestion(), aQuestion())
         .build();
 
-      quiz.submit(anAnswer());
-      const result = quiz.submit(anAnswer());
+      quiz.submit(aUserAnswer());
+      const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveProgress(100);
       expectResult(result).toBeComplete();
@@ -300,10 +299,10 @@ describe('Quiz', () => {
         .with(aQuestion(), aQuestion())
         .build();
 
-      quiz.submit(anAnswer());
-      quiz.submit(anAnswer());
+      quiz.submit(aUserAnswer());
+      quiz.submit(aUserAnswer());
 
-      expect(() => quiz.submit(anAnswer()))
+      expect(() => quiz.submit(aUserAnswer()))
         .toThrow('Quiz is already complete');
     })
   })
@@ -315,7 +314,7 @@ describe('Quiz', () => {
 
       quiz.retry();
 
-      const secondTry = quiz.submit(new Answer(false));
+      const secondTry = quiz.submit(false);
 
       expectResult(secondTry)
         .toNotBeComplete()
@@ -330,8 +329,8 @@ describe('Quiz', () => {
         .with(aQuestion(), aQuestion())
         .build();
 
-      const result1 = quiz.submit(anAnswer());
-      const result2 = quiz.submit(anAnswer());
+      const result1 = quiz.submit(aUserAnswer());
+      const result2 = quiz.submit(aUserAnswer());
 
       expect(result1.outcome).toBeUndefined();
       expect(result2.outcome).toBeDefined();
@@ -342,9 +341,9 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(true));
-      quiz.submit(new Answer(false));
-      const result3 = quiz.submit(new Answer(false));
+      quiz.submit(true);
+      quiz.submit(false);
+      const result3 = quiz.submit(false);
 
       expect(result3.outcome).toBeDefined();
       expect(result3.outcome?.hasFailed()).toBe(true);
@@ -355,8 +354,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(true));
-      const result2 = quiz.submit(new Answer(false));
+      quiz.submit(true);
+      const result2 = quiz.submit(false);
 
       expect(result2.outcome).toBeDefined();
       expect(result2.outcome?.hasFailed()).toBe(false);
@@ -369,8 +368,8 @@ describe('Quiz', () => {
         .with(aTrueStatement(), aTrueStatement())
         .build();
 
-      quiz.submit(new Answer(true));
-      const result2 = quiz.submit(new Answer(true));
+      quiz.submit(true);
+      const result2 = quiz.submit(true);
 
       expect(result2.outcome).toBeDefined();
       expect(result2.outcome?.hasFailed()).toBe(false);
@@ -390,8 +389,8 @@ describe('Quiz', () => {
         )
         .build();
 
-      const result1 = quiz.submit(anAnswer());
-      const result2 = quiz.submit(anAnswer());
+      const result1 = quiz.submit(aUserAnswer());
+      const result2 = quiz.submit(aUserAnswer());
 
       expectResult(result1)
         .toHaveNextQuestion('question 2');
@@ -404,7 +403,7 @@ describe('Quiz', () => {
         .with(aQuestion())
         .build();
 
-      const result = quiz.submit(anAnswer());
+      const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveNoNextQuestion();
     })
@@ -414,8 +413,8 @@ describe('Quiz', () => {
         .with(aMultipleChoiceQuestion(), aBooleanQuestion().labelled('IAM is an AWS service'))
         .build();
 
-      quiz.submit(anAnswer());
-      const result = quiz.submit(anAnswer());
+      quiz.submit(aUserAnswer());
+      const result = quiz.submit(aUserAnswer());
 
       expectResult(result).toHaveNoNextQuestion();
     })

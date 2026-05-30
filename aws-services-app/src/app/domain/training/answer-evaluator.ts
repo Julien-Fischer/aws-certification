@@ -1,9 +1,9 @@
 import {SubmitAnswer} from "./ports/inbound/submit-answer";
-import {Answer} from "./models/answer";
-import {Quiz, Result} from "./quiz";
+import {Result} from "./quiz";
 import {Inject, Injectable} from "@angular/core";
 import {QuizRepository, quizRepositoryInjectionToken} from "./ports/outbound/quiz-repository";
 import {QuizId} from "./quiz-id";
+import {UserAnswer} from "./models/user-answer";
 
 @Injectable({ providedIn: 'root' })
 export class AnswerEvaluator implements SubmitAnswer {
@@ -12,7 +12,7 @@ export class AnswerEvaluator implements SubmitAnswer {
     @Inject(quizRepositoryInjectionToken) private quizRepository: QuizRepository
   ) { }
 
-  submit(id: QuizId, answer: Answer<any>): Result {
+  submit(id: QuizId, answer: UserAnswer): Result {
     const quiz = this.quizRepository.get(id);
     if (quiz == null) throw new Error(`Quiz with id '${id}' not found`);
 

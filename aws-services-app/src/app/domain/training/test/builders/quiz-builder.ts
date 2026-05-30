@@ -2,10 +2,7 @@ import {Question} from "../../models/question";
 import {Quiz} from "../../quiz";
 import {QuestionBuilder} from "./question-builder";
 import {QuizId} from "../../quiz-id";
-import {Answer} from "../../models/answer";
-import {Option} from "../../models/multiple-choice-question";
-import {anAnswer} from "./answer-builder";
-import {Shuffle} from "../../shuffle";
+import {aUserAnswer} from "./answer-builder";
 
 export function aQuiz(): QuizBuilder {
   return new QuizBuilder();
@@ -19,7 +16,7 @@ export function aCompletedQuiz() {
         .build();
 
       for (let i = 0; i < questions.length; i++) {
-        quiz.submit(anAnswer());
+        quiz.submit(aUserAnswer());
       }
 
       return quiz;
