@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {Answer, MultipleChoiceQuestion, Option, TrueFalseQuestion} from "../../domain/search/models/question";
 import {FlashCard} from "../../domain/search/models/flash-card";
 
-export type Letter = 'A' | 'B' | 'C' | 'D';
-export const LETTERS: Letter[] = ['A', 'B', 'C', 'D'];
+export type Letter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+export const LETTERS: Letter[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 
 @Injectable({
     providedIn: 'root',
@@ -204,7 +204,7 @@ class MultipleChoiceParser {
     }
 
     private findLetter(line: string) {
-        const match = line.match(/Answer:\s*([A-D])/);
+        const match = line.match(/Answer:\s*([A-F])/);
         if (!match) {
             throw new Error(`Invalid Multiple Choice answer format: ${line}`);
         }
