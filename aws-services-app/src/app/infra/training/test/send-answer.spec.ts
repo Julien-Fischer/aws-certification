@@ -32,15 +32,59 @@ describe('SendAnswer', () => {
     sendAnswer = TestBed.inject(SendAnswer);
   });
 
-  describe('sends an answer', () => {
 
-    it('throws when quiz not found', () => {
-      expect(() => sendAnswer.send({quizId: 'unknown-quiz', answer: true}))
-        .toThrow(`Quiz with id 'unknown-quiz' not found`);
+  it('throws when quiz not found', () => {
+    expect(() => sendAnswer.send({quizId: 'unknown-quiz', answer: true}))
+      .toThrow(`Quiz with id 'unknown-quiz' not found`);
+  })
+
+  describe('multiple choice evaluation', () => {
+    it('is correct when prefix is correct', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aMultipleChoiceQuestion()
+            .withAnswer('C. Option 3')
+            .withOptions(
+              anOption().withValue('A. Option 1'),
+              anOption().withValue('B. Option 2'),
+              anOption().withValue('C. Option 3'),
+              anOption().withValue('D. Option 4')
+            )
+        ));
+
+      const result = send('C').toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toBeCorrect()
+        .toHaveExpectedAnswer('C');
     })
 
-    describe('multiple choice evaluation', () => {
-      it('is correct when prefix is correct', () => {
+    it('is incorrect when prefix is incorrect', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aMultipleChoiceQuestion()
+            .withAnswer('C. Option 3')
+            .withOptions(
+              anOption().withValue('A. Option 1'),
+              anOption().withValue('B. Option 2'),
+              anOption().withValue('C. Option 3'),
+              anOption().withValue('D. Option 4')
+            )
+        ));
+
+      const result = send('A').toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toBeIncorrect()
+        .toHaveExpectedAnswer('C');
+    })
+  })
+
+  describe('sends explanation regardless of answer being correct', () => {
+    describe('multiple-choice question', () => {
+      it('is correct', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
@@ -49,7 +93,7 @@ describe('SendAnswer', () => {
               .withOptions(
                 anOption().withValue('A. Option 1'),
                 anOption().withValue('B. Option 2'),
-                anOption().withValue('C. Option 3'),
+                anOption().withValue('C. Option 3').withExplanation('Correct answer explanation'),
                 anOption().withValue('D. Option 4')
               )
           ));
@@ -58,10 +102,10 @@ describe('SendAnswer', () => {
 
         expectResult(result)
           .toBeCorrect()
-          .toHaveExpectedAnswer('C');
+          .toHaveExplanation('Correct answer explanation');
       })
 
-      it('is incorrect when prefix is incorrect', () => {
+      it('is incorrect', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
@@ -69,171 +113,201 @@ describe('SendAnswer', () => {
               .withAnswer('C. Option 3')
               .withOptions(
                 anOption().withValue('A. Option 1'),
-                anOption().withValue('B. Option 2'),
+                anOption().withValue('B. Option 2').withExplanation('Incorrect answer explanation'),
                 anOption().withValue('C. Option 3'),
                 anOption().withValue('D. Option 4')
               )
           ));
 
-        const result = send('A').toQuiz(IAM_QUIZ);
+        const result = send('B').toQuiz(IAM_QUIZ);
 
         expectResult(result)
           .toBeIncorrect()
-          .toHaveExpectedAnswer('C');
+          .toHaveExplanation('Incorrect answer explanation');
       })
     })
 
-    describe('result and outcome', () => {
-      it('receives result', () => {
+    describe('boolean question', () => {
+      it('is correct', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aTrueStatement(),
-            aMultipleChoiceQuestion(),
-            aFalseStatement()
+            aTrueStatement().withExplanation('Answer explanation')
           ));
 
-        havingSent(false).toQuiz(IAM_QUIZ);
-
-        const result = send('A. Option 1').toQuiz(IAM_QUIZ);
+        const result = send(true).toQuiz(IAM_QUIZ);
 
         expectResult(result)
-          .toHaveProgress(66.66)
-          .toHaveAccuracy(0)
-          .toHaveNoOutcome();
-      })
-
-      it('receives outcome on quiz complete', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement(),
-            aFalseStatement()
-          ));
-
-        havingSent(false).toQuiz(IAM_QUIZ);
-
-        const result = send(false).toQuiz(IAM_QUIZ);
-
-        expectResult(result)
-          .toHaveProgress(100)
-          .toHaveAccuracy(50)
-          .toHaveNoNextQuestion()
-          .toHaveOutcome({
-            hasFailed: false,
-            hasSucceeded: true,
-            hasMastered: false
-          })
+          .toBeCorrect()
+          .toHaveExplanation('Answer explanation');
       })
     })
 
-    describe('next question', () => {
-      it('has next question as long as quiz is not complete', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement().labelled('question 1'),
-            aFalseStatement().labelled('question 2'),
-            aTrueStatement().labelled('question 3')
-          ));
+    it('is incorrect', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().withExplanation('Answer explanation')
+        ));
 
-        const result1 = send(anAnswer()).toQuiz(IAM_QUIZ);
-        const result2 = send(anAnswer()).toQuiz(IAM_QUIZ);
-        const result3 = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result = send(false).toQuiz(IAM_QUIZ);
 
-        expectResult(result1)
-          .toHaveNextQuestion('question 2');
-        expectResult(result2)
-          .toHaveNextQuestion('question 3');
-        expectResult(result3)
-          .toHaveNoNextQuestion();
-      })
+      expectResult(result)
+        .toBeIncorrect()
+        .toHaveExplanation('Answer explanation');
+    })
+  })
 
-      it('has no next question once quiz is complete', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement(),
-            aFalseStatement()
-          ));
+  describe('result and outcome', () => {
+    it('receives result', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aMultipleChoiceQuestion(),
+          aFalseStatement()
+        ));
 
-        havingSent(anAnswer()).toQuiz(IAM_QUIZ);
+      havingSent(false).toQuiz(IAM_QUIZ);
 
-        const result = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result = send('A. Option 1').toQuiz(IAM_QUIZ);
 
-        expectResult(result)
-          .toHaveNoNextQuestion();
-      })
+      expectResult(result)
+        .toHaveProgress(66.66)
+        .toHaveAccuracy(0)
+        .toHaveNoOutcome();
     })
 
-    describe('outcomes', () => {
-      it('has mastered quiz if accuracy = 100%', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement(),
-            aFalseStatement()
-          ));
+    it('receives outcome on quiz complete', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement()
+        ));
 
-        havingSent(true).toQuiz(IAM_QUIZ);
+      havingSent(false).toQuiz(IAM_QUIZ);
 
-        const result = send(false).toQuiz(IAM_QUIZ);
+      const result = send(false).toQuiz(IAM_QUIZ);
 
-        expectResult(result)
-          .toHaveProgress(100)
-          .toHaveAccuracy(100)
-          .toHaveOutcome({
-            hasFailed: false,
-            hasSucceeded: true,
-            hasMastered: true
-          });
-      })
+      expectResult(result)
+        .toHaveProgress(100)
+        .toHaveAccuracy(50)
+        .toHaveNoNextQuestion()
+        .toHaveOutcome({
+          hasFailed: false,
+          hasSucceeded: true,
+          hasMastered: false
+        })
+    })
+  })
 
-      it('has succeeded quiz if accuracy >= 50%', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement(),
-            aFalseStatement()
-          ));
+  describe('next question', () => {
+    it('has next question as long as quiz is not complete', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().labelled('question 1'),
+          aFalseStatement().labelled('question 2'),
+          aTrueStatement().labelled('question 3')
+        ));
 
-        havingSent(false).toQuiz(IAM_QUIZ);
+      const result1 = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result2 = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result3 = send(anAnswer()).toQuiz(IAM_QUIZ);
 
-        const result = send(false).toQuiz(IAM_QUIZ);
+      expectResult(result1)
+        .toHaveNextQuestion('question 2');
+      expectResult(result2)
+        .toHaveNextQuestion('question 3');
+      expectResult(result3)
+        .toHaveNoNextQuestion();
+    })
 
-        expectResult(result)
-          .toHaveProgress(100)
-          .toHaveAccuracy(50)
-          .toHaveOutcome({
-            hasFailed: false,
-            hasSucceeded: true,
-            hasMastered: false
-          });
-      })
+    it('has no next question once quiz is complete', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement()
+        ));
 
-      it('has failed quiz if accuracy < 50%', () => {
-        having(aQuiz()
-          .identified(IAM_QUIZ)
-          .with(
-            aTrueStatement(),
-            aFalseStatement(),
-            aTrueStatement(),
-          ));
+      havingSent(anAnswer()).toQuiz(IAM_QUIZ);
 
-        havingSent(false).toQuiz(IAM_QUIZ);
-        havingSent(false).toQuiz(IAM_QUIZ);
+      const result = send(anAnswer()).toQuiz(IAM_QUIZ);
 
-        const result = send(false).toQuiz(IAM_QUIZ);
+      expectResult(result)
+        .toHaveNoNextQuestion();
+    })
+  })
 
-        expectResult(result)
-          .toHaveProgress(100)
-          .toHaveAccuracy(33.33)
-          .toHaveOutcome({
-            hasFailed: true,
-            hasSucceeded: false,
-            hasMastered: false
-          });
-      })
+  describe('outcomes', () => {
+    it('has mastered quiz if accuracy = 100%', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement()
+        ));
+
+      havingSent(true).toQuiz(IAM_QUIZ);
+
+      const result = send(false).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveProgress(100)
+        .toHaveAccuracy(100)
+        .toHaveOutcome({
+          hasFailed: false,
+          hasSucceeded: true,
+          hasMastered: true
+        });
+    })
+
+    it('has succeeded quiz if accuracy >= 50%', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement()
+        ));
+
+      havingSent(false).toQuiz(IAM_QUIZ);
+
+      const result = send(false).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveProgress(100)
+        .toHaveAccuracy(50)
+        .toHaveOutcome({
+          hasFailed: false,
+          hasSucceeded: true,
+          hasMastered: false
+        });
+    })
+
+    it('has failed quiz if accuracy < 50%', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement(),
+          aFalseStatement(),
+          aTrueStatement(),
+        ));
+
+      havingSent(false).toQuiz(IAM_QUIZ);
+      havingSent(false).toQuiz(IAM_QUIZ);
+
+      const result = send(false).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveProgress(100)
+        .toHaveAccuracy(33.33)
+        .toHaveOutcome({
+          hasFailed: true,
+          hasSucceeded: false,
+          hasMastered: false
+        });
     })
   })
 
@@ -268,6 +342,10 @@ function expectResult(result: ResultDto) {
     },
     toHaveExpectedAnswer(answer: boolean | string) {
       expect(result.expectedAnswer).toBe(answer);
+      return this;
+    },
+    toHaveExplanation(explanation: string) {
+      expect(result.explanation).toBe(explanation);
       return this;
     },
     toHaveAccuracy(value: number) {

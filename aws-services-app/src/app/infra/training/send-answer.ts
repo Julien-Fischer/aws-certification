@@ -16,6 +16,7 @@ export interface OutcomeDto {
 export interface ResultDto {
   isAnswerCorrect: boolean;
   expectedAnswer: string | boolean;
+  explanation?: string;
   progress: number;
   accuracy: number;
   outcome?: OutcomeDto;
@@ -48,10 +49,11 @@ function toAnswer(answerDto: AnswerDto): UserAnswer {
 }
 
 function toDto(result: Result): ResultDto {
-  const {isAnswerCorrect, expectedAnswer, progress, accuracy, nextQuestion, outcome} = result;
+  const {isAnswerCorrect, expectedAnswer, explanation, progress, accuracy, nextQuestion, outcome} = result;
   return {
     isAnswerCorrect,
     expectedAnswer: toExpectedAnswer(expectedAnswer),
+    explanation,
     progress: progress.value,
     accuracy: accuracy.value,
     nextQuestion: nextQuestionText(nextQuestion),
