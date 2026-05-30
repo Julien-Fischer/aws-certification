@@ -198,8 +198,8 @@ describe('QuizPublisher', () => {
 
         const quiz: Quiz = havingPublished(dto);
 
-        quiz.submit(aUserAnswer());
-        quiz.submit(aUserAnswer());
+        havingSentAnAnswerTo(quiz);
+        havingSentAnAnswerTo(quiz);
 
         const result = quiz.submit(aUserAnswer());
 
@@ -220,6 +220,10 @@ describe('QuizPublisher', () => {
         throw new Error(`Quiz with id ${id} not found`);
       }
       return quiz;
+    }
+
+    function havingSentAnAnswerTo(quiz: Quiz) {
+      quiz.submit(aUserAnswer());
     }
 
   })
