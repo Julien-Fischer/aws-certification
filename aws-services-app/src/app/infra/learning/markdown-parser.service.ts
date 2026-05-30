@@ -235,14 +235,6 @@ function toLetter(character: string): Letter {
     throw new Error(`Invalid letter: ${character}`);
 }
 
-function trimLines(multiLineString: string): string[] {
-    return multiLineString
-        .trim()
-        .split('\n')
-        .map(line => line.trim())
-        .filter(line => line !== '');
-}
-
 function extractQuestionText(line: string): string {
     return line.replace(/^[ \t]*\d+\.[ \t]*/, '').trim();
 }
