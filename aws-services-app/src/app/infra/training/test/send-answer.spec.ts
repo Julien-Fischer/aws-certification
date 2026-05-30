@@ -39,67 +39,92 @@ describe('SendAnswer', () => {
         .toThrow(`Quiz with id 'unknown-quiz' not found`);
     })
 
-    it('sends prefix for multiple choice question', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aMultipleChoiceQuestion()
-            .withAnswer('C. Option 3')
-            .withOptions(
-              anOption().withValue('A. Option 1'),
-              anOption().withValue('B. Option 2'),
-              anOption().withValue('C. Option 3'),
-              anOption().withValue('D. Option 4')
-            )
-        ));
+    describe('multiple choice evaluation', () => {
+      it('is correct when prefix is correct', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer('C. Option 3')
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
 
-      const result = send('C').toQuiz(IAM_QUIZ);
+        const result = send('C').toQuiz(IAM_QUIZ);
 
-      expectResult(result)
-        .toBeCorrect()
-        .toHaveExpectedAnswer('C');
+        expectResult(result)
+          .toBeCorrect()
+          .toHaveExpectedAnswer('C');
+      })
+
+      it('is incorrect when prefix is incorrect', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer('C. Option 3')
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
+
+        const result = send('A').toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveExpectedAnswer('C');
+      })
     })
 
-    it('receives result', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aTrueStatement(),
-          aMultipleChoiceQuestion(),
-          aFalseStatement()
-        ));
+    describe('result and outcome', () => {
+      it('receives result', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aMultipleChoiceQuestion(),
+            aFalseStatement()
+          ));
 
-      havingSent(false).toQuiz(IAM_QUIZ);
+        havingSent(false).toQuiz(IAM_QUIZ);
 
-      const result = send('A. Option 1').toQuiz(IAM_QUIZ);
+        const result = send('A. Option 1').toQuiz(IAM_QUIZ);
 
-      expectResult(result)
-        .toHaveProgress(66.66)
-        .toHaveAccuracy(0)
-        .toHaveNoOutcome();
-    })
+        expectResult(result)
+          .toHaveProgress(66.66)
+          .toHaveAccuracy(0)
+          .toHaveNoOutcome();
+      })
 
-    it('receives outcome on quiz complete', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aTrueStatement(),
-          aFalseStatement()
-        ));
+      it('receives outcome on quiz complete', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement(),
+            aFalseStatement()
+          ));
 
-      havingSent(false).toQuiz(IAM_QUIZ);
+        havingSent(false).toQuiz(IAM_QUIZ);
 
-      const result = send(false).toQuiz(IAM_QUIZ);
+        const result = send(false).toQuiz(IAM_QUIZ);
 
-      expectResult(result)
-        .toHaveProgress(100)
-        .toHaveAccuracy(50)
-        .toHaveNoNextQuestion()
-        .toHaveOutcome({
-          hasFailed: false,
-          hasSucceeded: true,
-          hasMastered: false
-        })
+        expectResult(result)
+          .toHaveProgress(100)
+          .toHaveAccuracy(50)
+          .toHaveNoNextQuestion()
+          .toHaveOutcome({
+            hasFailed: false,
+            hasSucceeded: true,
+            hasMastered: false
+          })
+      })
     })
 
     describe('next question', () => {
@@ -235,6 +260,10 @@ function expectResult(result: ResultDto) {
   return {
     toBeCorrect() {
       expect(result.isAnswerCorrect).toBe(true);
+      return this;
+    },
+    toBeIncorrect() {
+      expect(result.isAnswerCorrect).toBe(false);
       return this;
     },
     toHaveExpectedAnswer(answer: boolean | string) {
