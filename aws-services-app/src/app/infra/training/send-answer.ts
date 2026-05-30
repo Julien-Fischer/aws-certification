@@ -13,6 +13,8 @@ export interface OutcomeDto {
 }
 
 export interface ResultDto {
+  isAnswerCorrect: boolean;
+  expectedAnswer: string | boolean;
   progress: number;
   accuracy: number;
   outcome?: OutcomeDto;
@@ -48,8 +50,10 @@ function toAnswer(answerDto: AnswerDto): Answer<any> {
 }
 
 function toDto(result: Result): ResultDto {
-  const {progress, accuracy, nextQuestion, outcome} = result;
+  const {isAnswerCorrect, expectedAnswer, progress, accuracy, nextQuestion, outcome} = result;
   return {
+    isAnswerCorrect,
+    expectedAnswer: toExpectedAnswer(expectedAnswer),
     progress: progress.value,
     accuracy: accuracy.value,
     nextQuestion: nextQuestionText(nextQuestion),
@@ -67,4 +71,10 @@ function toOutcomeDto(outcome?: QuizOutcome): OutcomeDto | undefined {
 
 function nextQuestionText(nextQuestion?: Question): string | undefined {
   return nextQuestion == null ? undefined : nextQuestion.label;
+}
+
+function toExpectedAnswer(expectedAnswer: Answer<any>): string | boolean {
+  return expectedAnswer.value instanceof Option
+    ? expectedAnswer.value.prefix
+    : expectedAnswer.value;
 }

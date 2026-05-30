@@ -12,6 +12,7 @@ import {
   aMultipleChoiceQuestion,
   aTrueStatement
 } from "../../../domain/training/test/builders/question-builder";
+import {anOption} from "../../../domain/training/test/builders/option-builder";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -32,9 +33,31 @@ describe('SendAnswer', () => {
   });
 
   describe('sends an answer', () => {
+
     it('throws when quiz not found', () => {
       expect(() => sendAnswer.send({quizId: 'unknown-quiz', answer: true}))
         .toThrow(`Quiz with id 'unknown-quiz' not found`);
+    })
+
+    it('sends prefix for multiple choice question', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aMultipleChoiceQuestion()
+            .withAnswer('C. Option 3')
+            .withOptions(
+              anOption().withValue('A. Option 1'),
+              anOption().withValue('B. Option 2'),
+              anOption().withValue('C. Option 3'),
+              anOption().withValue('D. Option 4')
+            )
+        ));
+
+      const result = send('C. Option 3').toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toBeCorrect()
+        .toHaveExpectedAnswer('C');
     })
 
     it('receives result', () => {
@@ -210,6 +233,14 @@ describe('SendAnswer', () => {
 
 function expectResult(result: ResultDto) {
   return {
+    toBeCorrect() {
+      expect(result.isAnswerCorrect).toBe(true);
+      return this;
+    },
+    toHaveExpectedAnswer(answer: boolean | string) {
+      expect(result.expectedAnswer).toBe(answer);
+      return this;
+    },
     toHaveAccuracy(value: number) {
       expect(result.accuracy).toBeCloseTo(value, 0);
       return this;
