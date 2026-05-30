@@ -13,6 +13,7 @@ import {
   aTrueStatement
 } from "../../../domain/training/test/builders/question-builder";
 import {anOption} from "../../../domain/training/test/builders/option-builder";
+import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -143,20 +144,41 @@ describe('SendAnswer', () => {
       })
     })
 
-    it('is incorrect', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aTrueStatement().withExplanation('Answer explanation')
-        ));
+    describe('Explanation is optional', () => {
+      it('multiple-choice', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withOptions(
+                anOption()
+                  .withValue('A. Option 1')
+                  .withNoExplanation()
+              )
+          ));
 
-      const result = send(false).toQuiz(IAM_QUIZ);
+        const result = send('A').toQuiz(IAM_QUIZ);
 
-      expectResult(result)
-        .toBeIncorrect()
-        .toHaveExplanation('Answer explanation');
+        expectResult(result)
+          .toBeCorrect()
+          .toHaveNoExplanation();
+      })
+
+      it('boolean', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aTrueStatement().withNoExplanation()
+          ));
+
+        const result = send(true).toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toBeCorrect()
+          .toHaveNoExplanation();
+      })
     })
-  })
+  });
 
   describe('result and outcome', () => {
     it('receives result', () => {
@@ -212,9 +234,9 @@ describe('SendAnswer', () => {
           aTrueStatement().labelled('question 3')
         ));
 
-      const result1 = send(anAnswer()).toQuiz(IAM_QUIZ);
-      const result2 = send(anAnswer()).toQuiz(IAM_QUIZ);
-      const result3 = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result1 = send(aUserAnswer()).toQuiz(IAM_QUIZ);
+      const result2 = send(aUserAnswer()).toQuiz(IAM_QUIZ);
+      const result3 = send(aUserAnswer()).toQuiz(IAM_QUIZ);
 
       expectResult(result1)
         .toHaveNextQuestion('question 2');
@@ -232,9 +254,9 @@ describe('SendAnswer', () => {
           aFalseStatement()
         ));
 
-      havingSent(anAnswer()).toQuiz(IAM_QUIZ);
+      havingSent(aUserAnswer()).toQuiz(IAM_QUIZ);
 
-      const result = send(anAnswer()).toQuiz(IAM_QUIZ);
+      const result = send(aUserAnswer()).toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toHaveNoNextQuestion();
@@ -328,53 +350,54 @@ describe('SendAnswer', () => {
     }
   }
 
-});
 
-function expectResult(result: ResultDto) {
-  return {
-    toBeCorrect() {
-      expect(result.isAnswerCorrect).toBe(true);
-      return this;
-    },
-    toBeIncorrect() {
-      expect(result.isAnswerCorrect).toBe(false);
-      return this;
-    },
-    toHaveExpectedAnswer(answer: boolean | string) {
-      expect(result.expectedAnswer).toBe(answer);
-      return this;
-    },
-    toHaveExplanation(explanation: string) {
-      expect(result.explanation).toBe(explanation);
-      return this;
-    },
-    toHaveAccuracy(value: number) {
-      expect(result.accuracy).toBeCloseTo(value, 0);
-      return this;
-    },
-    toHaveProgress(value: number) {
-      expect(result.progress).toBeCloseTo(value, 0);
-      return this;
-    },
-    toHaveNoOutcome() {
-      expect(result.outcome).toBeUndefined();
-      return this;
-    },
-    toHaveOutcome(param: OutcomeDto) {
-      expect(result.outcome).toStrictEqual(param);
-      return this;
-    },
-    toHaveNoNextQuestion() {
-      expect(result.nextQuestion).toBeUndefined();
-      return this;
-    },
-    toHaveNextQuestion(label: string) {
-      expect(result.nextQuestion).toBe(label);
-      return this;
+  function expectResult(result: ResultDto) {
+    return {
+      toBeCorrect() {
+        expect(result.isAnswerCorrect).toBe(true);
+        return this;
+      },
+      toBeIncorrect() {
+        expect(result.isAnswerCorrect).toBe(false);
+        return this;
+      },
+      toHaveExpectedAnswer(answer: boolean | string) {
+        expect(result.expectedAnswer).toBe(answer);
+        return this;
+      },
+      toHaveExplanation(explanation: string) {
+        expect(result.explanation).toBe(explanation);
+        return this;
+      },
+      toHaveNoExplanation() {
+        expect(result.explanation).toBeUndefined();
+        return this;
+      },
+      toHaveAccuracy(value: number) {
+        expect(result.accuracy).toBeCloseTo(value, 0);
+        return this;
+      },
+      toHaveProgress(value: number) {
+        expect(result.progress).toBeCloseTo(value, 0);
+        return this;
+      },
+      toHaveNoOutcome() {
+        expect(result.outcome).toBeUndefined();
+        return this;
+      },
+      toHaveOutcome(param: OutcomeDto) {
+        expect(result.outcome).toStrictEqual(param);
+        return this;
+      },
+      toHaveNoNextQuestion() {
+        expect(result.nextQuestion).toBeUndefined();
+        return this;
+      },
+      toHaveNextQuestion(label: string) {
+        expect(result.nextQuestion).toBe(label);
+        return this;
+      }
     }
   }
-}
 
-function anAnswer(): string | boolean {
-  return 'A. Option 1';
-}
+});

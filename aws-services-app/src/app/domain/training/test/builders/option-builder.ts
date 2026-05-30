@@ -40,4 +40,9 @@ export class OptionBuilder {
     this.explanation = explanation;
     return this;
   }
+
+  withNoExplanation() {
+    this.explanation = undefined;
+    return this;
+  }
 }

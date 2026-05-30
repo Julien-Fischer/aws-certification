@@ -48,6 +48,11 @@ class BooleanQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
+  withNoExplanation(): this {
+    this.explanation = undefined;
+    return this;
+  }
+
   build(): BooleanQuestion {
     return new BooleanQuestion(this.label, this.answer, this.explanation);
   }
