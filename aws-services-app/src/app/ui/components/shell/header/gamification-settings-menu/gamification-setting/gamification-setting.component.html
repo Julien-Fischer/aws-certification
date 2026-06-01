@@ -3,7 +3,8 @@
     (click)="onToggle()"
     (keydown.enter)="onToggle()"
     [tabindex]="isEnabled() ? 0 : -1"
-    role="button">
+    role="menuitem"
+>
   <span class="menu-item-label">{{ label() }}</span>
   <app-toggle [checked]="isChecked()" style="pointer-events: none;" />
 </li>

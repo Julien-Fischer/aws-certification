@@ -11,7 +11,9 @@
         <div class="menu-separator"></div>
 
         <ul>
-          <li class="menu-item-toggle main-toggle" (click)="gamification.toggle()" (keydown.enter)="gamification.toggle()" tabindex="0" role="button">
+          <li class="menu-item-toggle main-toggle" tabindex="0" role="menuitem"
+              (click)="gamification.toggle()"
+              (keydown.enter)="gamification.toggle()">
             <span class="menu-item-label">Enable</span>
             <app-toggle [checked]="gamification.isEnabled()" style="pointer-events: none;" />
           </li>
