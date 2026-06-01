@@ -4,12 +4,12 @@ import { Gamification, gamificationInjectionToken } from "../../../../../domain/
 import { forgetHighscoreInjectionToken } from "../../../../../domain/scoring/highscore-eraser";
 import {ToggleComponent} from "../../../generic/toggle.component";
 
-import { GamificationSettingComponent } from "./gamification-setting/gamification-setting.component";
+import { SwitchButtonComponent } from "../../../generic/switch-button/switch-button.component";
 
 @Component({
   selector: 'app-gamification-settings-menu',
   standalone: true,
-  imports: [CommonModule, ToggleComponent, GamificationSettingComponent],
+  imports: [CommonModule, SwitchButtonComponent],
   templateUrl: './gamification-settings-menu.component.html',
   styleUrl: './gamification-settings-menu.component.scss'
 })

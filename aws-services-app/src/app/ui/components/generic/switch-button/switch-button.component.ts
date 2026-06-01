@@ -1,17 +1,17 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToggleComponent } from '../../../../generic/toggle.component';
+import { ToggleComponent } from '../toggle.component';
 
 @Component({
   selector: 'app-gamification-setting',
   standalone: true,
   imports: [CommonModule, ToggleComponent],
-  templateUrl: './gamification-setting.component.html',
-  styleUrl: './gamification-setting.component.scss'
+  templateUrl: './switch-button.component.html',
+  styleUrl: './switch-button.component.scss'
 })
-export class GamificationSettingComponent {
+export class SwitchButtonComponent {
   label = input.required<string>();
-  isEnabled = input.required<boolean>();
+  isEnabled = input<boolean>(true);
   isChecked = input.required<boolean>();
   toggle = output<void>();
 

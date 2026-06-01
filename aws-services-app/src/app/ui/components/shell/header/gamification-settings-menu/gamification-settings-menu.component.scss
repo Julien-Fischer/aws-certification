@@ -131,42 +131,6 @@
     text-wrap: nowrap;
   }
 
-  .menu-item-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 0.75rem;
-    border-radius: 8px;
-    gap: 0.75rem;
-    cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    :host-context(.dark) &:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    &:active {
-      opacity: 0.8;
-    }
-
-    .menu-item-label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
-
-    &.main-toggle {
-      .menu-item-label {
-        font-weight: 600;
-        font-size: 0.95rem;
-      }
-    }
-  }
-
   .menu-item-btn {
     width: 100%;
     padding: 0.6rem 0.75rem;
