@@ -3,7 +3,7 @@
 ## 📘 Overview
 
 This project provides a **comprehensive study companion** for the 
-**AWS Certified Solutions Architect Associate (SAA-C04)** certification.  
+**AWS Certified Solutions Architect Associate (SAA-C03)** certification.  
 
 The website organizes **AWS services by thematic areas**, and for each service you will find:
 - A **Flash Card** with the **key concepts** and architectural principles.  
@@ -40,7 +40,7 @@ The **content of the AWS service cards** was **entirely generated with AI**
 during the preparation of the AWS Certified Solutions Architect Associate certification.  
 
 The original version was largely based on this [SAA-C03 Udemy course](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c03/)  
-It has been **re-designed and improved** to prepare for **SAA-C04**.
+It has been **re-designed and improved** to prepare for **SAA-C03**.
 
 ---
 ## Author
