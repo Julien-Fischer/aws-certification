@@ -1,5 +1,5 @@
 import {BooleanQuestion} from "../../models/boolean-question";
-import {MultipleChoiceQuestion} from "../../models/multiple-choice-question";
+import {SingleChoiceQuestion} from "../../models/single-choice-question";
 import {OptionBuilder} from "./option-builder";
 import {ExpectedAnswer} from "../../models/expected-answer";
 import {BooleanAnswer} from "../../models/boolean-answer";
@@ -22,8 +22,8 @@ export function aFalseStatement(): BooleanQuestionBuilder {
   return aBooleanQuestion().withAnswer(false);
 }
 
-export function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
-  return new MultipleChoiceQuestionBuilder();
+export function aSingleChoiceQuestion(): SingleChoiceQuestionBuilder {
+  return new SingleChoiceQuestionBuilder();
 }
 
 export abstract class QuestionBuilder {
@@ -62,7 +62,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 
 }
 
-class MultipleChoiceQuestionBuilder extends QuestionBuilder {
+class SingleChoiceQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
   private answer: ExpectedAnswer<Option> = new Choice(Option.from('A. Correct answer'));
@@ -83,8 +83,8 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  build(): MultipleChoiceQuestion {
-    return new MultipleChoiceQuestion(this.label, this.answer, this.options);
+  build(): SingleChoiceQuestion {
+    return new SingleChoiceQuestion(this.label, this.answer, this.options);
   }
 
 }

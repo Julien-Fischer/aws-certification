@@ -9,7 +9,7 @@ import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-bu
 import {QuizId} from "../../../domain/training/quiz-id";
 import {
   aFalseStatement,
-  aMultipleChoiceQuestion,
+  aSingleChoiceQuestion,
   aTrueStatement
 } from "../../../domain/training/test/builders/question-builder";
 import {anOption} from "../../../domain/training/test/builders/option-builder";
@@ -45,7 +45,7 @@ describe('SendAnswer', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
-          aMultipleChoiceQuestion()
+          aSingleChoiceQuestion()
             .withAnswer('C. Option 3')
             .withOptions(
               anOption().withValue('A. Option 1'),
@@ -66,7 +66,7 @@ describe('SendAnswer', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
-          aMultipleChoiceQuestion()
+          aSingleChoiceQuestion()
             .withAnswer('C. Option 3')
             .withOptions(
               anOption().withValue('A. Option 1'),
@@ -90,7 +90,7 @@ describe('SendAnswer', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withAnswer('C. Option 3')
               .withOptions(
                 anOption().withValue('A. Option 1'),
@@ -111,7 +111,7 @@ describe('SendAnswer', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withAnswer('C. Option 3')
               .withOptions(
                 anOption().withValue('A. Option 1'),
@@ -150,7 +150,7 @@ describe('SendAnswer', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withOptions(
                 anOption()
                   .withValue('A. Option 1')
@@ -187,7 +187,7 @@ describe('SendAnswer', () => {
         .identified(IAM_QUIZ)
         .with(
           aTrueStatement(),
-          aMultipleChoiceQuestion(),
+          aSingleChoiceQuestion(),
           aFalseStatement()
         ));
 

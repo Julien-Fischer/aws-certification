@@ -4,10 +4,10 @@ import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-rep
 import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../search/services/search.service";
 import {TrainingSession} from "../training-session";
-import {aFalseStatement, aMultipleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
+import {aFalseStatement, aSingleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
 import {expectResult} from "./expectations/expect-result";
 import {Shuffle} from "../shuffle";
-import {MultipleChoiceQuestion} from "../models/multiple-choice-question";
+import {SingleChoiceQuestion} from "../models/single-choice-question";
 import {Question} from "../models/question";
 import {anOption} from "./builders/option-builder";
 
@@ -69,7 +69,7 @@ describe('AnswerEvaluator', () => {
 
         const quiz = startQuiz.with(questions, reverseOrder());
 
-        const shuffled: MultipleChoiceQuestion[] = cast(quiz.questions());
+        const shuffled: SingleChoiceQuestion[] = cast(quiz.questions());
         const answers = shuffled.map(question => question.answer.toString());
 
         expect(answers).toEqual([
@@ -81,12 +81,12 @@ describe('AnswerEvaluator', () => {
 
       it('shuffles questions and their options', () => {
         const questions = [
-          aMultipleChoiceQuestion().withAnswer('A. IAM Question Answer')
+          aSingleChoiceQuestion().withAnswer('A. IAM Question Answer')
             .withOptions(
               anOption().withValue('A. IAM Question Answer'),
               anOption().withValue('B. IAM Question Option 2'),
             ).build(),
-          aMultipleChoiceQuestion().withAnswer('B. EC2 Question Answer')
+          aSingleChoiceQuestion().withAnswer('B. EC2 Question Answer')
             .withOptions(
               anOption().withValue('A. EC2 Question Option 1'),
               anOption().withValue('B. EC2 Question Answer'),
@@ -95,7 +95,7 @@ describe('AnswerEvaluator', () => {
 
         const quiz = startQuiz.with(questions, reverseOrder());
 
-        const shuffled: MultipleChoiceQuestion[] = cast(quiz.questions());
+        const shuffled: SingleChoiceQuestion[] = cast(quiz.questions());
         const answers = shuffled.map(question => question.answer.toString());
         const ec2Options = optionNames(shuffled[0]);
         const iamOptions = optionNames(shuffled[1]);
@@ -117,8 +117,8 @@ function reverseOrder(): Shuffle {
   }
 }
 
-function aQuestionWithAnswer(answerText: string): MultipleChoiceQuestion {
-  return aMultipleChoiceQuestion()
+function aQuestionWithAnswer(answerText: string): SingleChoiceQuestion {
+  return aSingleChoiceQuestion()
     .withAnswer(answerText)
     .build();
 }
@@ -131,6 +131,6 @@ function cast<T>(value: any): T {
   return value as T;
 }
 
-function optionNames(question: MultipleChoiceQuestion): string[] {
+function optionNames(question: SingleChoiceQuestion): string[] {
   return question.options.map(option => option.prefix);
 }

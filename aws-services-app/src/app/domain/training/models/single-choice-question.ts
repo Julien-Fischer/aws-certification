@@ -4,7 +4,7 @@ import {UserAnswer} from "./user-answer";
 import {ExpectedAnswer} from "./expected-answer";
 import {Option} from "./option";
 
-export class MultipleChoiceQuestion extends Question {
+export class SingleChoiceQuestion extends Question {
 
   readonly #brand = Symbol();
 

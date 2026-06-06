@@ -2,7 +2,7 @@ import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
 import {Question as DomainQuestion} from "../../domain/training/models/question";
 import {BooleanQuestion} from "../../domain/training/models/boolean-question";
-import {MultipleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/multiple-choice-question";
+import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/single-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";

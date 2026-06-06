@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {BooleanQuestion} from "../models/boolean-question";
-import {MultipleChoiceQuestion} from "../models/multiple-choice-question";
+import {SingleChoiceQuestion} from "../models/single-choice-question";
 import {BooleanAnswer} from "../models/boolean-answer";
 import {Choice} from "../models/choice";
 import {Option} from "../models/option";
@@ -34,9 +34,9 @@ describe('BooleanQuestion', () => {
   })
 })
 
-describe('MultipleChoiceQuestion', () => {
+describe('SingleChoiceQuestion', () => {
   it('has a correct answer', () => {
-    const question = new MultipleChoiceQuestion(
+    const question = new SingleChoiceQuestion(
       `What does IAM stand for?`,
       new Choice(Option.from('C. Identity and Access Management')),
       [
@@ -53,7 +53,7 @@ describe('MultipleChoiceQuestion', () => {
 
   describe('findExplanationFor', () => {
     it('finds explanation for any answer', () => {
-      const question = new MultipleChoiceQuestion(
+      const question = new SingleChoiceQuestion(
         `Which option is correct?`,
         new Choice(Option.from('C. Correct Option')),
         [
@@ -72,7 +72,7 @@ describe('MultipleChoiceQuestion', () => {
     })
 
     it('is optional', () => {
-      const question = new MultipleChoiceQuestion(
+      const question = new SingleChoiceQuestion(
         `Which option is correct?`,
         new Choice(Option.from('C. Correct Option')),
         [

@@ -3,7 +3,7 @@ import {aCompletedQuiz, aQuiz} from "./builders/quiz-builder";
 import {
   aBooleanQuestion,
   aFalseStatement,
-  aMultipleChoiceQuestion,
+  aSingleChoiceQuestion,
   aQuestion,
   aTrueStatement,
 } from "./builders/question-builder";
@@ -107,7 +107,7 @@ describe('Quiz', () => {
       it('is true when correct option is selected', () => {
         const quiz = aQuiz()
           .with(
-            aMultipleChoiceQuestion().withAnswer('A. First option')
+            aSingleChoiceQuestion().withAnswer('A. First option')
           )
           .build();
 
@@ -119,7 +119,7 @@ describe('Quiz', () => {
       it('is false when incorrect option is selected', () => {
         const quiz = aQuiz()
           .with(
-            aMultipleChoiceQuestion().withAnswer('A. First option')
+            aSingleChoiceQuestion().withAnswer('A. First option')
           )
           .build();
 
@@ -131,7 +131,7 @@ describe('Quiz', () => {
       it('is provides the correct answer when incorrect', () => {
         const quiz = aQuiz()
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withAnswer('B. Correct answer')
               .withOptions(
                 anOption().withValue('A. Incorrect option 1'),
@@ -151,7 +151,7 @@ describe('Quiz', () => {
       it('is provides the correct answer when correct', () => {
         const quiz = aQuiz()
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withAnswer('B. Correct answer')
               .withOptions(
                 anOption().withValue('A. Incorrect option 1'),
@@ -171,7 +171,7 @@ describe('Quiz', () => {
       it('explanation', () => {
         const quiz = aQuiz()
           .with(
-            aMultipleChoiceQuestion()
+            aSingleChoiceQuestion()
               .withAnswer('B. Correct answer')
               .withOptions(
                 anOption().withValue('A. Incorrect option 1').withExplanation('Explanation for incorrect option 1'),
@@ -420,7 +420,7 @@ describe('Quiz', () => {
 
     it('has no next question left', () => {
       const quiz = aQuiz()
-        .with(aMultipleChoiceQuestion(), aBooleanQuestion().labelled('IAM is an AWS service'))
+        .with(aSingleChoiceQuestion(), aBooleanQuestion().labelled('IAM is an AWS service'))
         .build();
 
       havingSentAnAnswer().to(quiz);
