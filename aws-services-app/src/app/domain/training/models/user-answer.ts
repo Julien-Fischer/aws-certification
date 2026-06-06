@@ -1,1 +1,1 @@
-export type UserAnswer = boolean | string;
+export type UserAnswer = boolean | string | string[];

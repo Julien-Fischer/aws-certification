@@ -14,6 +14,7 @@ import {
 } from "../../../domain/training/test/builders/question-builder";
 import {anOption} from "../../../domain/training/test/builders/option-builder";
 import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
+import {UserAnswer} from "../../../domain/training/models/user-answer";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -338,11 +339,11 @@ describe('SendAnswer', () => {
     quizRepository.save(quiz.build());
   }
 
-  function havingSent(answer: boolean | string) {
+  function havingSent(answer: UserAnswer) {
     return send(answer);
   }
 
-  function send(answer: boolean | string) {
+  function send(answer: UserAnswer) {
     return {
       toQuiz(quizId: QuizId) {
         return sendAnswer.send({quizId: quizId.toString(), answer});

@@ -15,7 +15,7 @@ export interface OutcomeDto {
 
 export interface ResultDto {
   isAnswerCorrect: boolean;
-  expectedAnswer: string | boolean;
+  expectedAnswer: boolean | string | string[];
   explanation?: string;
   progress: number;
   accuracy: number;
@@ -25,7 +25,7 @@ export interface ResultDto {
 
 export interface AnswerDto {
   quizId: string;
-  answer: string | boolean;
+  answer: UserAnswer;
 }
 
 @Injectable({ providedIn: 'root' })
