@@ -1,18 +1,19 @@
 import { describe, it, expect } from 'vitest';
 import {BooleanQuestion} from "../models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
-import {ExpectedAnswer} from "../models/expected-answer";
+import {BooleanAnswer} from "../models/boolean-answer";
+import {MultipleChoiceAnswer} from "../models/multiple-choice-answer";
 
 describe('BooleanQuestion', () => {
   it('has a correct answer', () => {
-    const question = new BooleanQuestion(`IAM stands for 'Identity and Access Management'`, new ExpectedAnswer(true));
+    const question = new BooleanQuestion(`IAM stands for 'Identity and Access Management'`, BooleanAnswer.TRUE);
 
     expect(question.hasAnswer(true)).toBe(true);
     expect(question.hasAnswer(false)).toBe(false);
   })
 
   it('has a correct answer', () => {
-    const question = new BooleanQuestion(`IAM stands for 'I Accidentally Managed'`, new ExpectedAnswer(false));
+    const question = new BooleanQuestion(`IAM stands for 'I Accidentally Managed'`, BooleanAnswer.FALSE);
 
     expect(question.hasAnswer(false)).toBe(true);
     expect(question.hasAnswer(true)).toBe(false);
@@ -21,7 +22,7 @@ describe('BooleanQuestion', () => {
   it('finds explanation for an answer', () => {
     const question = new BooleanQuestion(
       `IAM stands for 'It's Always Misconfigured'`,
-      new ExpectedAnswer(false),
+      BooleanAnswer.FALSE,
       'Is this supposed to be a joke?'
     );
 
@@ -36,7 +37,7 @@ describe('MultipleChoiceQuestion', () => {
   it('has a correct answer', () => {
     const question = new MultipleChoiceQuestion(
       `What does IAM stand for?`,
-      new ExpectedAnswer(Option.from('C. Identity and Access Management')),
+      new MultipleChoiceAnswer(Option.from('C. Identity and Access Management')),
       [
         Option.from(`A. I Accidentally Managed`),
         Option.from(`B. It's Always Misconfigured`),
@@ -53,7 +54,7 @@ describe('MultipleChoiceQuestion', () => {
     it('finds explanation for any answer', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new ExpectedAnswer(Option.from('C. Correct Option')),
+        new MultipleChoiceAnswer(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),
@@ -72,7 +73,7 @@ describe('MultipleChoiceQuestion', () => {
     it('is optional', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new ExpectedAnswer(Option.from('C. Correct Option')),
+        new MultipleChoiceAnswer(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),

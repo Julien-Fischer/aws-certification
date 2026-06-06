@@ -5,8 +5,9 @@ import {BooleanQuestion} from "../../domain/training/models/boolean-question";
 import {MultipleChoiceQuestion as DomainMultipleChoiceQuestion, Option as DomainOption} from "../../domain/training/models/multiple-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
-import {ExpectedAnswer} from "../../domain/training/models/expected-answer";
 import {Option} from "../../domain/search/models/question";
+import {BooleanAnswer} from "../../domain/training/models/boolean-answer";
+import {MultipleChoiceAnswer} from "../../domain/training/models/multiple-choice-answer";
 
 export interface QuizDto {
   id: string;
@@ -69,7 +70,7 @@ function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
-      new ExpectedAnswer<boolean>(question.answer),
+      BooleanAnswer.from(question.answer),
       question.explanation
     ));
 }
@@ -78,7 +79,7 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQu
   return questions
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
-      new ExpectedAnswer<DomainOption>(mapDomainOption(question.answer)),
+      new MultipleChoiceAnswer(mapDomainOption(question.answer)),
       mapDomainOptions(question.options)
     ));
 }

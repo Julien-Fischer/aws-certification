@@ -2,6 +2,8 @@ import {BooleanQuestion} from "../../models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../../models/multiple-choice-question";
 import {OptionBuilder} from "./option-builder";
 import {ExpectedAnswer} from "../../models/expected-answer";
+import {BooleanAnswer} from "../../models/boolean-answer";
+import {MultipleChoiceAnswer} from "../../models/multiple-choice-answer";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -30,7 +32,7 @@ export abstract class QuestionBuilder {
 class BooleanQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private answer: ExpectedAnswer<boolean> = new ExpectedAnswer(true);
+  private answer: ExpectedAnswer<boolean> = BooleanAnswer.TRUE;
   private explanation?: string;
 
   labelled(label: string): this {
@@ -39,7 +41,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
   }
 
   withAnswer(bool: boolean): this {
-    this.answer = new ExpectedAnswer(bool);
+    this.answer = BooleanAnswer.from(bool);
     return this;
   }
 
@@ -62,7 +64,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 class MultipleChoiceQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private answer: ExpectedAnswer<Option> = new ExpectedAnswer(Option.from('A. Correct answer'));
+  private answer: ExpectedAnswer<Option> = new MultipleChoiceAnswer(Option.from('A. Correct answer'));
   private options: Option[] = [];
 
   withLabel(label: string): this {
@@ -71,7 +73,7 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
   }
 
   withAnswer(answer: string): this {
-    this.answer = new ExpectedAnswer(Option.from(answer));
+    this.answer = new MultipleChoiceAnswer(Option.from(answer));
     return this;
   }
 

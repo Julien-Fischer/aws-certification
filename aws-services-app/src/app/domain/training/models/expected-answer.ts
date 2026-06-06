@@ -1,20 +1,12 @@
 import {UserAnswer} from "./user-answer";
 import {Option} from "./multiple-choice-question";
 
-export class ExpectedAnswer<T extends {toString: () => string}> {
+export interface ExpectedAnswer<T> {
 
-  readonly #brand = Symbol();
+  value: T;
 
-  constructor(readonly value: T) { }
+  accepts(userAnswer: UserAnswer): boolean;
 
-  accepts(userAnswer: UserAnswer): boolean {
-    return this.value instanceof Option
-      ? this.value.prefix === userAnswer
-      : this.value === userAnswer;
-  }
-
-  toString(): string {
-    return String(this.value.toString());
-  }
+  toString(): string;
 
 }
