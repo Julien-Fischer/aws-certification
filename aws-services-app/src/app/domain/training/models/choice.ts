@@ -2,7 +2,7 @@ import {UserAnswer} from "./user-answer";
 import {Option} from "./multiple-choice-question";
 import {ExpectedAnswer} from "./expected-answer";
 
-export class MultipleChoiceAnswer implements ExpectedAnswer<Option> {
+export class Choice implements ExpectedAnswer<Option> {
 
   readonly #brand = Symbol();
 

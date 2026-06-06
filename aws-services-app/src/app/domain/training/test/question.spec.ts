@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {BooleanQuestion} from "../models/boolean-question";
 import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
 import {BooleanAnswer} from "../models/boolean-answer";
-import {MultipleChoiceAnswer} from "../models/multiple-choice-answer";
+import {Choice} from "../models/choice";
 
 describe('BooleanQuestion', () => {
   it('has a correct answer', () => {
@@ -37,7 +37,7 @@ describe('MultipleChoiceQuestion', () => {
   it('has a correct answer', () => {
     const question = new MultipleChoiceQuestion(
       `What does IAM stand for?`,
-      new MultipleChoiceAnswer(Option.from('C. Identity and Access Management')),
+      new Choice(Option.from('C. Identity and Access Management')),
       [
         Option.from(`A. I Accidentally Managed`),
         Option.from(`B. It's Always Misconfigured`),
@@ -54,7 +54,7 @@ describe('MultipleChoiceQuestion', () => {
     it('finds explanation for any answer', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new MultipleChoiceAnswer(Option.from('C. Correct Option')),
+        new Choice(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),
@@ -73,7 +73,7 @@ describe('MultipleChoiceQuestion', () => {
     it('is optional', () => {
       const question = new MultipleChoiceQuestion(
         `Which option is correct?`,
-        new MultipleChoiceAnswer(Option.from('C. Correct Option')),
+        new Choice(Option.from('C. Correct Option')),
         [
           Option.from('A. Option 1', 'Explanation for Option A'),
           Option.from('B. Option 2'),

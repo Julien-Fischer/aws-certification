@@ -7,7 +7,7 @@ import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider
 import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";
 import {BooleanAnswer} from "../../domain/training/models/boolean-answer";
-import {MultipleChoiceAnswer} from "../../domain/training/models/multiple-choice-answer";
+import {Choice} from "../../domain/training/models/choice";
 
 export interface QuizDto {
   id: string;
@@ -79,7 +79,7 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQu
   return questions
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
-      new MultipleChoiceAnswer(mapDomainOption(question.answer)),
+      new Choice(mapDomainOption(question.answer)),
       mapDomainOptions(question.options)
     ));
 }

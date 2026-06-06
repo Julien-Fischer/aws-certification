@@ -3,7 +3,7 @@ import {MultipleChoiceQuestion, Option} from "../../models/multiple-choice-quest
 import {OptionBuilder} from "./option-builder";
 import {ExpectedAnswer} from "../../models/expected-answer";
 import {BooleanAnswer} from "../../models/boolean-answer";
-import {MultipleChoiceAnswer} from "../../models/multiple-choice-answer";
+import {Choice} from "../../models/choice";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -64,7 +64,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 class MultipleChoiceQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private answer: ExpectedAnswer<Option> = new MultipleChoiceAnswer(Option.from('A. Correct answer'));
+  private answer: ExpectedAnswer<Option> = new Choice(Option.from('A. Correct answer'));
   private options: Option[] = [];
 
   withLabel(label: string): this {
@@ -73,7 +73,7 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
   }
 
   withAnswer(answer: string): this {
-    this.answer = new MultipleChoiceAnswer(Option.from(answer));
+    this.answer = new Choice(Option.from(answer));
     return this;
   }
 
