@@ -2,12 +2,13 @@ import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
 import {Question as DomainQuestion} from "../../domain/training/models/question";
 import {BooleanQuestion} from "../../domain/training/models/boolean-question";
-import {MultipleChoiceQuestion as DomainMultipleChoiceQuestion, Option as DomainOption} from "../../domain/training/models/multiple-choice-question";
+import {MultipleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/multiple-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";
 import {BooleanAnswer} from "../../domain/training/models/boolean-answer";
 import {Choice} from "../../domain/training/models/choice";
+import {Option as SelectedOption} from "../../domain/training/models/option";
 
 export interface QuizDto {
   id: string;
@@ -79,17 +80,17 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQu
   return questions
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
-      new Choice(mapDomainOption(question.answer)),
-      mapDomainOptions(question.options)
+      new Choice(toSelectedOption(question.answer)),
+      toExpectedOption(question.options)
     ));
 }
 
-function mapDomainOptions(optionDtos: OptionDto[]): DomainOption[] {
-  return optionDtos.map(mapDomainOption);
+function toExpectedOption(optionDtos: OptionDto[]): SelectedOption[] {
+  return optionDtos.map(toSelectedOption);
 }
 
-function mapDomainOption(optionDto: OptionDto): DomainOption {
-  return DomainOption.from(optionDto.value, optionDto.explanation);
+function toSelectedOption(optionDto: OptionDto): SelectedOption {
+  return SelectedOption.from(optionDto.value, optionDto.explanation);
 }
 
 function response(quiz: Quiz): QuizDto {

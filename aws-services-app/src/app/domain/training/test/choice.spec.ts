@@ -1,16 +1,14 @@
 import {describe, it, expect} from 'vitest';
-import {Option} from "../models/multiple-choice-question";
-import {ExpectedAnswer} from "../models/expected-answer";
-import {BooleanAnswer} from "../models/boolean-answer";
 import {Choice} from "../models/choice";
+import {Option} from "../models/option";
 
-describe('Answer', () => {
+describe('Choice', () => {
 
   it('constructs', () => {
-    const value = Option.from('A. Answer');
-    const answer = new Choice(value);
+    const option = Option.from('A. Answer');
+    const answer = new Choice(option);
 
-    expect(answer.value).toBe(value);
+    expect(answer.value).toBe(option);
   });
 
   it('accepts', () => {

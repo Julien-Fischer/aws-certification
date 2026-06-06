@@ -1,7 +1,7 @@
-import {Option} from "../../models/multiple-choice-question";
 import {ExpectedAnswer} from "../../models/expected-answer";
 import {UserAnswer} from "../../models/user-answer";
 import {Choice} from "../../models/choice";
+import {Option} from "../../models/option";
 
 export function aUserAnswer(): UserAnswer {
   return 'A';

@@ -1,9 +1,7 @@
 import {describe, it, expect} from 'vitest';
-import {Option} from "../models/multiple-choice-question";
-import {ExpectedAnswer} from "../models/expected-answer";
 import {BooleanAnswer} from "../models/boolean-answer";
 
-describe('Answer', () => {
+describe('BooleanAnswer', () => {
 
   it('constructs', () => {
     const trueAnswer = BooleanAnswer.TRUE;

@@ -1,8 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {BooleanQuestion} from "../models/boolean-question";
-import {MultipleChoiceQuestion, Option} from "../models/multiple-choice-question";
+import {MultipleChoiceQuestion} from "../models/multiple-choice-question";
 import {BooleanAnswer} from "../models/boolean-answer";
 import {Choice} from "../models/choice";
+import {Option} from "../models/option";
 
 describe('BooleanQuestion', () => {
   it('has a correct answer', () => {

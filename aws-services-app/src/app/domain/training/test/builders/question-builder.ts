@@ -1,9 +1,10 @@
 import {BooleanQuestion} from "../../models/boolean-question";
-import {MultipleChoiceQuestion, Option} from "../../models/multiple-choice-question";
+import {MultipleChoiceQuestion} from "../../models/multiple-choice-question";
 import {OptionBuilder} from "./option-builder";
 import {ExpectedAnswer} from "../../models/expected-answer";
 import {BooleanAnswer} from "../../models/boolean-answer";
 import {Choice} from "../../models/choice";
+import {Option} from "../../models/option";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();

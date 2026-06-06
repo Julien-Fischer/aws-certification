@@ -1,4 +1,4 @@
-import {Option} from "../../models/multiple-choice-question";
+import {Option} from "../../models/option";
 
 export function anOption(): OptionBuilder {
   return new OptionBuilder();

@@ -1,5 +1,4 @@
 import {UserAnswer} from "./user-answer";
-import {Option} from "./multiple-choice-question";
 import {ExpectedAnswer} from "./expected-answer";
 
 export class BooleanAnswer implements ExpectedAnswer<boolean> {
