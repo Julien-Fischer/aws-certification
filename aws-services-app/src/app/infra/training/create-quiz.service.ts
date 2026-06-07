@@ -2,7 +2,7 @@ import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
 import {Question} from "../../domain/training/models/questions/question";
 import {BooleanQuestion} from "../../domain/training/models/questions/boolean-question";
-import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
+import {SingleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
 import {Option as OptionDto} from "../../domain/search/models/question";
@@ -69,7 +69,7 @@ class DtoToQuestion {
   toQuestions(dto: QuizRequest): Question[] {
     return [
       ...this.mapBoolean(dto.booleanQuestions),
-      ...this.mapMultipleChoice(dto.multipleChoiceQuestions)
+      ...this.mapSingleChoice(dto.multipleChoiceQuestions)
     ];
   }
 
@@ -81,9 +81,9 @@ class DtoToQuestion {
       ));
   }
 
-  private mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
+  private mapSingleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
     return questions
-      .map(question => new DomainMultipleChoiceQuestion(
+      .map(question => new SingleChoiceQuestion(
         question.label,
         this.toExpectedChoice(question.answer),
         this.toOptions(question.options)
@@ -118,7 +118,7 @@ class QuizToResponse {
     const questionDto: Partial<QuestionDto> = {
       label: question.label
     };
-    if (question instanceof DomainMultipleChoiceQuestion) {
+    if (question instanceof SingleChoiceQuestion) {
       questionDto.options = question.options.map(option => new OptionDto(option.toString()));
     }
     return questionDto as QuestionDto;
