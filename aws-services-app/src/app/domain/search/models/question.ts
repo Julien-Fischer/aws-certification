@@ -3,6 +3,11 @@ export interface Question {
     answer: Answer<any>;
 }
 
+export interface MultipleChoiceQuestion extends Question {
+  options: Option[];
+  answer: Answer<Option[]>;
+}
+
 export interface SingleChoiceQuestion extends Question {
     options: Option[];
     answer: Answer<Option>;

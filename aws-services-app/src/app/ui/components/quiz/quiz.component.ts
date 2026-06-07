@@ -1,7 +1,13 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import {SingleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
+import {
+  SingleChoiceQuestion,
+  Option,
+  Question,
+  BooleanQuestion,
+  MultipleChoiceQuestion
+} from "../../../domain/search/models/question";
 import {ResultDto, SendAnswer} from "../../../infra/training/send-answer.service";
 import Score from "../../../domain/scoring/models/score";
 import Percentage from "../../../domain/scoring/models/percentage";
@@ -42,6 +48,8 @@ export class QuizComponent {
 
   private currentIndex: number = 0;
   private _questions: Question[] = [];
+
+  private readonly requestMapper = new QuestionsToQuizRequest();
 
   constructor(
     private sendAnswer: SendAnswer,
@@ -226,10 +234,7 @@ export class QuizComponent {
   }
 
   private createQuizRequest(): QuizRequest {
-    const booleanQuestions = this._questions.filter(question => !('options' in question)) as BooleanQuestion[];
-    const singleChoiceQuestions = this._questions.filter(question => 'options' in question) as SingleChoiceQuestion[];
-
-    return toQuizRequest(booleanQuestions, singleChoiceQuestions);
+    return this.requestMapper.toQuizRequest(this.questions, true);
   }
 
   protected isOptionIncorrect(option: Option): boolean {
@@ -251,25 +256,62 @@ function toScore(result: ResultDto): ProgressUpdate {
   }
 }
 
-function toQuizRequest(
-  booleanQuestions: BooleanQuestion[],
-  singleChoiceQuestions: SingleChoiceQuestion[]
-): QuizRequest {
-  return {
-    booleanQuestions: booleanQuestions.map(question => ({
-      label: question.label,
-      answer: question.answer.value,
-      explanation: question.answer.explanation
-    })),
-    singleChoiceQuestions: singleChoiceQuestions.map(question => ({
-      label: question.label,
-      answer: {
-        value: question.answer.value.prefix,
+
+class QuestionsToQuizRequest {
+
+  public toQuizRequest(questions: Question[], shuffle: boolean): QuizRequest {
+    return this.toRequest(
+      this.getBooleanQuestions(questions),
+      this.getSingleChoiceQuestions(questions),
+      this.getMultipleChoiceQuestions(questions),
+      shuffle
+    );
+  }
+
+  private getBooleanQuestions(questions: Question[]): BooleanQuestion[] {
+    return questions.filter(question => !this.hasOptions(question));
+  }
+
+  private getSingleChoiceQuestions(questions: Question[]): SingleChoiceQuestion[] {
+    return questions.filter(question => this.hasOptions(question) && !Array.isArray(question.answer.value)) as SingleChoiceQuestion[];
+  }
+
+  private getMultipleChoiceQuestions(questions: Question[]): MultipleChoiceQuestion[] {
+    return questions.filter(question => this.hasOptions(question) && Array.isArray(question.answer.value)) as MultipleChoiceQuestion[];
+  }
+
+  private hasOptions(question: Question): boolean {
+    return 'options' in question;
+  }
+
+  private toRequest(
+    booleanQuestions: BooleanQuestion[],
+    singleChoiceQuestions: SingleChoiceQuestion[],
+    multipleChoiceQuestions: MultipleChoiceQuestion[],
+    shuffle: boolean,
+  ): QuizRequest {
+    return {
+      booleanQuestions: booleanQuestions.map(question => ({
+        label: question.label,
+        answer: question.answer.value,
         explanation: question.answer.explanation
-      },
-      options: question.options.map((option: Option) => `${option.toString()}`)
-    })),
-    multipleChoiceQuestions: [], // TODO: implement later
-    shuffle: true
-  };
+      })),
+      singleChoiceQuestions: singleChoiceQuestions.map(question => ({
+        label: question.label,
+        answer: {
+          value: question.answer.value.prefix,
+          explanation: question.answer.explanation
+        },
+        options: question.options.map((option: Option) => option.toString())
+      })),
+      multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
+        label: question.label,
+        answer: question.answer.value.map(option => option.prefix),
+        explanation: question.answer.explanation,
+        options: question.options.map((option: Option) => option.toString())
+      })),
+      shuffle
+    };
+  }
+
 }
