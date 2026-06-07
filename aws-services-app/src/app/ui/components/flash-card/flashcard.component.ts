@@ -32,10 +32,10 @@ import {Question} from "../../../domain/search/models/question";
     FlashCardNavigationComponent,
     FlashCardHeaderComponent
   ],
-  templateUrl: './flash-card.component.html',
-  styleUrl: './flash-card.component.scss',
+  templateUrl: './flashcard.component.html',
+  styleUrl: './flashcard.component.scss',
 })
-export class FlashCardComponent implements OnInit, OnDestroy {
+export class FlashcardComponent implements OnInit, OnDestroy {
 
   flashCard: FlashCardMetadata | undefined;
   markdownContent: string = '';

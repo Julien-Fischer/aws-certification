@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {describe, it, expect, beforeEach, vi} from 'vitest';
-import {FlashCardComponent} from "./flash-card.component";
+import {FlashcardComponent} from "./flashcard.component";
 import {ActivatedRoute, convertToParamMap, ParamMap, Router} from "@angular/router";
 import {SearchService} from "../../../domain/search/services/search.service";
 import {saveHighscoreInjectionToken} from "../../../domain/scoring/highscore-evaluator";
@@ -85,8 +85,8 @@ class StubConfetti implements Confetti {
 }
 
 describe('FlashCardComponent', () => {
-    let component: FlashCardComponent;
-    let fixture: ComponentFixture<FlashCardComponent>;
+    let component: FlashcardComponent;
+    let fixture: ComponentFixture<FlashcardComponent>;
     let page: FlashCardComponentPage;
 
     let flashCardProvider: MockFlashCardProvider;
@@ -102,7 +102,7 @@ describe('FlashCardComponent', () => {
         confetti = new StubConfetti();
 
         await TestBed.configureTestingModule({
-            imports: [FlashCardComponent],
+            imports: [FlashcardComponent],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteMock },
                 { provide: carouselInjectionToken, useClass: InMemoryCarousel },
@@ -119,7 +119,7 @@ describe('FlashCardComponent', () => {
 
         TestBed.inject(ScoringAppService);
 
-        fixture = TestBed.createComponent(FlashCardComponent);
+        fixture = TestBed.createComponent(FlashcardComponent);
         component = fixture.componentInstance;
         page = new FlashCardComponentPage(fixture);
         fixture.detectChanges();
@@ -291,9 +291,9 @@ function aFlashCard() {
   }
 }
 
-class FlashCardComponentPage extends PageObject<FlashCardComponent> {
+class FlashCardComponentPage extends PageObject<FlashcardComponent> {
 
-  constructor(fixture: ComponentFixture<FlashCardComponent>) {
+  constructor(fixture: ComponentFixture<FlashcardComponent>) {
     super(fixture);
   }
 

@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { FlashCardComponent } from './components/flash-card/flash-card.component';
+import { FlashcardComponent } from './components/flash-card/flashcard.component';
 
 export const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: 'service/:id', component: FlashCardComponent },
+  { path: 'service/:id', component: FlashcardComponent },
   { path: '**', redirectTo: '' }
 ];
