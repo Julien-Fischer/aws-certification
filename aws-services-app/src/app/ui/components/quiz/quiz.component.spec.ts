@@ -129,15 +129,13 @@ describe('QuizComponent', () => {
   });
 
   it('displays options for multiple choice quiz', async () => {
-    await having({
-      label: 'Which feature provides cross-Region disaster recovery for Aurora?',
-      answer: new Answer(new Option('B. Aurora Global Database')),
-      options: [
-        new Option('A. Aurora Replicas'),
-        new Option('B. Aurora Global Database'),
-        new Option('C. Multi-AZ')
-      ]
-    });
+    await having(
+      aMultipleChoiceQuestion()
+        .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
+        .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
+        .withCorrectAnswer('B')
+        .build()
+    );
 
     expect(page.optionCards).toHaveLength(3);
     expect(page.option(0)).toContain('Aurora Replicas');
@@ -208,15 +206,11 @@ describe('QuizComponent', () => {
 
   it('marks incorrect option when submitting wrong answer', async () => {
     await having(
-      {
-        label: 'Which feature provides cross-Region disaster recovery for Aurora?',
-        answer: new Answer(new Option('B. Aurora Global Database')),
-        options: [
-          new Option('A. Aurora Replicas'),
-          new Option('B. Aurora Global Database'),
-          new Option('C. Multi-AZ')
-        ]
-      },
+      aMultipleChoiceQuestion()
+        .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
+        .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
+        .withCorrectAnswer('B')
+        .build()
     );
 
     await page.clickOption(0);
@@ -434,6 +428,8 @@ function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
 
 class MultipleChoiceQuestionBuilder {
 
+  private label: string = 'Question label';
+
   private correctAnswer: Letter = 'B';
 
   private explanation?: string;
@@ -443,6 +439,11 @@ class MultipleChoiceQuestionBuilder {
     new Option('B. Aurora Global Database'),
     new Option('C. Multi-AZ')
   ];
+
+  labelled(label: string): this {
+    this.label = label;
+    return this;
+  }
 
   withCorrectAnswer(prefix: Letter): this {
     this.correctAnswer = prefix;
@@ -462,7 +463,7 @@ class MultipleChoiceQuestionBuilder {
   build(): MultipleChoiceQuestion {
     const correctOption = this.options.find(option => option.prefix === this.correctAnswer) || this.options[1];
     return {
-      label: 'Which feature provides cross-Region disaster recovery for Aurora?',
+      label: this.label,
       answer: new Answer(correctOption!, this.explanation),
       options: this.options
     }
