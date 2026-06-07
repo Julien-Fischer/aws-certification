@@ -114,23 +114,11 @@ export class QuizComponent {
   checkAnswer(): void {
     if (!this.selectedOption) return;
 
-    console.log('selectedOption:', typeof this.selectedOption, this.selectedOption)
-
     const answerValue = this.createAnswer(this.selectedOption);
-
-    console.log('-> send:', answerValue)
 
     const result: ResultDto = this.sendAnswer.send({
       quizId: this.quiz!.id,
       answer: answerValue
-    });
-
-    console.log('<- received:', {
-      selectedOption: this.selectedOption,
-      answerValue: answerValue,
-      expectedAnswer: result.expectedAnswer,
-      isAnswerCorrect: result.isAnswerCorrect,
-      matchesAnswerFromString: this.matchesAnswerFromString(answerValue + '')
     });
 
     this.lastResult = result;
@@ -222,7 +210,6 @@ export class QuizComponent {
   matchesAnswerFromString(candidate: string): boolean {
     const expected = this.lastResult?.expectedAnswer;
     const candidateLetter = candidate.split('.')[0];
-    console.log('debug', expected, candidateLetter, expected === candidateLetter)
     return candidateLetter === expected;
   }
 
@@ -243,6 +230,14 @@ export class QuizComponent {
     const multipleChoiceQuestions = this._questions.filter(q => 'options' in q) as MultipleChoiceQuestion[];
 
     return toQuizRequest(booleanQuestions, multipleChoiceQuestions);
+  }
+
+  protected isOptionIncorrect(option: Option): boolean {
+    return this.selectedOption?.toString() === option.toString() && !this.matchesAnswerFromString(option.value);
+  }
+
+  protected isSelected(option: Option): boolean {
+    return this.selectedOption?.toString() === option.toString();
   }
 
 }
