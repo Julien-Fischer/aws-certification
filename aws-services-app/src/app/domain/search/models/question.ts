@@ -55,4 +55,10 @@ export class Option {
         return `${this.prefix}. ${this.label}`;
     }
 
+    equals(other: Option | string | null): boolean {
+      return other == null
+        ? false
+        : this.toString() === other.toString();
+    }
+
 }

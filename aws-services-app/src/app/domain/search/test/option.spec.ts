@@ -53,4 +53,28 @@ describe('Option', () => {
         expect(option.toString()).toBe('Z. Original value');
     });
 
+    describe('equals', () => {
+      it('is equal when value is equal', () => {
+        const option = new Option('A. Option value');
+
+        expect(option.equals('A. Option value')).toBe(true);
+        expect(option.equals(new Option('A. Option value'))).toBe(true);
+      })
+
+      it('is equal when values differ', () => {
+        const option = new Option('A. Option value');
+
+        expect(option.equals('B. Option value')).toBe(false);
+        expect(option.equals(new Option('B. Option value'))).toBe(false);
+        expect(option.equals('B. Another value')).toBe(false);
+        expect(option.equals(new Option('B. Another value'))).toBe(false);
+      })
+
+      it('is not equal to null', () => {
+        const option = new Option('A. Option value');
+
+        expect(option.equals(null)).toBe(false);
+      })
+    })
+
 });
