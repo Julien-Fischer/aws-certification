@@ -107,6 +107,50 @@ describe('SendAnswer', () => {
         .toHaveExpectedAnswer(['A', 'C'])
         .toHaveExpectedAnswer(['C', 'A']);
     })
+
+    describe('is incorrect when selection differs from expected combination', () => {
+      it('when selection is smaller than expected combination', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer(['A. Option 1', 'C. Option 3'])
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
+
+        const result = send(['A']).toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveExpectedAnswer(['A', 'C']);
+      })
+
+      it('when selection is greater than expected combination', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer(['A. Option 1', 'C. Option 3'])
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
+
+        const result = send(['A', 'B', 'C']).toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toBeIncorrect()
+          .toHaveExpectedAnswer(['A', 'C']);
+      })
+    })
   })
 
   describe('sends explanation regardless of answer being correct', () => {
