@@ -32,6 +32,8 @@ export interface QuizOptions {
 })
 export class QuizComponent {
 
+  private static readonly SHUFFLE = true;
+
   accuracy: number = 0;
   progress: number = 0;
 
@@ -234,7 +236,7 @@ export class QuizComponent {
   }
 
   private createQuizRequest(): QuizRequest {
-    return this.requestMapper.toQuizRequest(this.questions, true);
+    return this.requestMapper.toQuizRequest(this.questions, QuizComponent.SHUFFLE);
   }
 
   protected isOptionIncorrect(option: Option): boolean {
