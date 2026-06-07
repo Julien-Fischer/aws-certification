@@ -7,7 +7,7 @@ import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider
 import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";
 import {Option as SelectedOption} from "../../domain/training/models/option";
-import {BooleanAnswer} from "../../domain/training/models/answers/boolean-answer";
+import {ExpectedBooleanAnswer} from "../../domain/training/models/answers/expected-boolean-answer";
 import {ExpectedChoice} from "../../domain/training/models/answers/expected-choice";
 
 export interface QuizDto {
@@ -72,7 +72,7 @@ function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
-      BooleanAnswer.of(question.answer, question.explanation),
+      ExpectedBooleanAnswer.of(question.answer, question.explanation),
     ));
 }
 
