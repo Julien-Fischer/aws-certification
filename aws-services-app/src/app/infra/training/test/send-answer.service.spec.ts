@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {TestBed} from "@angular/core/testing";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
-import {NextQuestionDto, OutcomeDto, ResultDto, SendAnswer} from "../send-answer.service";
+import {ExpectedAnswerDto, NextQuestionDto, OutcomeDto, ResultDto, SendAnswer} from "../send-answer.service";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
@@ -81,6 +81,29 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toBeIncorrect()
         .toHaveExpectedAnswer('C');
+    })
+  })
+
+  describe('multiple choice evaluation', () => {
+    it('is correct when selection equals expected combination', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aMultipleChoiceQuestion()
+            .withAnswer(['A. Option 1', 'C. Option 3'])
+            .withOptions(
+              anOption().withValue('A. Option 1'),
+              anOption().withValue('B. Option 2'),
+              anOption().withValue('C. Option 3'),
+              anOption().withValue('D. Option 4')
+            )
+        ));
+
+      const result = send(['A', 'C']).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toBeCorrect()
+        .toHaveExpectedAnswer(['A', 'C']);
     })
   })
 
@@ -417,8 +440,8 @@ describe('SendAnswer', () => {
         expect(result.isAnswerCorrect).toBe(false);
         return this;
       },
-      toHaveExpectedAnswer(answer: boolean | string) {
-        expect(result.expectedAnswer).toBe(answer);
+      toHaveExpectedAnswer(answer: ExpectedAnswerDto) {
+        expect(result.expectedAnswer).toStrictEqual(answer);
         return this;
       },
       toHaveExplanation(explanation: string) {

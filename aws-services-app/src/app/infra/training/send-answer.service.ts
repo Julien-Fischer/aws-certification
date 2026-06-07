@@ -10,6 +10,8 @@ import {MultipleChoiceQuestion} from "../../domain/training/models/questions/mul
 import {BooleanQuestion} from "../../domain/training/models/questions/boolean-question";
 import {SingleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
 
+export type ExpectedAnswerDto = boolean | string | string[];
+
 export interface OutcomeDto {
   hasFailed: boolean;
   hasSucceeded: boolean;
@@ -18,7 +20,7 @@ export interface OutcomeDto {
 
 export interface ResultDto {
   isAnswerCorrect: boolean;
-  expectedAnswer: boolean | string | string[];
+  expectedAnswer: ExpectedAnswerDto;
   explanation?: string;
   progress: number;
   accuracy: number;
@@ -108,7 +110,10 @@ function toNextQuestion(nextQuestion?: Question): NextQuestionDto | undefined {
   return dto as NextQuestionDto;
 }
 
-function toExpectedAnswer(expectedAnswer: ExpectedAnswer<any>): string | boolean {
+function toExpectedAnswer(expectedAnswer: ExpectedAnswer<any>): ExpectedAnswerDto {
+  if (Array.isArray(expectedAnswer.value)) {
+    return expectedAnswer.value.map(value => value.prefix);
+  }
   return expectedAnswer.value instanceof Option
     ? expectedAnswer.value.prefix
     : expectedAnswer.value;

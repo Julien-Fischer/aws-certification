@@ -112,7 +112,7 @@ class SingleChoiceQuestionBuilder extends QuestionBuilder {
 class MultipleChoiceQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private expectedAnswer: string = 'A. Correct answer';
+  private expectedAnswer: string[] = ['A. Correct answer'];
   private explanation?: string;
   private options: Option[] = [Option.from('A. Option 1')];
 
@@ -121,7 +121,7 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
-  withAnswer(answer: string): this {
+  withAnswer(answer: string[]): this {
     this.expectedAnswer = answer;
     return this;
   }
@@ -142,7 +142,7 @@ class MultipleChoiceQuestionBuilder extends QuestionBuilder {
   }
 
   build(): MultipleChoiceQuestion {
-    const options: Option[] = [Option.from(this.expectedAnswer)];
+    const options: Option[] = this.expectedAnswer.map(subject => Option.from(subject));
 
     return new MultipleChoiceQuestion(
       this.label,
