@@ -1,6 +1,6 @@
 import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
-import {Question as DomainQuestion} from "../../domain/training/models/questions/question";
+import {Question} from "../../domain/training/models/questions/question";
 import {BooleanQuestion} from "../../domain/training/models/questions/boolean-question";
 import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
@@ -61,14 +61,14 @@ export class CreateQuiz {
 
 }
 
-function toQuestions(dto: QuizRequest): DomainQuestion[] {
+function toQuestions(dto: QuizRequest): Question[] {
   return [
     ...mapBoolean(dto.booleanQuestions),
     ...mapMultipleChoice(dto.multipleChoiceQuestions)
   ];
 }
 
-function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
+function mapBoolean(questions: BooleanQuestionRequest[]): Question[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
@@ -76,7 +76,7 @@ function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
     ));
 }
 
-function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQuestion[] {
+function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
   return questions
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
@@ -105,7 +105,7 @@ function response(quiz: Quiz): QuizDto {
   };
 }
 
-function toQuestionDto(question: DomainQuestion): QuestionDto {
+function toQuestionDto(question: Question): QuestionDto {
   const questionDto: Partial<QuestionDto> = {
     label: question.label
   };
