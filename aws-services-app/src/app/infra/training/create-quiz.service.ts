@@ -81,19 +81,19 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQu
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
       toExpectedChoice(question.answer),
-      toPossibleOptions(question.options)
+      toOptions(question.options)
     ));
 }
 
 function toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
-  return new ExpectedChoice(toSelectedOption(answer.value), answer.explanation);
+  return new ExpectedChoice(toOption(answer.value), answer.explanation);
 }
 
-function toPossibleOptions(options: string[]): SelectedOption[] {
-  return options.map(toSelectedOption);
+function toOptions(options: string[]): SelectedOption[] {
+  return options.map(toOption);
 }
 
-function toSelectedOption(option: string): SelectedOption {
+function toOption(option: string): SelectedOption {
   return SelectedOption.from(option);
 }
 
