@@ -24,7 +24,7 @@ import {StubGamificationService} from "../../test/stub-gamification";
 import {ForgetHighscoreService} from "../../../domain/scoring/forget-highscore.service";
 import {ScoringAppService} from "../../../domain/scoring/scoring-application.service";
 import {InMemoryCarousel} from "../../../domain/search/services/in-memory-carousel.service";
-import {HighscoreDetailsComponent} from "./highscore-details/highscore-details.component";
+import {HighscoreDetailsComponent} from "./content/highscore-details/highscore-details.component";
 import {FlashCardMetadata} from "../../../domain/search/models/metadata";
 import {Confetti, confettiInjectionToken} from "../../animations/confetti";
 

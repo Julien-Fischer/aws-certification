@@ -1,7 +1,7 @@
 import {Inject, Injectable} from "@angular/core";
-import {Carousel, carouselInjectionToken} from "../../../domain/search/carousel";
-import {FlashCardMetadata} from "../../../domain/search/models/metadata";
-import {FlashCardId} from "../../../domain/shared/flash-card-id";
+import {Carousel, carouselInjectionToken} from "../../../../../domain/search/carousel";
+import {FlashCardMetadata} from "../../../../../domain/search/models/metadata";
+import {FlashCardId} from "../../../../../domain/shared/flash-card-id";
 import {forkJoin, map, Observable} from "rxjs";
 
 export interface Neighbor {

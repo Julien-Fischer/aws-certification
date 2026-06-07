@@ -14,9 +14,9 @@ import { FlashCardId } from "../../../domain/shared/flash-card-id";
 import {Confetti, confettiInjectionToken} from "../../animations/confetti";
 import { AppBackToHomeButtonComponent } from "../generic/back-to-home-button.component";
 import { AppTextPopComponent } from "../../animations/text-pop.component";
-import { HighscoreDetailsComponent } from "./highscore-details/highscore-details.component";
-import { FlashCardNavigationComponent } from "./flash-card-navigation.component";
-import { FlashCardHeaderComponent } from "./flash-card-header.component";
+import { HighscoreDetailsComponent } from "./content/highscore-details/highscore-details.component";
+import { FlashCardNavigationComponent } from "./content/navigation/flash-card-navigation.component";
+import { FlashCardHeaderComponent } from "./content/flash-card-header.component";
 import {ScoringAppService, AnswerResult} from "../../../domain/scoring/scoring-application.service";
 import {Question} from "../../../domain/search/models/question";
 

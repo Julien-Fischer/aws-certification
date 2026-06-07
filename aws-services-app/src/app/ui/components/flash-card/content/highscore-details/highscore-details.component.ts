@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Inject, Input, Output} from '@angular/core';
-import Highscore from "../../../../domain/scoring/models/highscore";
+import Highscore from "../../../../../domain/scoring/models/highscore";
 import {DatePipe} from "@angular/common";
-import {ScoreIndicatorComponent} from "../../generic/score-indicator.component";
-import {Gamification, gamificationInjectionToken} from "../../../../domain/scoring/gamification";
+import {ScoreIndicatorComponent} from "../../../generic/score-indicator.component";
+import {Gamification, gamificationInjectionToken} from "../../../../../domain/scoring/gamification";
 
 @Component({
   selector: 'app-highscore-details',

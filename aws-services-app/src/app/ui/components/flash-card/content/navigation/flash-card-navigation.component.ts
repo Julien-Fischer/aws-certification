@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {Neighbor, Neighbors, NavigationService} from './navigation.service';
-import {FlashCardId} from "../../../domain/shared/flash-card-id";
+import {FlashCardId} from "../../../../../domain/shared/flash-card-id";
 
 @Component({
   selector: 'app-flash-card-navigation',

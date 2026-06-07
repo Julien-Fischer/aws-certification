@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlashCardMetadata } from '../../../domain/search/models/metadata';
+import { FlashCardMetadata } from '../../../../domain/search/models/metadata';
 
 @Component({
   selector: 'app-flash-card-header',

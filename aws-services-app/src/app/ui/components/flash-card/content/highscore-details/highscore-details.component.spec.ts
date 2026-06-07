@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HighscoreDetailsComponent } from './highscore-details.component';
-import {gamificationInjectionToken} from "../../../../domain/scoring/gamification";
-import {GamificationService} from "../../../services/gamification.service";
-import GamificationLocalStorageAccessor, {GAMIFICATION_STORAGE} from "../../../../infra/scoring/gamification-local-storage-accessor";
+import {gamificationInjectionToken} from "../../../../../domain/scoring/gamification";
+import {GamificationService} from "../../../../services/gamification.service";
+import GamificationLocalStorageAccessor, {GAMIFICATION_STORAGE} from "../../../../../infra/scoring/gamification-local-storage-accessor";
 
 describe('HighscoreDetailsComponent', () => {
   let component: HighscoreDetailsComponent;
