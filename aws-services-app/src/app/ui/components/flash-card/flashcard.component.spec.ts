@@ -316,11 +316,8 @@ class FlashCardComponentPage extends PageObject<FlashcardComponent> {
   }
 
   get resetButton(): HTMLElement {
-    // return this.lookupByDataTestId('reset-highscore-button');
     const childHost = this.fixture.debugElement.query(By.directive(HighscoreDetailsComponent));
-    const button = childHost.nativeElement.querySelector('[data-test-id="reset-highscore-button"]');
-
-    return button;
+    return childHost.nativeElement.querySelector('[data-test-id="reset-highscore-button"]');
   }
 
   get highscore(): Highscore {
