@@ -86,29 +86,51 @@ describe('SendAnswer', () => {
   })
 
   describe('multiple choice evaluation', () => {
-    it('is correct when selection equals expected combination regardless of order', () => {
-      having(aQuiz()
-        .identified(IAM_QUIZ)
-        .with(
-          aMultipleChoiceQuestion()
-            .withAnswer(['A. Option 1', 'C. Option 3'])
-            .withOptions(
-              anOption().withValue('A. Option 1'),
-              anOption().withValue('B. Option 2'),
-              anOption().withValue('C. Option 3'),
-              anOption().withValue('D. Option 4')
-            )
-        ));
+    describe('is correct', () => {
+      it('when selection equals expected combination', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer(['A. Option 1', 'C. Option 3'])
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
 
-      const result = send(['A', 'C']).toQuiz(IAM_QUIZ);
+        const result = send(['A', 'C']).toQuiz(IAM_QUIZ);
 
-      expectResult(result)
-        .toBeCorrect()
-        .toHaveExpectedAnswer(['A', 'C'])
-        .toHaveExpectedAnswer(['C', 'A']);
+        expectResult(result)
+          .toBeCorrect()
+          .toHaveExpectedAnswer(['A', 'C']);
+      })
+
+      it('when selection equals expected combination regardless of order', () => {
+        having(aQuiz()
+          .identified(IAM_QUIZ)
+          .with(
+            aMultipleChoiceQuestion()
+              .withAnswer(['A. Option 1', 'C. Option 3'])
+              .withOptions(
+                anOption().withValue('A. Option 1'),
+                anOption().withValue('B. Option 2'),
+                anOption().withValue('C. Option 3'),
+                anOption().withValue('D. Option 4')
+              )
+          ));
+
+        const result = send(['C', 'A']).toQuiz(IAM_QUIZ);
+
+        expectResult(result)
+          .toBeCorrect()
+          .toHaveExpectedAnswer(['A', 'C']);
+      })
     })
 
-    describe('is incorrect when selection differs from expected combination', () => {
+    describe('is incorrect', () => {
       it('when selection is smaller than expected combination', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
