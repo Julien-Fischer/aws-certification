@@ -1,6 +1,5 @@
 import {beforeEach, describe, expect, it} from "vitest";
 import {TestBed} from "@angular/core/testing";
-import {QuizRequest, CreateQuiz, QuizDto, QuestionDto} from "../quiz-publisher.service";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../shuffle-provider";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
@@ -11,6 +10,7 @@ import {QuizId} from "../../../domain/training/quiz-id";
 import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
 import {Quiz} from "../../../domain/training/quiz";
 import {Option} from "../../../domain/search/models/question";
+import {CreateQuiz, QuestionDto, QuizDto, QuizRequest} from "../create-quiz.service";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -37,7 +37,7 @@ class MockShuffle implements Shuffle {
 
 }
 
-describe('QuizPublisher', () => {
+describe('CreateQuiz', () => {
 
   let quizPublisher: CreateQuiz;
   let shuffleProvider: ShuffleProvider;

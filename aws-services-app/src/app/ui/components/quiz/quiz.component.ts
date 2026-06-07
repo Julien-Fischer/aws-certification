@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
 import {MultipleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
 import {ResultDto, SendAnswer} from "../../../infra/training/send-answer";
-import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/quiz-publisher.service";
 import Score from "../../../domain/scoring/models/score";
 import Percentage from "../../../domain/scoring/models/percentage";
+import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/create-quiz.service";
 
 export interface ProgressUpdate {
   score: Score;
