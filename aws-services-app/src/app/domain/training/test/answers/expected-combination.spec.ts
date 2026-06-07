@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {Combination} from "../../models/answers/combination";
+import {ExpectedCombination} from "../../models/answers/expected-combination";
 import {Option} from "../../models/option";
 
 describe('Combination', () => {
@@ -9,14 +9,14 @@ describe('Combination', () => {
       Option.from('A. Option A'),
       Option.from('B. Option B')
     ];
-    const answer = new Combination(options);
+    const answer = new ExpectedCombination(options);
 
     expect(answer.value).toBe(options);
   });
 
   describe('accepts', () => {
     it('single value', () => {
-      const expectedAnswer = new Combination([
+      const expectedAnswer = new ExpectedCombination([
         Option.from('A. Option A')
       ]);
 
@@ -26,7 +26,7 @@ describe('Combination', () => {
     })
 
     it('mutliple values', () => {
-      const expectedAnswer = new Combination([
+      const expectedAnswer = new ExpectedCombination([
         Option.from('A. Option A'),
         Option.from('B. Option B')
       ]);
@@ -40,7 +40,7 @@ describe('Combination', () => {
 
   describe('explanation', () => {
     it('has an explanation', () => {
-      const expectedAnswer = new Combination([
+      const expectedAnswer = new ExpectedCombination([
         Option.from('A. Option A'),
         Option.from('B. Option B')
       ], 'Explanation');
@@ -49,7 +49,7 @@ describe('Combination', () => {
     })
 
     it('is optional', () => {
-      const expectedAnswer = new Combination([
+      const expectedAnswer = new ExpectedCombination([
         Option.from('A. Option A'),
         Option.from('B. Option B')
       ]);
@@ -59,7 +59,7 @@ describe('Combination', () => {
   })
 
   it('toString', () => {
-    const answer = new Combination([
+    const answer = new ExpectedCombination([
       Option.from('A. Option A'),
       Option.from('B. Option B')
     ]);
