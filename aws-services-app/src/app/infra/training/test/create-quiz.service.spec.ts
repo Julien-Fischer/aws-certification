@@ -7,11 +7,10 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
 import {QuizId} from "../../../domain/training/quiz-id";
-import {aUserAnswer, combination} from "../../../domain/training/test/builders/answer-builder";
+import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
 import {Quiz} from "../../../domain/training/quiz";
 import {Option} from "../../../domain/search/models/question";
 import {CreateQuiz, QuestionDto, QuizDto, QuizRequest} from "../create-quiz.service";
-import {ExpectedAnswer} from "../../../domain/training/models/answers/expected-answer";
 import {expectResult} from "../../../domain/training/test/expectations/expect-result";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
