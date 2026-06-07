@@ -11,6 +11,12 @@ export interface ProgressUpdate {
   score: Score;
 }
 
+export interface QuizOptions {
+  label: string;
+  allowMultipleSelection: boolean;
+  values: string[];
+}
+
 @Component({
   selector: 'app-quiz',
   standalone: true,
@@ -31,13 +37,15 @@ export class QuizComponent {
   protected lastResult: ResultDto | null = null;
   protected quizCompleted: boolean = false;
   protected explanation: string | undefined = undefined;
+  protected currentQuizOptions: QuizOptions | null = null;
+  protected pendingNextQuestion: QuizOptions | null = null;
 
   private currentIndex: number = 0;
   private _questions: Question[] = [];
 
   constructor(
-      private sendAnswer: SendAnswer,
-      private createQuiz: CreateQuiz
+    private sendAnswer: SendAnswer,
+    private createQuiz: CreateQuiz
   ) {
   }
 
@@ -56,31 +64,26 @@ export class QuizComponent {
   }
 
   private startQuiz(): void {
-    const booleanQuestions = this._questions.filter(question => !('options' in question)) as BooleanQuestion[];
-    const multipleChoiceQuestions = this._questions.filter(q => 'options' in q) as MultipleChoiceQuestion[];
-
-    const request: QuizRequest = {
-      booleanQuestions: booleanQuestions.map(question => ({
-        label: question.label,
-        answer: question.answer.value,
-        explanation: question.answer.explanation
-      })),
-      multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
-        label: question.label,
-        answer: {
-          value: question.answer.value.prefix,
-          explanation: question.answer.explanation
-        },
-        options: question.options.map((option: Option) => `${option.prefix}.${option.label}`)
-      })),
-      shuffle: true
-    };
-    const dto = this.createQuiz.publish(request);
-    this.quiz = dto;
-    this.questionCount = dto.questions;
+    this.quiz = this.sendQuizRequest();
+    this.questionCount = this.quiz.questions;
     const index = this.questions.findIndex(question => question.label === this.quiz?.firstQuestion.label);
     if (index !== -1) {
       this.currentIndex = index;
+    }
+    this.initializeCurrentQuizOptions();
+  }
+
+  private initializeCurrentQuizOptions(): void {
+    const firstQuestion = this.questions[this.currentIndex];
+    if (firstQuestion && 'options' in firstQuestion && Array.isArray(firstQuestion.options)) {
+      const multipleChoiceQ = firstQuestion as MultipleChoiceQuestion;
+      this.currentQuizOptions = {
+        label: multipleChoiceQ.label,
+        allowMultipleSelection: false,
+        values: multipleChoiceQ.options.map((option: Option) => `${option.prefix}.${option.label}`)
+      };
+    } else {
+      this.currentQuizOptions = null;
     }
   }
 
@@ -94,6 +97,8 @@ export class QuizComponent {
     this.progress = 0;
     this.questionIndex = 0;
     this.explanation = undefined;
+    this.currentQuizOptions = null;
+    this.pendingNextQuestion = null;
 
     if (this.questions.length > 0) {
       this.startQuiz();
@@ -109,13 +114,23 @@ export class QuizComponent {
   checkAnswer(): void {
     if (!this.selectedOption) return;
 
-    const answerValue = (typeof this.selectedOption === 'string')
-      ? (this.selectedOption === 'true')
-      : (this.selectedOption as Option).prefix;
+    console.log('selectedOption:', typeof this.selectedOption, this.selectedOption)
+
+    const answerValue = this.createAnswer(this.selectedOption);
+
+    console.log('-> send:', answerValue)
 
     const result: ResultDto = this.sendAnswer.send({
       quizId: this.quiz!.id,
       answer: answerValue
+    });
+
+    console.log('<- received:', {
+      selectedOption: this.selectedOption,
+      answerValue: answerValue,
+      expectedAnswer: result.expectedAnswer,
+      isAnswerCorrect: result.isAnswerCorrect,
+      matchesAnswerFromString: this.matchesAnswerFromString(answerValue + '')
     });
 
     this.lastResult = result;
@@ -124,24 +139,45 @@ export class QuizComponent {
     this.explanation = result.explanation;
     this.showFeedback = true;
     this.isCorrect = result.isAnswerCorrect;
+
+    this.storeNextQuestionData(result);
+
     this.onAnswer.emit(toScore(result));
+  }
+
+  private createAnswer(selectedOption: string | Option): string | boolean {
+    return (typeof selectedOption === 'string')
+      ? (selectedOption === 'true')
+      : selectedOption!.prefix;
+  }
+
+  private storeNextQuestionData(result: ResultDto) {
+    if (result.nextQuestion?.options) {
+      this.pendingNextQuestion = {
+        label: result.nextQuestion.label,
+        allowMultipleSelection: result.nextQuestion.options.allowMultipleSelection,
+        values: result.nextQuestion.options.values
+      };
+    } else if (result.nextQuestion) {
+      this.pendingNextQuestion = {
+        label: result.nextQuestion.label,
+        allowMultipleSelection: false,
+        values: []
+      };
+    }
   }
 
   nextQuestion(): void {
     if (this.lastResult?.nextQuestion) {
-      // TODO: use last questions received from training context instead of in-memory array
-      const nextIndex = this.questions.findIndex(question => question.label === this.lastResult?.nextQuestion?.label);
-      if (nextIndex !== -1) {
-        this.currentIndex = nextIndex;
-        this.selectedOption = null;
-        this.showFeedback = false;
-        this.isCorrect = false;
-        this.lastResult = null;
-        this.questionIndex++;
-      } else {
-        console.error('Next question not found in the list', this.lastResult.nextQuestion);
-        this.quizCompleted = true;
-      }
+      // Now apply the pending next question
+      this.currentQuizOptions = this.pendingNextQuestion;
+      this.pendingNextQuestion = null;
+
+      this.selectedOption = null;
+      this.showFeedback = false;
+      this.isCorrect = false;
+      this.lastResult = null;
+      this.questionIndex++;
     } else {
       this.quizCompleted = true;
     }
@@ -149,6 +185,20 @@ export class QuizComponent {
 
   get currentQuestion(): Question {
     return this.questions[this.currentIndex];
+  }
+
+  getCurrentQuestionLabel(): string {
+    if (this.currentQuizOptions) {
+      return this.currentQuizOptions.label;
+    }
+    return this.currentQuestion.label;
+  }
+
+  getCurrentQuestionOptions(): Option[] {
+    if (this.currentQuizOptions) {
+      return this.currentQuizOptions.values.map(subject => new Option(subject));
+    }
+    return [];
   }
 
   get renderedExplanation(): string {
@@ -160,21 +210,42 @@ export class QuizComponent {
     return this.lastResult!.outcome!.hasSucceeded;
   }
 
-  matchesAnswer(candidate: string): boolean;
-  matchesAnswer(candidate: Option): boolean;
-  matchesAnswer(candidate: string | Option): boolean {
-    const expected = this.lastResult?.expectedAnswer;
-    const actual = (typeof candidate === 'string') ? candidate : candidate.prefix;
-    return expected === actual;
-  }
-
   protected isLastQuestion(): boolean {
     return this.questionIndex === this.questionCount - 1;
   }
 
-  protected readonly Array = Array;
-}
+  selectOptionFromContext(option: Option): void {
+    if (this.showFeedback) return;
+    this.selectedOption = option;
+  }
 
+  matchesAnswerFromString(candidate: string): boolean {
+    const expected = this.lastResult?.expectedAnswer;
+    const candidateLetter = candidate.split('.')[0];
+    console.log('debug', expected, candidateLetter, expected === candidateLetter)
+    return candidateLetter === expected;
+  }
+
+  hasOptions(): boolean {
+    return this.currentQuizOptions !== null && this.currentQuizOptions?.values.length > 0;
+  }
+
+  protected trackOption(index: number, option: Option): string {
+    return option.toString();
+  }
+
+  private sendQuizRequest(): QuizDto {
+    return this.createQuiz.publish(this.createQuizRequest());
+  }
+
+  private createQuizRequest(): QuizRequest {
+    const booleanQuestions = this._questions.filter(question => !('options' in question)) as BooleanQuestion[];
+    const multipleChoiceQuestions = this._questions.filter(q => 'options' in q) as MultipleChoiceQuestion[];
+
+    return toQuizRequest(booleanQuestions, multipleChoiceQuestions);
+  }
+
+}
 
 function toScore(result: ResultDto): ProgressUpdate {
   return {
@@ -183,4 +254,26 @@ function toScore(result: ResultDto): ProgressUpdate {
       new Percentage(result.accuracy)
     )
   }
+}
+
+function toQuizRequest(
+  booleanQuestions: BooleanQuestion[],
+  multipleChoiceQuestions: MultipleChoiceQuestion[]
+): QuizRequest {
+  return {
+    booleanQuestions: booleanQuestions.map(question => ({
+      label: question.label,
+      answer: question.answer.value,
+      explanation: question.answer.explanation
+    })),
+    multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
+      label: question.label,
+      answer: {
+        value: question.answer.value.prefix,
+        explanation: question.answer.explanation
+      },
+      options: question.options.map((option: Option) => `${option.prefix}.${option.label}`)
+    })),
+    shuffle: true
+  };
 }

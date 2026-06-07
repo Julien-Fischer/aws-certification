@@ -12,28 +12,28 @@
               Question {{ questionIndex + 1 }} of {{ questionCount }}
             </h5>
             <p data-test-id="question-text" class="lead fw-bold">
-              {{ currentQuestion.label }}
+              {{ getCurrentQuestionLabel() }}
             </p>
         </div>
 
         <div class="options-section mb-4">
-            @if (currentQuestion && 'options' in currentQuestion && Array.isArray(currentQuestion.options)) {
-                @for (option of currentQuestion.options; track option.value; let index = $index) {
-                    <div (click)="selectOption(option)"
-                         [class.selected]="selectedOption === option"
-                         [class.correct]="showFeedback && matchesAnswer(option)"
-                         [class.wrong]="showFeedback && selectedOption === option && !matchesAnswer(option)"
-                         class="option-card p-3 mb-2 border rounded transition {{showFeedback ? 'disabled' : ''}}"
-                    >
-                        <div class="d-flex align-items-center">
-                            <div class="option-indicator me-3 bg-gray-500 dark:bg-gray-700 text-white
-                            rounded-circle d-flex align-items-center justify-content-center font-weight-bold">
-                                {{ option.prefix }}
-                            </div>
-                            <div class="option-label">{{ option.label }}</div>
-                        </div>
+          @if (hasOptions()) {
+              @for (option of getCurrentQuestionOptions(); track trackOption($index, option); let index = $index) {
+                <div (click)="selectOptionFromContext(option)"
+                     [class.selected]="selectedOption?.toString() === option.toString()"
+                     [class.correct]="showFeedback && matchesAnswerFromString(option.value)"
+                     [class.wrong]="showFeedback && selectedOption?.toString() === option.toString() && !matchesAnswerFromString(option.value)"
+                     class="option-card p-3 mb-2 border rounded transition {{showFeedback ? 'disabled' : ''}}"
+                >
+                  <div class="d-flex align-items-center">
+                    <div class="option-indicator me-3 bg-gray-500 dark:bg-gray-700 text-white
+                                  rounded-circle d-flex align-items-center justify-content-center font-weight-bold">
+                      {{ option.prefix }}
                     </div>
-                }
+                    <div class="option-label">{{ option.label }}</div>
+                  </div>
+                </div>
+              }
             }
 
             @else {
