@@ -2,7 +2,7 @@ import {UserAnswer} from "./user-answer";
 import {ExpectedAnswer} from "./expected-answer";
 import {Option} from "./option";
 
-export class Selection implements ExpectedAnswer<Option[]> {
+export class Combination implements ExpectedAnswer<Option[]> {
 
   readonly #brand = Symbol();
 

@@ -1,22 +1,22 @@
 import {describe, it, expect} from 'vitest';
-import {Selection} from "../models/selection";
+import {Combination} from "../models/combination";
 import {Option} from "../models/option";
 
-describe('Selection', () => {
+describe('Combination', () => {
 
   it('constructs', () => {
-    const selected = [
+    const options = [
       Option.from('A. Option A'),
       Option.from('B. Option B')
     ];
-    const answer = new Selection(selected);
+    const answer = new Combination(options);
 
-    expect(answer.value).toBe(selected);
+    expect(answer.value).toBe(options);
   });
 
   describe('accepts', () => {
     it('single value', () => {
-      const expectedAnswer = new Selection([
+      const expectedAnswer = new Combination([
         Option.from('A. Option A')
       ]);
 
@@ -26,7 +26,7 @@ describe('Selection', () => {
     })
 
     it('mutliple values', () => {
-      const expectedAnswer = new Selection([
+      const expectedAnswer = new Combination([
         Option.from('A. Option A'),
         Option.from('B. Option B')
       ]);
@@ -39,7 +39,7 @@ describe('Selection', () => {
   })
 
   it('toString', () => {
-    const answer = new Selection([
+    const answer = new Combination([
       Option.from('A. Option A'),
       Option.from('B. Option B')
     ]);
