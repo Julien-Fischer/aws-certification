@@ -171,10 +171,10 @@ describe('Quiz', () => {
       it('explanation', () => {
         const quiz = aQuiz()
           .with(
-            aSingleChoiceQuestion()
+            aSingleChoiceQuestion().withExplanation('Explanation for incorrect option 1')
               .withAnswer('B. Correct answer')
               .withOptions(
-                anOption().withValue('A. Incorrect option 1').withExplanation('Explanation for incorrect option 1'),
+                anOption().withValue('A. Incorrect option 1'),
                 anOption().withValue('B. Correct Answer'),
                 anOption().withValue('C. Incorrect option 2'),
               )

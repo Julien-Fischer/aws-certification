@@ -123,7 +123,7 @@ describe('QuizComponent', () => {
 
     it('displays options for multiple choice quiz', async () => {
         await having({
-            question: 'Which feature provides cross-Region disaster recovery for Aurora?',
+            label: 'Which feature provides cross-Region disaster recovery for Aurora?',
             answer: new Answer(new Option('B. Aurora Global Database')),
             options: [
                 new Option('A. Aurora Replicas'),
@@ -202,7 +202,7 @@ describe('QuizComponent', () => {
     it('marks incorrect option when submitting wrong answer', async () => {
         await having(
             {
-                question: 'Which feature provides cross-Region disaster recovery for Aurora?',
+                label: 'Which feature provides cross-Region disaster recovery for Aurora?',
                 answer: new Answer(new Option('B. Aurora Global Database')),
                 options: [
                     new Option('A. Aurora Replicas'),
@@ -412,11 +412,11 @@ function aBooleanQuestion(question?: string): BooleanQuestion {
 }
 
 function aTrueStatement(question: string = 'Question Text'): BooleanQuestion {
-  return {question, answer: new Answer(true)};
+  return {label: question, answer: new Answer(true)};
 }
 
 function aFalseStatement(question: string = 'Question Text'): BooleanQuestion {
-  return {question, answer: new Answer(false)};
+  return {label: question, answer: new Answer(false)};
 }
 
 function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
@@ -441,7 +441,7 @@ class MultipleChoiceQuestionBuilder {
     build(): MultipleChoiceQuestion {
       const correctOption = this.options.find(option => option.prefix === this.correctAnswer) || this.options[1];
       return {
-        question: 'Which feature provides cross-Region disaster recovery for Aurora?',
+        label: 'Which feature provides cross-Region disaster recovery for Aurora?',
         answer: new Answer(correctOption!),
         options: this.options
       }

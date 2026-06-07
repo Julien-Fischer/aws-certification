@@ -130,7 +130,7 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveMultipleChoiceQuestions([
                     {
-                        question: 'Some question?',
+                        label: 'Some question?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                         answer: new Answer(new Option('C. Option C'))
                     }
@@ -156,12 +156,12 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveMultipleChoiceQuestions([
                     {
-                        question: 'Some question?',
+                        label: 'Some question?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                         answer: new Answer(new Option('C. Option C'))
                     },
                     {
-                        question: 'Some other question?',
+                        label: 'Some other question?',
                         options: toOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'),
                         answer: new Answer(new Option('B. Option 2'))
                     }
@@ -228,7 +228,7 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveBooleanQuestions([
                     {
-                        question: 'A true statement.',
+                        label: 'A true statement.',
                         answer: new Answer(true)
                     }
                 ])
@@ -246,15 +246,15 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveBooleanQuestions([
                     {
-                        question: 'A true statement.',
+                        label: 'A true statement.',
                         answer: new Answer(true)
                     },
                     {
-                        question: 'A false statement.',
+                        label: 'A false statement.',
                         answer: new Answer(false)
                     },
                     {
-                        question: 'Another true statement.',
+                        label: 'Another true statement.',
                         answer: new Answer(true)
                     }
                 ])
@@ -305,7 +305,7 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveMultipleChoiceQuestions([
                         {
-                            question: 'Some question?',
+                            label: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                             answer: new Answer(new Option('C. Option C'), explanation)
                         }
@@ -343,12 +343,12 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveMultipleChoiceQuestions([
                         {
-                            question: 'Some question?',
+                            label: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
                             answer: new Answer(new Option('C. Option C'), explanation1)
                         },
                         {
-                            question: 'Some other question?',
+                            label: 'Some other question?',
                             options: toOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'),
                             answer: new Answer(new Option('B. Option 2'), 'explanation2')
                         }
@@ -381,7 +381,7 @@ describe('MarkdownParserService', () => {
             expectFlashCard(parsed)
                 .toHaveBooleanQuestions([
                     {
-                        question: 'A true statement',
+                        label: 'A true statement',
                         answer: new Answer(true, explanation)
                     }
                 ])
@@ -401,7 +401,7 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveBooleanQuestions([
                         {
-                            question: 'A true statement',
+                            label: 'A true statement',
                             answer: new Answer(true, 'explanation')
                         }
                     ])
@@ -424,11 +424,11 @@ describe('MarkdownParserService', () => {
                 expectFlashCard(parsed)
                     .toHaveBooleanQuestions([
                         {
-                            question: 'A true statement',
+                            label: 'A true statement',
                             answer: new Answer(true, 'inline explanation')
                         },
                         {
-                            question: 'A false statement',
+                            label: 'A false statement',
                             answer: new Answer(false, 'multiline explanation')
                         }
                     ])
@@ -608,13 +608,13 @@ function aFlashCard(): FlashCardStringBuilder {
 }
 
 interface ExpectedMultipleChoiceQuestion {
-    question: string;
+    label: string;
     options: Option[];
     answer: Answer<Option>;
 }
 
 interface ExpectedBooleanQuestion {
-    question: string;
+    label: string;
     answer: Answer<boolean>;
 }
 

@@ -1,13 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import {SingleChoiceQuestion} from "../../models/questions/single-choice-question";
-import {Choice} from "../models/choice";
 import {Option} from "../../models/option";
+import {ExpectedChoice} from "../../models/answers/expected-choice";
 
 describe('SingleChoiceQuestion', () => {
   it('has a correct answer', () => {
     const question = new SingleChoiceQuestion(
       `What does IAM stand for?`,
-      new Choice(Option.from('C. Identity and Access Management')),
+      new ExpectedChoice(Option.from('C. Identity and Access Management')),
       [
         Option.from(`A. I Accidentally Managed`),
         Option.from(`B. It's Always Misconfigured`),
@@ -20,40 +20,35 @@ describe('SingleChoiceQuestion', () => {
     expect(question.hasAnswer('B')).toBe(false);
   })
 
-  describe('findExplanationFor', () => {
-    it('finds explanation for any answer', () => {
+  describe('explanation', () => {
+    it('has an explanation', () => {
       const question = new SingleChoiceQuestion(
         `Which option is correct?`,
-        new Choice(Option.from('C. Correct Option')),
+        new ExpectedChoice(Option.from('C. Correct Option'), 'Explanation'),
         [
-          Option.from('A. Option 1', 'Explanation for Option A'),
+          Option.from('A. Option 1'),
           Option.from('B. Option 2'),
-          Option.from('C. Correct Option', 'Explanation for Option C'),
-          Option.from('D. Option 4', 'Explanation for Option D'),
+          Option.from('C. Correct Option'),
+          Option.from('D. Option 4')
         ]
       );
 
-      expect(question.findExplanationFor('C'))
-        .toBe('Explanation for Option C');
-
-      expect(question.findExplanationFor('D'))
-        .toBe('Explanation for Option D');
+      expect(question.explanation).toBe('Explanation');
     })
 
     it('is optional', () => {
       const question = new SingleChoiceQuestion(
         `Which option is correct?`,
-        new Choice(Option.from('C. Correct Option')),
+        new ExpectedChoice(Option.from('C. Correct Option')),
         [
-          Option.from('A. Option 1', 'Explanation for Option A'),
+          Option.from('A. Option 1'),
           Option.from('B. Option 2'),
-          Option.from('C. Correct Option', 'Explanation for Option C'),
-          Option.from('D. Option 4', 'Explanation for Option D'),
+          Option.from('C. Correct Option'),
+          Option.from('D. Option 4')
         ]
       );
 
-      expect(question.findExplanationFor('B'))
-        .toBeUndefined();
+      expect(question.explanation).toBeUndefined();
     })
   })
 })

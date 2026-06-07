@@ -67,8 +67,8 @@ describe('CreateQuiz', () => {
           {label: 'statement 2', answer: true}
         ],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
-          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
       }
 
@@ -85,8 +85,8 @@ describe('CreateQuiz', () => {
           {label: 'statement 2', answer: true}
         ],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
-          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
       }
 
@@ -104,8 +104,8 @@ describe('CreateQuiz', () => {
           {label: 'statement 2', answer: true}
         ],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
-          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
       }
 
@@ -121,8 +121,8 @@ describe('CreateQuiz', () => {
       const dto: QuizRequest = {
         booleanQuestions: [],
         multipleChoiceQuestions: [
-          {label: 'question 1', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]},
-          {label: 'question 2', answer: {value: 'A. option 1'}, options: [{value: 'A. option 1'}, {value: 'B. option 2'}]}
+          {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
+          {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
       }
 
@@ -153,18 +153,18 @@ describe('CreateQuiz', () => {
           multipleChoiceQuestions: [
             {
               label: 'question 1',
-              answer: {value: 'A. option 1'},
+              answer: {value: 'A. option 1', explanation: 'Explanation 3'},
               options: [
-                {value: 'A. option 1', explanation: 'Explanation 2'},
-                {value: 'B. option 2'}
+                'A. option 1',
+                'B. option 2'
               ]
             },
             {
               label: 'question 2',
               answer: {value: 'A. option 1'},
               options: [
-                {value: 'A. option 1'},
-                {value: 'B. option 2', explanation: 'Explanation 3'}
+                'A. option 1',
+                'B. option 2'
               ]
             }
           ]
@@ -187,18 +187,18 @@ describe('CreateQuiz', () => {
           multipleChoiceQuestions: [
             {
               label: 'question 1',
-              answer: {value: 'A. option 1'},
+              answer: {value: 'A. option 1', explanation: 'Explanation 3'},
               options: [
-                {value: 'A. option 1', explanation: 'Explanation 2'},
-                {value: 'B. option 2'}
+                'A. option 1',
+                'B. option 2'
               ]
             },
             {
               label: 'question 2',
               answer: {value: 'A. option 1'},
               options: [
-                {value: 'A. option 1'},
-                {value: 'B. option 2', explanation: 'Explanation 3'}
+                'A. option 1',
+                'B. option 2'
               ]
             }
           ]
@@ -212,7 +212,7 @@ describe('CreateQuiz', () => {
         const result = quiz.submit(aUserAnswer());
 
         expect(result).toBeDefined();
-        expect(result?.explanation).toBe('Explanation 2');
+        expect(result?.explanation).toBe('Explanation 3');
       })
 
     })

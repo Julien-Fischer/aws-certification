@@ -91,11 +91,11 @@ describe('SendAnswer', () => {
           .identified(IAM_QUIZ)
           .with(
             aSingleChoiceQuestion()
-              .withAnswer('C. Option 3')
+              .withAnswer('C. Option 3').withExplanation('Correct answer explanation')
               .withOptions(
                 anOption().withValue('A. Option 1'),
                 anOption().withValue('B. Option 2'),
-                anOption().withValue('C. Option 3').withExplanation('Correct answer explanation'),
+                anOption().withValue('C. Option 3'),
                 anOption().withValue('D. Option 4')
               )
           ));
@@ -112,10 +112,10 @@ describe('SendAnswer', () => {
           .identified(IAM_QUIZ)
           .with(
             aSingleChoiceQuestion()
-              .withAnswer('C. Option 3')
+              .withAnswer('C. Option 3').withExplanation('Incorrect answer explanation')
               .withOptions(
                 anOption().withValue('A. Option 1'),
-                anOption().withValue('B. Option 2').withExplanation('Incorrect answer explanation'),
+                anOption().withValue('B. Option 2'),
                 anOption().withValue('C. Option 3'),
                 anOption().withValue('D. Option 4')
               )
@@ -150,11 +150,10 @@ describe('SendAnswer', () => {
         having(aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aSingleChoiceQuestion()
+            aSingleChoiceQuestion().withNoExplanation()
               .withOptions(
                 anOption()
                   .withValue('A. Option 1')
-                  .withNoExplanation()
               )
           ));
 

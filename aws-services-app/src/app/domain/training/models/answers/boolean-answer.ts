@@ -3,12 +3,24 @@ import {UserAnswer} from "../user-answer";
 
 export class BooleanAnswer implements ExpectedAnswer<boolean> {
 
-  static readonly TRUE = new BooleanAnswer(true);
-  static readonly FALSE = new BooleanAnswer(false);
+  static ofTrue(explanation?: string): BooleanAnswer {
+    return BooleanAnswer.of(true, explanation);
+  }
+
+  static ofFalse(explanation?: string): BooleanAnswer {
+    return BooleanAnswer.of(false, explanation);
+  }
+
+  static of(value: boolean, explanation?: string): BooleanAnswer {
+    return new BooleanAnswer(value, explanation);
+  }
 
   readonly #brand = Symbol();
 
-  private constructor(readonly value: boolean) { }
+  private constructor(
+    readonly value: boolean,
+    readonly explanation?: string
+  ) { }
 
   accepts(userAnswer: UserAnswer): boolean {
     return this.value === userAnswer;
@@ -16,10 +28,6 @@ export class BooleanAnswer implements ExpectedAnswer<boolean> {
 
   toString(): string {
     return String(this.value.toString());
-  }
-
-  static from(value: boolean): BooleanAnswer {
-    return value ? BooleanAnswer.TRUE : BooleanAnswer.FALSE;
   }
 
 }

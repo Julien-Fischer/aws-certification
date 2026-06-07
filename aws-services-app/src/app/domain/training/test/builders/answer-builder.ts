@@ -1,7 +1,7 @@
 import {UserAnswer} from "../../models/user-answer";
 import {Option} from "../../models/option";
 import {ExpectedAnswer} from "../../models/answers/expected-answer";
-import {Choice} from "../../models/answers/choice";
+import {ExpectedChoice} from "../../models/answers/expected-choice";
 
 export function aUserAnswer(): UserAnswer {
   return 'A';
@@ -12,5 +12,5 @@ export function anAnswer(): ExpectedAnswer<any> {
 }
 
 export function choice(value: string): ExpectedAnswer<any> {
-  return new Choice(Option.from(value));
+  return new ExpectedChoice(Option.from(value));
 }

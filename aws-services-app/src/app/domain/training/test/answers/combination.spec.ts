@@ -38,6 +38,26 @@ describe('Combination', () => {
     })
   })
 
+  describe('explanation', () => {
+    it('has an explanation', () => {
+      const expectedAnswer = new Combination([
+        Option.from('A. Option A'),
+        Option.from('B. Option B')
+      ], 'Explanation');
+
+      expect(expectedAnswer.explanation).toBe('Explanation');
+    })
+
+    it('is optional', () => {
+      const expectedAnswer = new Combination([
+        Option.from('A. Option A'),
+        Option.from('B. Option B')
+      ]);
+
+      expect(expectedAnswer.explanation).toBeUndefined();
+    })
+  })
+
   it('toString', () => {
     const answer = new Combination([
       Option.from('A. Option A'),

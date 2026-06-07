@@ -2,9 +2,8 @@ import {BooleanQuestion} from "../../models/questions/boolean-question";
 import {SingleChoiceQuestion} from "../../models/questions/single-choice-question";
 import {OptionBuilder} from "./option-builder";
 import {Option} from "../../models/option";
-import {ExpectedAnswer} from "../../models/answers/expected-answer";
 import {BooleanAnswer} from "../../models/answers/boolean-answer";
-import {Choice} from "../../models/answers/choice";
+import {ExpectedChoice} from "../../models/answers/expected-choice";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -33,7 +32,7 @@ export abstract class QuestionBuilder {
 class BooleanQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private answer: ExpectedAnswer<boolean> = BooleanAnswer.TRUE;
+  private answer: boolean = true;
   private explanation?: string;
 
   labelled(label: string): this {
@@ -42,7 +41,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
   }
 
   withAnswer(bool: boolean): this {
-    this.answer = BooleanAnswer.from(bool);
+    this.answer = bool;
     return this;
   }
 
@@ -57,7 +56,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
   }
 
   build(): BooleanQuestion {
-    return new BooleanQuestion(this.label, this.answer, this.explanation);
+    return new BooleanQuestion(this.label, BooleanAnswer.of(this.answer, this.explanation));
   }
 
 }
@@ -65,7 +64,8 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 class SingleChoiceQuestionBuilder extends QuestionBuilder {
 
   private label: string = 'question text';
-  private answer: ExpectedAnswer<Option> = new Choice(Option.from('A. Correct answer'));
+  private expectedAnswer: string = 'A. Correct answer';
+  private explanation?: string;
   private options: Option[] = [];
 
   withLabel(label: string): this {
@@ -74,7 +74,7 @@ class SingleChoiceQuestionBuilder extends QuestionBuilder {
   }
 
   withAnswer(answer: string): this {
-    this.answer = new Choice(Option.from(answer));
+    this.expectedAnswer = answer;
     return this;
   }
 
@@ -83,8 +83,22 @@ class SingleChoiceQuestionBuilder extends QuestionBuilder {
     return this;
   }
 
+  withExplanation(explanation: string): this {
+    this.explanation = explanation;
+    return this;
+  }
+
+  withNoExplanation(): this {
+    this.explanation = undefined;
+    return this;
+  }
+
   build(): SingleChoiceQuestion {
-    return new SingleChoiceQuestion(this.label, this.answer, this.options);
+    return new SingleChoiceQuestion(
+      this.label,
+      new ExpectedChoice(Option.from(this.expectedAnswer), this.explanation),
+      this.options
+    );
   }
 
 }

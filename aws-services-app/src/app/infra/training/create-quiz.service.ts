@@ -8,7 +8,7 @@ import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";
 import {Option as SelectedOption} from "../../domain/training/models/option";
 import {BooleanAnswer} from "../../domain/training/models/answers/boolean-answer";
-import {Choice} from "../../domain/training/models/answers/choice";
+import {ExpectedChoice} from "../../domain/training/models/answers/expected-choice";
 
 export interface QuizDto {
   id: string;
@@ -35,14 +35,15 @@ interface BooleanQuestionRequest {
 
 interface MultipleChoiceQuestionRequest {
   label: string;
-  answer: OptionDto;
-  options: OptionDto[];
+  answer: ExpectedAnswerRequest;
+  options: string[];
 }
 
-interface OptionDto {
+interface ExpectedAnswerRequest {
   value: string;
   explanation?: string;
 }
+
 
 @Injectable({ providedIn: 'root' })
 export class CreateQuiz {
@@ -71,8 +72,7 @@ function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
   return questions
     .map(question => new BooleanQuestion(
       question.label,
-      BooleanAnswer.from(question.answer),
-      question.explanation
+      BooleanAnswer.of(question.answer, question.explanation),
     ));
 }
 
@@ -80,17 +80,21 @@ function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): DomainQu
   return questions
     .map(question => new DomainMultipleChoiceQuestion(
       question.label,
-      new Choice(toSelectedOption(question.answer)),
-      toExpectedOption(question.options)
+      toExpectedChoice(question.answer),
+      toPossibleOptions(question.options)
     ));
 }
 
-function toExpectedOption(optionDtos: OptionDto[]): SelectedOption[] {
-  return optionDtos.map(toSelectedOption);
+function toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
+  return new ExpectedChoice(toSelectedOption(answer.value), answer.explanation);
 }
 
-function toSelectedOption(optionDto: OptionDto): SelectedOption {
-  return SelectedOption.from(optionDto.value, optionDto.explanation);
+function toPossibleOptions(options: string[]): SelectedOption[] {
+  return options.map(toSelectedOption);
+}
+
+function toSelectedOption(option: string): SelectedOption {
+  return SelectedOption.from(option);
 }
 
 function response(quiz: Quiz): QuizDto {

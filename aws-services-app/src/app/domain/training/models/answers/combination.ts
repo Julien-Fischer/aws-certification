@@ -6,7 +6,10 @@ export class Combination implements ExpectedAnswer<Option[]> {
 
   readonly #brand = Symbol();
 
-  constructor(readonly value: Option[]) { }
+  constructor(
+    readonly value: Option[],
+    readonly explanation?: string
+  ) { }
 
   accepts(userAnswer: UserAnswer): boolean {
     if (!Array.isArray(userAnswer) || this.value.length !== userAnswer.length) {

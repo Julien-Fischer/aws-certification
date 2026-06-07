@@ -2,18 +2,17 @@ import {UserAnswer} from "./user-answer";
 
 export class Option {
 
-  public static from(value: string, explanation?: string): Option {
+  public static from(value: string): Option {
     const parts = value.split(/\. */);
     const [prefix, label] = parts;
-    return new Option(prefix, label, explanation);
+    return new Option(prefix, label);
   }
 
   readonly #brand = Symbol();
 
   constructor(
     readonly prefix: string,
-    readonly label: string,
-    readonly explanation?: string
+    readonly label: string
   ) {
   }
 

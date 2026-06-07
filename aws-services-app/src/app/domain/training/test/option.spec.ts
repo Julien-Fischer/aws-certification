@@ -45,14 +45,6 @@ describe('Option', () => {
         expect(option.hasPrefix('E')).toBe(false);
     });
 
-    it('has an optional explanation', () => {
-      const option = Option.from('A. Option label');
-      const optionWithExplanation = Option.from('A. Option label', 'Explanation');
-
-      expect(option.explanation).toBeUndefined();
-      expect(optionWithExplanation.explanation).toBe('Explanation');
-    })
-
     it('toString returns the original value', () => {
         const option = Option.from('Z. Original value');
 

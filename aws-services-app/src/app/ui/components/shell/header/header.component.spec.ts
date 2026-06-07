@@ -2,13 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { HeaderComponent } from './header.component';
-import {GamificationService} from "../../../services/gamification.service";
 import {provideGamification} from "../../../test/stub-gamification";
 import {flashCardProviderInjectionToken} from "../../../../domain/search/flash-card-provider";
 import {MockFlashCardProvider} from "../../../../domain/search/test/mock-flashcard-provider";
 import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
-import { SearchService } from '../../../../domain/search/services/search.service';
 import {scoreProviderInjectionToken} from "../../../../domain/scoring/score-provider";
 import Highscore from "../../../../domain/scoring/models/highscore";
 import {forgetHighscoreInjectionToken} from "../../../../domain/scoring/highscore-eraser";

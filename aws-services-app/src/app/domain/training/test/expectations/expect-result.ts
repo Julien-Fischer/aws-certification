@@ -54,6 +54,11 @@ export function expectResult(result: Result) {
       return this;
     },
 
+    toHaveNoExplanation() {
+      expect(result.explanation).toBeUndefined();
+      return this;
+    },
+
     toHaveNoNextQuestion() {
       expect(result.nextQuestion).toBeUndefined();
       return this;

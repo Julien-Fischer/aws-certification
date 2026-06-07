@@ -61,26 +61,24 @@ export class QuizComponent {
 
     const request: QuizRequest = {
       booleanQuestions: booleanQuestions.map(question => ({
-        label: question.question,
+        label: question.label,
         answer: question.answer.value,
         explanation: question.answer.explanation
       })),
       multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
-        label: question.question,
+        label: question.label,
         answer: {
           value: question.answer.value.prefix,
           explanation: question.answer.explanation
         },
-        options: question.options.map((option: Option) => ({
-          value: `${option.prefix}.${option.label}`
-        }))
+        options: question.options.map((option: Option) => `${option.prefix}.${option.label}`)
       })),
       shuffle: true
     };
     const dto = this.createQuiz.publish(request);
     this.quiz = dto;
     this.questionCount = dto.questions;
-    const index = this.questions.findIndex(q => q.question === this.quiz?.firstQuestion.label);
+    const index = this.questions.findIndex(question => question.label === this.quiz?.firstQuestion.label);
     if (index !== -1) {
       this.currentIndex = index;
     }
@@ -131,7 +129,7 @@ export class QuizComponent {
 
   nextQuestion(): void {
     if (this.lastResult?.nextQuestion) {
-      const nextIndex = this.questions.findIndex(q => q.question === this.lastResult?.nextQuestion);
+      const nextIndex = this.questions.findIndex(q => q.label === this.lastResult?.nextQuestion);
       if (nextIndex !== -1) {
         this.currentIndex = nextIndex;
         this.selectedOption = null;

@@ -14,6 +14,8 @@ export abstract class Question {
     return this.answer.accepts(answer);
   }
 
-  abstract findExplanationFor(answer: UserAnswer): string | undefined;
+  get explanation(): string | undefined {
+    return this.answer.explanation;
+  };
 
 }

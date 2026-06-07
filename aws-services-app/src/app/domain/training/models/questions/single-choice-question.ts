@@ -1,6 +1,5 @@
 import {Question} from "./question";
 import {Shuffle} from "../../shuffle";
-import {UserAnswer} from "../user-answer";
 import {Option} from "../option";
 import {ExpectedAnswer} from "../answers/expected-answer";
 
@@ -14,12 +13,6 @@ export class SingleChoiceQuestion extends Question {
     readonly options: Option[]
   ) {
     super(label, answer);
-  }
-
-  findExplanationFor(answer: UserAnswer): string | undefined {
-    return this.options
-      .find((option) => option.matches(answer))
-      ?.explanation;
   }
 
   shuffle(options: Option[], strategy: Shuffle) {

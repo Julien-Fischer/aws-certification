@@ -127,7 +127,7 @@ class BooleanQuestionParser {
 
         const answer = this.parseBooleanAnswerLine(answerLine, explanation);
 
-        return {question: questionText, answer};
+        return {label: questionText, answer};
     }
 
     private parseBooleanAnswerLine(line: string, explanation?: string): Answer<boolean> {
@@ -180,7 +180,7 @@ class MultipleChoiceQuestionParser {
             throw new Error(`Invalid Multiple Choice question format (missing answer): ${block}`);
         }
 
-        return {question: questionText, options, answer};
+        return {label: questionText, options, answer};
     }
 
     private parseMultipleChoiceAnswerLines(block: string): { options: Option[], answer: Answer<Option> | null } {

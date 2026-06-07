@@ -133,7 +133,7 @@ export class Quiz {
   }
 
   private getExplanationFor(answer: UserAnswer): string | undefined {
-    return this.currentQuestion.findExplanationFor(answer);
+    return this.currentQuestion.explanation;
   }
 
   private toPercentage(progress: number): Percentage {

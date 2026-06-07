@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from "vitest";
 import {QuizId} from "../quiz-id";
 import {expectResult} from "./expectations/expect-result";
 import {aQuiz, QuizBuilder} from "./builders/quiz-builder";
-import {aFalseStatement, aTrueStatement} from "./builders/question-builder";
+import {aFalseStatement, aSingleChoiceQuestion, aTrueStatement} from "./builders/question-builder";
 import {TestBed} from "@angular/core/testing";
 import {SearchService} from "../../search/services/search.service";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
@@ -45,8 +45,8 @@ describe('AnswerEvaluator', () => {
         aQuiz()
           .identified(IAM_QUIZ)
           .with(
-            aTrueStatement().withExplanation('Explanation for question 1'),
-            aFalseStatement().withExplanation('Explanation for question 2')
+            aTrueStatement(),
+            aFalseStatement()
           )
       );
 
@@ -56,8 +56,7 @@ describe('AnswerEvaluator', () => {
         .toBeCorrect()
         .toNotBeComplete()
         .toHaveProgress(50)
-        .toHaveAccuracy(50)
-        .toHaveExplanation('Explanation for question 1');
+        .toHaveAccuracy(50);
 
       const lastAnswer = answerEvaluator.submit(IAM_QUIZ, false);
 
@@ -65,15 +64,14 @@ describe('AnswerEvaluator', () => {
         .toBeCorrect()
         .toBeComplete()
         .toHaveProgress(100)
-        .toHaveAccuracy(100)
-        .toHaveExplanation('Explanation for question 2');
+        .toHaveAccuracy(100);
     })
 
     it('evaluates incorrect answers', () => {
       having(
         aQuiz()
           .identified(IAM_QUIZ)
-          .with(aTrueStatement().withExplanation('Explanation for question 1'))
+          .with(aTrueStatement())
       );
 
       const result = answerEvaluator.submit(IAM_QUIZ, false);
@@ -82,9 +80,35 @@ describe('AnswerEvaluator', () => {
         .toBeIncorrect()
         .toBeComplete()
         .toHaveAccuracy(0)
-        .toHaveCorrectAnswer(true)
-        .toHaveExplanation('Explanation for question 1');
+        .toHaveCorrectAnswer(true);
     })
+  })
+
+  it('has an optional explanation', () => {
+    having(
+      aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().withExplanation('Explanation for question 1'),
+          aFalseStatement().withNoExplanation(),
+          aSingleChoiceQuestion().withExplanation('Explanation for question 3'),
+          aSingleChoiceQuestion().withNoExplanation()
+        )
+    );
+
+    const first = answerEvaluator.submit(IAM_QUIZ, true);
+    expectResult(first)
+      .toHaveExplanation('Explanation for question 1');
+
+    const second = answerEvaluator.submit(IAM_QUIZ, false);
+    expectResult(second).toHaveNoExplanation();
+
+    const third = answerEvaluator.submit(IAM_QUIZ, 'A');
+    expectResult(third)
+      .toHaveExplanation('Explanation for question 3');
+
+    const fourth = answerEvaluator.submit(IAM_QUIZ, 'A');
+    expectResult(fourth).toHaveNoExplanation();
   })
 
   describe('saving', () => {

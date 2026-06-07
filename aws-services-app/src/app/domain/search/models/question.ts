@@ -1,5 +1,5 @@
 export interface Question {
-    question: string;
+    label: string;
     answer: Answer<any>;
 }
 
