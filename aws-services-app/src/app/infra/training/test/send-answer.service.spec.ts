@@ -40,7 +40,7 @@ describe('SendAnswer', () => {
       .toThrow(`Quiz with id 'unknown-quiz' not found`);
   })
 
-  describe('multiple choice evaluation', () => {
+  describe('single choice evaluation', () => {
     it('is correct when prefix is correct', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
