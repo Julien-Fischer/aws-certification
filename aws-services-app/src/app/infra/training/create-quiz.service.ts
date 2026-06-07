@@ -48,70 +48,81 @@ interface ExpectedAnswerRequest {
 @Injectable({ providedIn: 'root' })
 export class CreateQuiz {
 
+  private quizMapper = new DtoToQuestion();
+  private responseMapper = new QuizToResponse();
+
   constructor(
     @Inject(startQuizInjectionToken) private startQuiz: StartQuiz,
     @Inject(shuffleProviderInjectionToken) private shuffleProvider: ShuffleProvider,
   ) { }
 
   publish(quizDto: QuizRequest): QuizDto {
-    const questions = toQuestions(quizDto);
+    const questions = this.quizMapper.toQuestions(quizDto);
     const quiz = this.startQuiz.with(questions, this.shuffleProvider.get(quizDto.shuffle ?? false));
-    return response(quiz);
+    return this.responseMapper.toResponse(quiz);
   }
 
 }
 
-function toQuestions(dto: QuizRequest): Question[] {
-  return [
-    ...mapBoolean(dto.booleanQuestions),
-    ...mapMultipleChoice(dto.multipleChoiceQuestions)
-  ];
-}
+class DtoToQuestion {
 
-function mapBoolean(questions: BooleanQuestionRequest[]): Question[] {
-  return questions
-    .map(question => new BooleanQuestion(
-      question.label,
-      ExpectedBoolean.of(question.answer, question.explanation),
-    ));
-}
-
-function mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
-  return questions
-    .map(question => new DomainMultipleChoiceQuestion(
-      question.label,
-      toExpectedChoice(question.answer),
-      toOptions(question.options)
-    ));
-}
-
-function toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
-  return new ExpectedChoice(toOption(answer.value), answer.explanation);
-}
-
-function toOptions(options: string[]): Option[] {
-  return options.map(toOption);
-}
-
-function toOption(option: string): Option {
-  return Option.from(option);
-}
-
-function response(quiz: Quiz): QuizDto {
-  return {
-    id: quiz.id.toString(),
-    questions: quiz.length,
-    firstQuestion: toQuestionDto(quiz.questions()[0])
-  };
-}
-
-function toQuestionDto(question: Question): QuestionDto {
-  const questionDto: Partial<QuestionDto> = {
-    label: question.label
-  };
-  if (question instanceof DomainMultipleChoiceQuestion) {
-    questionDto.options = question.options.map(option => new OptionDto(option.toString()));
+  toQuestions(dto: QuizRequest): Question[] {
+    return [
+      ...this.mapBoolean(dto.booleanQuestions),
+      ...this.mapMultipleChoice(dto.multipleChoiceQuestions)
+    ];
   }
-  return questionDto as QuestionDto;
+
+  private mapBoolean(questions: BooleanQuestionRequest[]): Question[] {
+    return questions
+      .map(question => new BooleanQuestion(
+        question.label,
+        ExpectedBoolean.of(question.answer, question.explanation),
+      ));
+  }
+
+  private mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
+    return questions
+      .map(question => new DomainMultipleChoiceQuestion(
+        question.label,
+        this.toExpectedChoice(question.answer),
+        this.toOptions(question.options)
+      ));
+  }
+
+  private toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
+    return new ExpectedChoice(this.toOption(answer.value), answer.explanation);
+  }
+
+  private toOptions(options: string[]): Option[] {
+    return options.map(this.toOption);
+  }
+
+  private toOption(option: string): Option {
+    return Option.from(option);
+  }
+
+}
+
+class QuizToResponse {
+
+  toResponse(quiz: Quiz): QuizDto {
+    return {
+      id: quiz.id.toString(),
+      questions: quiz.length,
+      firstQuestion: this.toQuestionDto(quiz.questions()[0])
+    };
+  }
+
+  private toQuestionDto(question: Question): QuestionDto {
+    const questionDto: Partial<QuestionDto> = {
+      label: question.label
+    };
+    if (question instanceof DomainMultipleChoiceQuestion) {
+      questionDto.options = question.options.map(option => new OptionDto(option.toString()));
+    }
+    return questionDto as QuestionDto;
+  }
+
 }
 
