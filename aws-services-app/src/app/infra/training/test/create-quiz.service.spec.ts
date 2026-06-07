@@ -181,8 +181,8 @@ describe('CreateQuiz', () => {
 
         const result = quiz.submit(aUserAnswer());
 
-        expect(result).toBeDefined();
-        expect(result?.explanation).toBe('Explanation 1');
+        expectResult(result!)
+          .toHaveExplanation('Explanation 1');
       })
 
       it('handles optional explanations', () => {
@@ -219,8 +219,8 @@ describe('CreateQuiz', () => {
 
         const result = quiz.submit(aUserAnswer());
 
-        expect(result).toBeDefined();
-        expect(result?.explanation).toBe('Explanation 3');
+        expectResult(result!)
+          .toHaveExplanation('Explanation 3');
       })
 
       it('supports multiple choice questions', () => {
