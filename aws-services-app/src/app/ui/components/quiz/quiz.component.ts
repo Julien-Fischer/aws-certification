@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
 import {MultipleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
-import {ResultDto, SendAnswer} from "../../../infra/training/send-answer";
+import {ResultDto, SendAnswer} from "../../../infra/training/send-answer.service";
 import Score from "../../../domain/scoring/models/score";
 import Percentage from "../../../domain/scoring/models/percentage";
 import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/create-quiz.service";

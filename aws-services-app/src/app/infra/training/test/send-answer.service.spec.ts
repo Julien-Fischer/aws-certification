@@ -2,7 +2,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {TestBed} from "@angular/core/testing";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
-import {OutcomeDto, ResultDto, SendAnswer} from "../send-answer";
+import {OutcomeDto, ResultDto, SendAnswer} from "../send-answer.service";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
