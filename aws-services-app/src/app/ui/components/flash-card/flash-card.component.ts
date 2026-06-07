@@ -113,11 +113,11 @@ export class FlashCardComponent implements OnInit, OnDestroy {
         if (!card) {
           return;
         }
-        const { mainContent, booleanQuestions, multipleChoiceQuestions } = card;
+        const { mainContent, booleanQuestions, singleChoiceQuestions } = card;
         const renderer = tableRenderer();
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
-        this.questions = [...booleanQuestions, ...multipleChoiceQuestions];
+        this.questions = [...booleanQuestions, ...singleChoiceQuestions];
         this.loading = false;
       },
       error: (error) => {

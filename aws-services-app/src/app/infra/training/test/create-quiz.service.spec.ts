@@ -66,7 +66,7 @@ describe('CreateQuiz', () => {
           {label: 'statement 1', answer: true},
           {label: 'statement 2', answer: true}
         ],
-        multipleChoiceQuestions: [
+        singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
@@ -84,7 +84,7 @@ describe('CreateQuiz', () => {
           {label: 'statement 1', answer: true},
           {label: 'statement 2', answer: true}
         ],
-        multipleChoiceQuestions: [
+        singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
@@ -103,7 +103,7 @@ describe('CreateQuiz', () => {
           {label: 'statement 1', answer: true},
           {label: 'statement 2', answer: true}
         ],
-        multipleChoiceQuestions: [
+        singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
@@ -117,10 +117,10 @@ describe('CreateQuiz', () => {
       expect(quiz.firstQuestion).toStrictEqual({label: 'statement 1'})
     })
 
-    it('returns created quiz with a multiple choice question', () => {
+    it('returns created quiz with a single choice question', () => {
       const dto: QuizRequest = {
         booleanQuestions: [],
-        multipleChoiceQuestions: [
+        singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
         ]
@@ -150,7 +150,7 @@ describe('CreateQuiz', () => {
             {label: 'statement 1', answer: true, explanation: 'Explanation 1'},
             {label: 'statement 2', answer: true}
           ],
-          multipleChoiceQuestions: [
+          singleChoiceQuestions: [
             {
               label: 'question 1',
               answer: {value: 'A. option 1', explanation: 'Explanation 3'},
@@ -184,7 +184,7 @@ describe('CreateQuiz', () => {
             {label: 'statement 1', answer: true, explanation: 'Explanation 1'},
             {label: 'statement 2', answer: true}
           ],
-          multipleChoiceQuestions: [
+          singleChoiceQuestions: [
             {
               label: 'question 1',
               answer: {value: 'A. option 1', explanation: 'Explanation 3'},

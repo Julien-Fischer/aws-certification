@@ -284,7 +284,7 @@ function aFlashCard() {
     withLearningMaterial(content: string) {
       return {
         mainContent: content,
-        multipleChoiceQuestions: [],
+        singleChoiceQuestions: [],
         booleanQuestions: []
       }
     }

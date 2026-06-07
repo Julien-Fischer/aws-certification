@@ -23,7 +23,7 @@ export interface QuestionDto {
 
 export interface QuizRequest {
   booleanQuestions: BooleanQuestionRequest[],
-  multipleChoiceQuestions: MultipleChoiceQuestionRequest[],
+  singleChoiceQuestions: SingleChoiceQuestionRequest[],
   shuffle?: boolean
 }
 
@@ -33,7 +33,7 @@ interface BooleanQuestionRequest {
   explanation?: string;
 }
 
-interface MultipleChoiceQuestionRequest {
+interface SingleChoiceQuestionRequest {
   label: string;
   answer: ExpectedAnswerRequest;
   options: string[];
@@ -69,7 +69,7 @@ class DtoToQuestion {
   toQuestions(dto: QuizRequest): Question[] {
     return [
       ...this.mapBoolean(dto.booleanQuestions),
-      ...this.mapSingleChoice(dto.multipleChoiceQuestions)
+      ...this.mapSingleChoice(dto.singleChoiceQuestions)
     ];
   }
 
@@ -81,7 +81,7 @@ class DtoToQuestion {
       ));
   }
 
-  private mapSingleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
+  private mapSingleChoice(questions: SingleChoiceQuestionRequest[]): Question[] {
     return questions
       .map(question => new SingleChoiceQuestion(
         question.label,

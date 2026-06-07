@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Answer, MultipleChoiceQuestion, Option, BooleanQuestion} from "../../domain/search/models/question";
+import {Answer, SingleChoiceQuestion, Option, BooleanQuestion} from "../../domain/search/models/question";
 import {FlashCard} from "../../domain/search/models/flash-card";
 
 export type Letter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
@@ -10,7 +10,7 @@ export const LETTERS: Letter[] = ['A', 'B', 'C', 'D', 'E', 'F'];
 })
 export class MarkdownParserService {
 
-    private multipleChoiceQuestionsParser = new MultipleChoiceQuestionParser()
+    private singleChoiceQuestionsParser = new MultipleChoiceQuestionParser()
     private booleanQuestionsParser = new BooleanQuestionParser();
 
     parse(content: string): FlashCard {
@@ -18,16 +18,16 @@ export class MarkdownParserService {
         const mainContent = this.extractMainContent(content, quizSection);
 
         if (!quizSection) {
-            return {mainContent, multipleChoiceQuestions: [], booleanQuestions: []};
+            return {mainContent, singleChoiceQuestions: [], booleanQuestions: []};
         }
 
-        const {multipleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
+        const {singleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
 
-        if (this.hasNoQuizzes(multipleChoiceQuestions, booleanQuestions)) {
+        if (this.hasNoQuizzes(singleChoiceQuestions, booleanQuestions)) {
             throw new Error('No valid questions found in this quiz');
         }
 
-        return {mainContent, multipleChoiceQuestions, booleanQuestions};
+        return {mainContent, singleChoiceQuestions: singleChoiceQuestions, booleanQuestions};
     }
 
     private extractQuizSection(content: string): string | null {
@@ -53,18 +53,18 @@ export class MarkdownParserService {
     }
 
     private parseAllQuizzesFrom(quizContent: string): {
-        multipleChoiceQuestions: MultipleChoiceQuestion[];
+        singleChoiceQuestions: SingleChoiceQuestion[];
         booleanQuestions: BooleanQuestion[];
     } {
-        const {multipleChoiceContent, booleanContent} = this.splitQuizIntoMcAndTf(quizContent);
+        const {multipleChoiceContent, booleanContent} = this.splitQuizSections(quizContent);
 
-        const multipleChoiceQuestions = this.multipleChoiceQuestionsParser.parse(multipleChoiceContent);
+        const singleChoiceQuestions = this.singleChoiceQuestionsParser.parse(multipleChoiceContent);
         const booleanQuestions = this.booleanQuestionsParser.parse(booleanContent);
 
-        return {multipleChoiceQuestions, booleanQuestions};
+        return {singleChoiceQuestions, booleanQuestions};
     }
 
-    private splitQuizIntoMcAndTf(quizContent: string): {
+    private splitQuizSections(quizContent: string): {
         multipleChoiceContent: string;
         booleanContent: string;
     } {
@@ -86,11 +86,11 @@ export class MarkdownParserService {
     }
 
     private hasNoQuizzes(
-        multipleChoiceQuestions: MultipleChoiceQuestion[],
+        singleChoiceQuestions: SingleChoiceQuestion[],
         booleanQuestions: BooleanQuestion[]
     ): boolean {
         return (
-            multipleChoiceQuestions.length === 0 &&
+            singleChoiceQuestions.length === 0 &&
             booleanQuestions.length === 0
         );
     }
@@ -155,18 +155,18 @@ class BooleanQuestionParser {
 
 class MultipleChoiceQuestionParser {
 
-    parse(mcContent: string): MultipleChoiceQuestion[] {
-        if (!mcContent.trim()) return [];
+    parse(multipleChoiceContent: string): SingleChoiceQuestion[] {
+        if (!multipleChoiceContent.trim()) return [];
 
-        const rawQuestions = this.splitMultipleChoiceBlocks(mcContent);
+        const rawQuestions = this.splitMultipleChoiceBlocks(multipleChoiceContent);
         return rawQuestions.map((q) => this.parseMultipleChoiceBlock(q));
     }
 
-    private splitMultipleChoiceBlocks(mcContent: string): string[] {
-        return mcContent.split(/\*\*Q\d+\.\*\*/).slice(1);
+    private splitMultipleChoiceBlocks(multipleChoiceContent: string): string[] {
+        return multipleChoiceContent.split(/\*\*Q\d+\.\*\*/).slice(1);
     }
 
-    private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion {
+    private parseMultipleChoiceBlock(block: string): SingleChoiceQuestion {
         const questionLine = block.split('\n').map(l => l.trim()).find(Boolean) || '';
         const questionText = extractQuestionText(questionLine);
 

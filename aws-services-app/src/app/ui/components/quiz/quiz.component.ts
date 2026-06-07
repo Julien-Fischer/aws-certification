@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import {MultipleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
+import {SingleChoiceQuestion, Option, Question, BooleanQuestion} from "../../../domain/search/models/question";
 import {ResultDto, SendAnswer} from "../../../infra/training/send-answer.service";
 import Score from "../../../domain/scoring/models/score";
 import Percentage from "../../../domain/scoring/models/percentage";
@@ -76,11 +76,11 @@ export class QuizComponent {
   private initializeCurrentQuizOptions(): void {
     const firstQuestion = this.questions[this.currentIndex];
     if (firstQuestion && 'options' in firstQuestion && Array.isArray(firstQuestion.options)) {
-      const multipleChoiceQ = firstQuestion as MultipleChoiceQuestion;
+      const singleChoiceQuestion = firstQuestion as SingleChoiceQuestion;
       this.currentQuizOptions = {
-        label: multipleChoiceQ.label,
+        label: singleChoiceQuestion.label,
         allowMultipleSelection: false,
-        values: multipleChoiceQ.options.map((option: Option) => `${option.prefix}.${option.label}`)
+        values: singleChoiceQuestion.options.map((option: Option) => `${option.prefix}.${option.label}`)
       };
     } else {
       this.currentQuizOptions = null;
@@ -227,9 +227,9 @@ export class QuizComponent {
 
   private createQuizRequest(): QuizRequest {
     const booleanQuestions = this._questions.filter(question => !('options' in question)) as BooleanQuestion[];
-    const multipleChoiceQuestions = this._questions.filter(q => 'options' in q) as MultipleChoiceQuestion[];
+    const singleChoiceQuestions = this._questions.filter(question => 'options' in question) as SingleChoiceQuestion[];
 
-    return toQuizRequest(booleanQuestions, multipleChoiceQuestions);
+    return toQuizRequest(booleanQuestions, singleChoiceQuestions);
   }
 
   protected isOptionIncorrect(option: Option): boolean {
@@ -253,7 +253,7 @@ function toScore(result: ResultDto): ProgressUpdate {
 
 function toQuizRequest(
   booleanQuestions: BooleanQuestion[],
-  multipleChoiceQuestions: MultipleChoiceQuestion[]
+  singleChoiceQuestions: SingleChoiceQuestion[]
 ): QuizRequest {
   return {
     booleanQuestions: booleanQuestions.map(question => ({
@@ -261,7 +261,7 @@ function toQuizRequest(
       answer: question.answer.value,
       explanation: question.answer.explanation
     })),
-    multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
+    singleChoiceQuestions: singleChoiceQuestions.map(question => ({
       label: question.label,
       answer: {
         value: question.answer.value.prefix,

@@ -128,7 +128,7 @@ describe('MarkdownParserService', () => {
             const parsed = service.parse(markdown);
 
             expectFlashCard(parsed)
-                .toHaveMultipleChoiceQuestions([
+                .toHaveSingleChoiceQuestions([
                     {
                         label: 'Some question?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
@@ -154,7 +154,7 @@ describe('MarkdownParserService', () => {
             const parsed = service.parse(markdown);
 
             expectFlashCard(parsed)
-                .toHaveMultipleChoiceQuestions([
+                .toHaveSingleChoiceQuestions([
                     {
                         label: 'Some question?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
@@ -303,7 +303,7 @@ describe('MarkdownParserService', () => {
                 const parsed = service.parse(markdown);
 
                 expectFlashCard(parsed)
-                    .toHaveMultipleChoiceQuestions([
+                    .toHaveSingleChoiceQuestions([
                         {
                             label: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
@@ -341,7 +341,7 @@ describe('MarkdownParserService', () => {
                 const parsed = service.parse(markdown);
 
                 expectFlashCard(parsed)
-                    .toHaveMultipleChoiceQuestions([
+                    .toHaveSingleChoiceQuestions([
                         {
                             label: 'Some question?',
                             options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
@@ -607,7 +607,7 @@ function aFlashCard(): FlashCardStringBuilder {
     return new FlashCardStringBuilder();
 }
 
-interface ExpectedMultipleChoiceQuestion {
+interface ExpectedSingleChoiceQuestion {
     label: string;
     options: Option[];
     answer: Answer<Option>;
@@ -628,8 +628,8 @@ class FlashCardExpectation {
         return this;
     }
 
-    toHaveMultipleChoiceQuestions(expected: ExpectedMultipleChoiceQuestion[]): this {
-        expect(this.flashCard.multipleChoiceQuestions)
+    toHaveSingleChoiceQuestions(expected: ExpectedSingleChoiceQuestion[]): this {
+        expect(this.flashCard.singleChoiceQuestions)
             .toStrictEqual(expected)
         return this;
     }

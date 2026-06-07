@@ -5,7 +5,7 @@ import {QuizComponent} from "./quiz.component";
 import {
   Answer,
   Option,
-  MultipleChoiceQuestion,
+  SingleChoiceQuestion,
   Question,
   BooleanQuestion
 } from "../../../domain/search/models/question";
@@ -363,7 +363,7 @@ describe('QuizComponent', () => {
   });
 
 
-  async function having(...questions: (BooleanQuestion | MultipleChoiceQuestion)[]) {
+  async function having(...questions: (BooleanQuestion | SingleChoiceQuestion)[]) {
     fixture.componentRef.setInput('questions', [...questions]);
     await page.stabilize();
   }
@@ -460,7 +460,7 @@ class MultipleChoiceQuestionBuilder {
     return this;
   }
 
-  build(): MultipleChoiceQuestion {
+  build(): SingleChoiceQuestion {
     const correctOption = this.options.find(option => option.prefix === this.correctAnswer) || this.options[1];
     return {
       label: this.label,
