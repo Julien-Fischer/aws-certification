@@ -367,7 +367,7 @@ describe('SendAnswer', () => {
         .toHaveNextQuestion().toHaveNoOptions();
     })
 
-    it('next question has options when single-choice question', () => {
+    it('next question requires single selection when single-choice question', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
@@ -388,7 +388,7 @@ describe('SendAnswer', () => {
         .toRequireSingleSelection();
     })
 
-    it('next question has options when multiple-choice question', () => {
+    it('next question allow multiple selection when multiple-choice question', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
