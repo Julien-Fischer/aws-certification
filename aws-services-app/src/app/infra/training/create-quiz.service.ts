@@ -54,18 +54,18 @@ export class CreateQuiz {
   ) { }
 
   publish(quizDto: QuizRequest): QuizDto {
-    const questions = this.toQuestions(quizDto);
+    const questions = toQuestions(quizDto);
     const quiz = this.startQuiz.with(questions, this.shuffleProvider.get(quizDto.shuffle ?? false));
     return response(quiz);
   }
 
-  private toQuestions(dto: QuizRequest): DomainQuestion[] {
-    return [
-      ...mapBoolean(dto.booleanQuestions),
-      ...mapMultipleChoice(dto.multipleChoiceQuestions)
-    ];
-  }
+}
 
+function toQuestions(dto: QuizRequest): DomainQuestion[] {
+  return [
+    ...mapBoolean(dto.booleanQuestions),
+    ...mapMultipleChoice(dto.multipleChoiceQuestions)
+  ];
 }
 
 function mapBoolean(questions: BooleanQuestionRequest[]): DomainQuestion[] {
