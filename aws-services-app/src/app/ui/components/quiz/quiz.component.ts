@@ -233,7 +233,7 @@ export class QuizComponent {
   }
 
   protected isOptionIncorrect(option: Option): boolean {
-    return this.selectedOption?.toString() === option.toString() && !this.matchesAnswerFromString(option.value);
+    return this.selectedOption?.toString() === option.toString() && !this.matchesAnswerFromString(option.toString());
   }
 
   protected isSelected(option: Option): boolean {

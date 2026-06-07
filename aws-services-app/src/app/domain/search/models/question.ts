@@ -36,9 +36,10 @@ export class Option {
     public readonly prefix: string;
     public readonly label: string;
 
-    constructor(readonly value: string) {
-        this.prefix = value.split('.')[0];
-        this.label = value.split('.')[1];
+    constructor(private readonly value: string) {
+        const split = value.split('.');
+        this.prefix = split[0];
+        this.label = split[1].trimStart();
     }
 
     hasPrefix(prefix: string): boolean {
@@ -46,7 +47,7 @@ export class Option {
     }
 
     toString(): string {
-        return String(this.value);
+        return `${this.prefix}. ${this.label}`;
     }
 
 }
