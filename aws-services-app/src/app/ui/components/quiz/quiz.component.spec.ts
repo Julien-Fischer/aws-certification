@@ -320,7 +320,7 @@ describe('QuizComponent', () => {
     });
 
 
-    it.skip('shows explanation when answer is wrong and explanation exists', async () => {
+    it('shows explanation when answer is wrong and explanation exists', async () => {
         const explanation = 'This is because **Aurora Global Database** provides low-latency global reads and fast disaster recovery.';
         const question: MultipleChoiceQuestion = {
             ...aMultipleChoiceQuestion().build(),
