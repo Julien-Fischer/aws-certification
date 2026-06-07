@@ -15,6 +15,7 @@ import {
 import {anOption} from "../../../domain/training/test/builders/option-builder";
 import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
 import {UserAnswer} from "../../../domain/training/models/user-answer";
+import {expectArray} from "../../../domain/training/test/expectations/expect-array";
 
 const IAM_QUIZ = new QuizId('IAM-1');
 
@@ -85,7 +86,7 @@ describe('SendAnswer', () => {
   })
 
   describe('multiple choice evaluation', () => {
-    it('is correct when selection equals expected combination', () => {
+    it('is correct when selection equals expected combination regardless of order', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
@@ -103,7 +104,8 @@ describe('SendAnswer', () => {
 
       expectResult(result)
         .toBeCorrect()
-        .toHaveExpectedAnswer(['A', 'C']);
+        .toHaveExpectedAnswer(['A', 'C'])
+        .toHaveExpectedAnswer(['C', 'A']);
     })
   })
 
@@ -441,7 +443,11 @@ describe('SendAnswer', () => {
         return this;
       },
       toHaveExpectedAnswer(answer: ExpectedAnswerDto) {
-        expect(result.expectedAnswer).toStrictEqual(answer);
+        if (Array.isArray(result.expectedAnswer) && Array.isArray(answer)) {
+          expectArray(result.expectedAnswer).toContainExactlyInAnyOrder(answer);
+        } else {
+          expect(result.expectedAnswer).toBe(answer);
+        }
         return this;
       },
       toHaveExplanation(explanation: string) {
