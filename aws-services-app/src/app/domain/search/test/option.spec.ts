@@ -53,11 +53,4 @@ describe('Option', () => {
         expect(option.toString()).toBe('Z. Original value');
     });
 
-    it('preserves readonly properties', () => {
-        const option = new Option('X. Readonly test');
-
-        expect(option).toHaveProperty('prefix');
-        expect(option).toHaveProperty('label');
-        expect(option).toHaveProperty('value');
-    });
 });

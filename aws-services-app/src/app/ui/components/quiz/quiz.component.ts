@@ -267,7 +267,7 @@ function toQuizRequest(
         value: question.answer.value.prefix,
         explanation: question.answer.explanation
       },
-      options: question.options.map((option: Option) => `${option.prefix}.${option.label}`)
+      options: question.options.map((option: Option) => `${option.toString()}`)
     })),
     multipleChoiceQuestions: [], // TODO: implement later
     shuffle: true

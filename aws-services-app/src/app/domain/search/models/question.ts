@@ -36,7 +36,7 @@ export class Option {
     public readonly prefix: string;
     public readonly label: string;
 
-    constructor(private readonly value: string) {
+    constructor(value: string) {
         const split = value.split('.');
         this.prefix = split[0];
         this.label = split[1].trimStart();
