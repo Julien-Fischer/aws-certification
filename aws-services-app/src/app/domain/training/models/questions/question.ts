@@ -1,5 +1,5 @@
-import {ExpectedAnswer} from "./expected-answer";
-import {UserAnswer} from "./user-answer";
+import {UserAnswer} from "../user-answer";
+import {ExpectedAnswer} from "../answers/expected-answer";
 
 export abstract class Question {
 

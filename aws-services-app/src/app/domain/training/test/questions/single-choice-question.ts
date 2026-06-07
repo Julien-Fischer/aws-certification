@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import {SingleChoiceQuestion} from "../models/single-choice-question";
+import {SingleChoiceQuestion} from "../../models/questions/single-choice-question";
 import {Choice} from "../models/choice";
-import {Option} from "../models/option";
+import {Option} from "../../models/option";
 
 describe('SingleChoiceQuestion', () => {
   it('has a correct answer', () => {

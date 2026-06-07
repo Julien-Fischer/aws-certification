@@ -1,8 +1,8 @@
 import {Question} from "./question";
-import {Shuffle} from "../shuffle";
-import {UserAnswer} from "./user-answer";
-import {ExpectedAnswer} from "./expected-answer";
-import {Option} from "./option";
+import {Shuffle} from "../../shuffle";
+import {UserAnswer} from "../user-answer";
+import {Option} from "../option";
+import {ExpectedAnswer} from "../answers/expected-answer";
 
 export class SingleChoiceQuestion extends Question {
 

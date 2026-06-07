@@ -1,5 +1,5 @@
 import {InjectionToken} from "@angular/core";
-import {Question} from "../../models/question";
+import {Question} from "../../models/questions/question";
 import {Shuffle} from "../../shuffle";
 import {Quiz} from "../../quiz";
 

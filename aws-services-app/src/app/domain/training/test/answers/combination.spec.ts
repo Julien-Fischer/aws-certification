@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest';
-import {Combination} from "../models/combination";
-import {Option} from "../models/option";
+import {Combination} from "../../models/answers/combination";
+import {Option} from "../../models/option";
 
 describe('Combination', () => {
 

@@ -1,5 +1,5 @@
-import {UserAnswer} from "./user-answer";
 import {ExpectedAnswer} from "./expected-answer";
+import {UserAnswer} from "../user-answer";
 
 export class BooleanAnswer implements ExpectedAnswer<boolean> {
 

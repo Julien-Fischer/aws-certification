@@ -1,14 +1,14 @@
 import {Inject, Injectable} from "@angular/core";
 import {StartQuiz, startQuizInjectionToken} from "../../domain/training/ports/inbound/start-quiz";
-import {Question as DomainQuestion} from "../../domain/training/models/question";
-import {BooleanQuestion} from "../../domain/training/models/boolean-question";
-import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/single-choice-question";
+import {Question as DomainQuestion} from "../../domain/training/models/questions/question";
+import {BooleanQuestion} from "../../domain/training/models/questions/boolean-question";
+import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
 import {Option} from "../../domain/search/models/question";
-import {BooleanAnswer} from "../../domain/training/models/boolean-answer";
-import {Choice} from "../../domain/training/models/choice";
 import {Option as SelectedOption} from "../../domain/training/models/option";
+import {BooleanAnswer} from "../../domain/training/models/answers/boolean-answer";
+import {Choice} from "../../domain/training/models/answers/choice";
 
 export interface QuizDto {
   id: string;

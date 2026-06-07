@@ -3,8 +3,8 @@ import {QuizRepository, quizRepositoryInjectionToken} from "./ports/outbound/qui
 import {StartQuiz} from "./ports/inbound/start-quiz";
 import {Quiz} from "./quiz";
 import {FisherYatesShuffle, Shuffle} from "./shuffle";
-import {Question} from "./models/question";
-import {SingleChoiceQuestion} from "./models/single-choice-question";
+import {Question} from "./models/questions/question";
+import {SingleChoiceQuestion} from "./models/questions/single-choice-question";
 
 @Injectable({ providedIn: 'root' })
 export class TrainingSession implements StartQuiz {

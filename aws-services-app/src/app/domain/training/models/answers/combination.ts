@@ -1,6 +1,6 @@
-import {UserAnswer} from "./user-answer";
 import {ExpectedAnswer} from "./expected-answer";
-import {Option} from "./option";
+import {Option} from "../option";
+import {UserAnswer} from "../user-answer";
 
 export class Combination implements ExpectedAnswer<Option[]> {
 

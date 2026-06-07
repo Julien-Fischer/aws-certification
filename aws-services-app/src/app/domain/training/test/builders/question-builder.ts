@@ -1,10 +1,10 @@
-import {BooleanQuestion} from "../../models/boolean-question";
-import {SingleChoiceQuestion} from "../../models/single-choice-question";
+import {BooleanQuestion} from "../../models/questions/boolean-question";
+import {SingleChoiceQuestion} from "../../models/questions/single-choice-question";
 import {OptionBuilder} from "./option-builder";
-import {ExpectedAnswer} from "../../models/expected-answer";
-import {BooleanAnswer} from "../../models/boolean-answer";
-import {Choice} from "../../models/choice";
 import {Option} from "../../models/option";
+import {ExpectedAnswer} from "../../models/answers/expected-answer";
+import {BooleanAnswer} from "../../models/answers/boolean-answer";
+import {Choice} from "../../models/answers/choice";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();

@@ -1,8 +1,8 @@
-import {Question} from "./models/question";
+import {Question} from "./models/questions/question";
 import Percentage from "./models/percentage";
 import {QuizId} from "./quiz-id";
-import {ExpectedAnswer} from "./models/expected-answer";
 import {UserAnswer} from "./models/user-answer";
+import {ExpectedAnswer} from "./models/answers/expected-answer";
 
 export class QuizOutcome {
 

@@ -1,7 +1,7 @@
-import {ExpectedAnswer} from "../../models/expected-answer";
 import {UserAnswer} from "../../models/user-answer";
-import {Choice} from "../../models/choice";
 import {Option} from "../../models/option";
+import {ExpectedAnswer} from "../../models/answers/expected-answer";
+import {Choice} from "../../models/answers/choice";
 
 export function aUserAnswer(): UserAnswer {
   return 'A';

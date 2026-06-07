@@ -1,5 +1,5 @@
 import {describe, it, expect} from 'vitest';
-import {BooleanAnswer} from "../models/boolean-answer";
+import {BooleanAnswer} from "../../models/answers/boolean-answer";
 
 describe('BooleanAnswer', () => {
 

@@ -7,8 +7,8 @@ import {TrainingSession} from "../training-session";
 import {aFalseStatement, aSingleChoiceQuestion, aQuestion, aTrueStatement} from "./builders/question-builder";
 import {expectResult} from "./expectations/expect-result";
 import {Shuffle} from "../shuffle";
-import {SingleChoiceQuestion} from "../models/single-choice-question";
-import {Question} from "../models/question";
+import {SingleChoiceQuestion} from "../models/questions/single-choice-question";
+import {Question} from "../models/questions/question";
 import {anOption} from "./builders/option-builder";
 
 describe('AnswerEvaluator', () => {

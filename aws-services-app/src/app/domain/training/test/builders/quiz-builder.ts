@@ -1,4 +1,4 @@
-import {Question} from "../../models/question";
+import {Question} from "../../models/questions/question";
 import {Quiz} from "../../quiz";
 import {QuestionBuilder} from "./question-builder";
 import {QuizId} from "../../quiz-id";

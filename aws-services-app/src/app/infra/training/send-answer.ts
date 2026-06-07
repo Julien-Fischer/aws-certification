@@ -2,10 +2,10 @@ import {Inject, Injectable} from "@angular/core";
 import {SubmitAnswer, submitAnswerInjectionToken} from "../../domain/training/ports/inbound/submit-answer";
 import {QuizId} from "../../domain/training/quiz-id";
 import {QuizOutcome, Result} from "../../domain/training/quiz";
-import {Question} from "../../domain/training/models/question";
+import {Question} from "../../domain/training/models/questions/question";
 import {UserAnswer} from "../../domain/training/models/user-answer";
-import {ExpectedAnswer} from "../../domain/training/models/expected-answer";
 import {Option} from "../../domain/training/models/option";
+import {ExpectedAnswer} from "../../domain/training/models/answers/expected-answer";
 
 export interface OutcomeDto {
   hasFailed: boolean;

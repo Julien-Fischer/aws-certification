@@ -1,6 +1,6 @@
 import {Question} from "./question";
-import {UserAnswer} from "./user-answer";
-import {ExpectedAnswer} from "./expected-answer";
+import {UserAnswer} from "../user-answer";
+import {ExpectedAnswer} from "../answers/expected-answer";
 
 export class BooleanQuestion extends Question {
 

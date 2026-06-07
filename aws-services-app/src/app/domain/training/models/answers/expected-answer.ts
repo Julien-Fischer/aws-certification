@@ -1,4 +1,4 @@
-import {UserAnswer} from "./user-answer";
+import {UserAnswer} from "../user-answer";
 
 export interface ExpectedAnswer<T> {
 
