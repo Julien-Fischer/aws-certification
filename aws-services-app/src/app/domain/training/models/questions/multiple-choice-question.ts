@@ -1,7 +1,7 @@
 import {Question} from "./question";
 import {Shuffle} from "../../shuffle";
 import {Option} from "../option";
-import {ExpectedAnswer} from "../answers/expected-answer";
+import {ExpectedCombination} from "../answers/expected-combination";
 
 export class MultipleChoiceQuestion extends Question {
 
@@ -9,7 +9,7 @@ export class MultipleChoiceQuestion extends Question {
 
   constructor(
     label: string,
-    answer: ExpectedAnswer<Option[]>,
+    answer: ExpectedCombination,
     readonly options: Option[]
   ) {
     super(label, answer);
