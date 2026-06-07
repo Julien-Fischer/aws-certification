@@ -2,13 +2,13 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {TestBed} from "@angular/core/testing";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
-import {OutcomeDto, ResultDto, SendAnswer} from "../send-answer.service";
+import {NextQuestionDto, OutcomeDto, ResultDto, SendAnswer} from "../send-answer.service";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
 import {aQuiz, QuizBuilder} from "../../../domain/training/test/builders/quiz-builder";
 import {QuizId} from "../../../domain/training/quiz-id";
 import {
-  aFalseStatement,
+  aFalseStatement, aMultipleChoiceQuestion,
   aSingleChoiceQuestion,
   aTrueStatement
 } from "../../../domain/training/test/builders/question-builder";
@@ -239,9 +239,9 @@ describe('SendAnswer', () => {
       const result3 = send(aUserAnswer()).toQuiz(IAM_QUIZ);
 
       expectResult(result1)
-        .toHaveNextQuestion('question 2');
+        .toHaveNextQuestion().labelled('question 2');
       expectResult(result2)
-        .toHaveNextQuestion('question 3');
+        .toHaveNextQuestion().labelled('question 3');
       expectResult(result3)
         .toHaveNoNextQuestion();
     })
@@ -260,6 +260,62 @@ describe('SendAnswer', () => {
 
       expectResult(result)
         .toHaveNoNextQuestion();
+    })
+
+    it('next question has no option when boolean statement', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().labelled('question 1'),
+          aFalseStatement().labelled('question 2'),
+        ));
+
+      const result = send(aUserAnswer()).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveNextQuestion().toHaveNoOptions();
+    })
+
+    it('next question has options when single-choice question', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().labelled('question 1'),
+          aSingleChoiceQuestion().labelled('question 2').withOptions(
+            anOption().withValue('A. Option 1'),
+            anOption().withValue('B. Option 2'),
+            anOption().withValue('C. Option 3'),
+            anOption().withValue('D. Option 4')
+          ),
+        ));
+
+      const result = send(aUserAnswer()).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveNextQuestion()
+        .toHaveOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
+        .toRequireSingleSelection();
+    })
+
+    it('next question has options when multiple-choice question', () => {
+      having(aQuiz()
+        .identified(IAM_QUIZ)
+        .with(
+          aTrueStatement().labelled('question 1'),
+          aMultipleChoiceQuestion().labelled('question 2').withOptions(
+            anOption().withValue('A. Option 1'),
+            anOption().withValue('B. Option 2'),
+            anOption().withValue('C. Option 3'),
+            anOption().withValue('D. Option 4')
+          ),
+        ));
+
+      const result = send(aUserAnswer()).toQuiz(IAM_QUIZ);
+
+      expectResult(result)
+        .toHaveNextQuestion()
+        .toHaveOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
+        .toAllowMultipleSelection();
     })
   })
 
@@ -393,11 +449,41 @@ describe('SendAnswer', () => {
         expect(result.nextQuestion).toBeUndefined();
         return this;
       },
-      toHaveNextQuestion(label: string) {
-        expect(result.nextQuestion).toBe(label);
-        return this;
+      toHaveNextQuestion(): NextQuestionExpectation {
+        return new NextQuestionExpectation(result.nextQuestion);
       }
     }
   }
 
 });
+
+class NextQuestionExpectation {
+
+  constructor(private nextQuestion?: NextQuestionDto) { }
+
+  labelled(label: string): this {
+    expect(this.nextQuestion?.label).toBe(label);
+    return this;
+  }
+
+  toHaveNoOptions(): this {
+    expect(this.nextQuestion?.options).toBeUndefined();
+    return this;
+  }
+
+  toHaveOptions(...options: string[]): this {
+    expect(this.nextQuestion?.options?.values).toStrictEqual(options);
+    return this;
+  }
+
+  toAllowMultipleSelection(): this {
+    expect(this.nextQuestion?.options?.allowMultipleSelection).toBe(true);
+    return this;
+  }
+
+  toRequireSingleSelection(): this {
+    expect(this.nextQuestion?.options?.allowMultipleSelection).toBe(false);
+    return this;
+  }
+
+}

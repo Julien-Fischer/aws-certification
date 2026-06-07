@@ -129,7 +129,8 @@ export class QuizComponent {
 
   nextQuestion(): void {
     if (this.lastResult?.nextQuestion) {
-      const nextIndex = this.questions.findIndex(q => q.label === this.lastResult?.nextQuestion);
+      // TODO: use last questions received from training context instead of in-memory array
+      const nextIndex = this.questions.findIndex(question => question.label === this.lastResult?.nextQuestion?.label);
       if (nextIndex !== -1) {
         this.currentIndex = nextIndex;
         this.selectedOption = null;
