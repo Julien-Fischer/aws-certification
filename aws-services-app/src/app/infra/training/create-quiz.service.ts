@@ -5,8 +5,8 @@ import {BooleanQuestion} from "../../domain/training/models/questions/boolean-qu
 import {SingleChoiceQuestion as DomainMultipleChoiceQuestion} from "../../domain/training/models/questions/single-choice-question";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "./shuffle-provider";
 import {Quiz} from "../../domain/training/quiz";
-import {Option} from "../../domain/search/models/question";
-import {Option as SelectedOption} from "../../domain/training/models/option";
+import {Option as OptionDto} from "../../domain/search/models/question";
+import {Option} from "../../domain/training/models/option";
 import {ExpectedBoolean} from "../../domain/training/models/answers/expected-boolean";
 import {ExpectedChoice} from "../../domain/training/models/answers/expected-choice";
 
@@ -18,7 +18,7 @@ export interface QuizDto {
 
 export interface QuestionDto {
   label: string;
-  options?: Option[];
+  options?: OptionDto[];
 }
 
 export interface QuizRequest {
@@ -89,12 +89,12 @@ function toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
   return new ExpectedChoice(toOption(answer.value), answer.explanation);
 }
 
-function toOptions(options: string[]): SelectedOption[] {
+function toOptions(options: string[]): Option[] {
   return options.map(toOption);
 }
 
-function toOption(option: string): SelectedOption {
-  return SelectedOption.from(option);
+function toOption(option: string): Option {
+  return Option.from(option);
 }
 
 function response(quiz: Quiz): QuizDto {
@@ -110,7 +110,7 @@ function toQuestionDto(question: DomainQuestion): QuestionDto {
     label: question.label
   };
   if (question instanceof DomainMultipleChoiceQuestion) {
-    questionDto.options = question.options.map(option => new Option(option.toString()));
+    questionDto.options = question.options.map(option => new OptionDto(option.toString()));
   }
   return questionDto as QuestionDto;
 }
