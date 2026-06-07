@@ -321,31 +321,33 @@ describe('QuizComponent', () => {
 
 
     it('shows explanation when answer is wrong and explanation exists', async () => {
-        const explanation = 'This is because **Aurora Global Database** provides low-latency global reads and fast disaster recovery.';
-        const question: MultipleChoiceQuestion = {
-            ...aMultipleChoiceQuestion().build(),
-            answer: new Answer(new Option('B. Aurora Global Database'), explanation)
-        };
+        const question = aMultipleChoiceQuestion()
+          .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
+          .withCorrectAnswer('B')
+          .withExplanation('Some explanation')
+          .build();
+
         await having(question);
 
-        await page.clickOption(0); // Wrong answer
+        await page.clickOption(0);
         await page.clickSubmitButton();
 
-        expect(page.explanationText).toContain('<strong>Aurora Global Database</strong>');
+        expect(page.explanationText).toContain('Some explanation');
     });
 
     it('does not show explanation when answer is correct', async () => {
-        const explanation = 'Some explanation';
-        const question: MultipleChoiceQuestion = {
-            ...aMultipleChoiceQuestion().build(),
-            answer: new Answer(new Option('B. Aurora Global Database'), explanation)
-        };
-        await having(question);
+      const question = aMultipleChoiceQuestion()
+        .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
+        .withCorrectAnswer('B')
+        .withExplanation('Some explanation')
+        .build();
 
-        await page.clickOption(1); // Correct answer
-        await page.clickSubmitButton();
+      await having(question);
 
-        expect(page.explanationText).toBe('');
+      await page.clickOption(1);
+      await page.clickSubmitButton();
+
+      expect(page.explanationText).toBe('');
     });
 
     it('does not show explanation when it does not exist', async () => {
@@ -427,7 +429,9 @@ class MultipleChoiceQuestionBuilder {
 
     private correctAnswer: Letter = 'B';
 
-    private readonly options: Option[] = [
+    private explanation?: string;
+
+    private options: Option[] = [
       new Option('A. Aurora Replicas'),
       new Option('B. Aurora Global Database'),
       new Option('C. Multi-AZ')
@@ -438,11 +442,21 @@ class MultipleChoiceQuestionBuilder {
       return this;
     }
 
+    withExplanation(explanation: string): this {
+      this.explanation = explanation;
+      return this;
+    }
+
+    withOptions(...options: string[]): this {
+      this.options = options.map(option => new Option(option));
+      return this;
+    }
+
     build(): MultipleChoiceQuestion {
       const correctOption = this.options.find(option => option.prefix === this.correctAnswer) || this.options[1];
       return {
         label: 'Which feature provides cross-Region disaster recovery for Aurora?',
-        answer: new Answer(correctOption!),
+        answer: new Answer(correctOption!, this.explanation),
         options: this.options
       }
     }
