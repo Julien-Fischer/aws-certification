@@ -269,6 +269,7 @@ function toQuizRequest(
       },
       options: question.options.map((option: Option) => `${option.prefix}.${option.label}`)
     })),
+    multipleChoiceQuestions: [], // TODO: implement later
     shuffle: true
   };
 }

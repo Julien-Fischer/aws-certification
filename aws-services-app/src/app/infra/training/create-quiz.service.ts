@@ -9,6 +9,8 @@ import {Option as OptionDto} from "../../domain/search/models/question";
 import {Option} from "../../domain/training/models/option";
 import {ExpectedBoolean} from "../../domain/training/models/answers/expected-boolean";
 import {ExpectedChoice} from "../../domain/training/models/answers/expected-choice";
+import {MultipleChoiceQuestion} from "../../domain/training/models/questions/multiple-choice-question";
+import {ExpectedCombination} from "../../domain/training/models/answers/expected-combination";
 
 export interface QuizDto {
   id: string;
@@ -24,6 +26,7 @@ export interface QuestionDto {
 export interface QuizRequest {
   booleanQuestions: BooleanQuestionRequest[],
   singleChoiceQuestions: SingleChoiceQuestionRequest[],
+  multipleChoiceQuestions: MultipleChoiceQuestionRequest[],
   shuffle?: boolean
 }
 
@@ -37,6 +40,14 @@ interface SingleChoiceQuestionRequest {
   label: string;
   answer: ExpectedAnswerRequest;
   options: string[];
+  explanation?: string;
+}
+
+interface MultipleChoiceQuestionRequest {
+  label: string;
+  answer: string[];
+  options: string[];
+  explanation?: string;
 }
 
 interface ExpectedAnswerRequest {
@@ -69,7 +80,8 @@ class DtoToQuestion {
   toQuestions(dto: QuizRequest): Question[] {
     return [
       ...this.mapBoolean(dto.booleanQuestions),
-      ...this.mapSingleChoice(dto.singleChoiceQuestions)
+      ...this.mapSingleChoice(dto.singleChoiceQuestions),
+      ...this.mapMultipleChoice(dto.multipleChoiceQuestions)
     ];
   }
 
@@ -90,8 +102,21 @@ class DtoToQuestion {
       ));
   }
 
+  private mapMultipleChoice(questions: MultipleChoiceQuestionRequest[]): Question[] {
+    return questions
+      .map(question => new MultipleChoiceQuestion(
+        question.label,
+        this.toExpectedCombination(question.answer, question.explanation),
+        this.toOptions(question.options)
+      ));
+  }
+
   private toExpectedChoice(answer: ExpectedAnswerRequest): ExpectedChoice {
     return new ExpectedChoice(this.toOption(answer.value), answer.explanation);
+  }
+
+  private toExpectedCombination(answer: string[], explanation?: string): ExpectedCombination {
+    return new ExpectedCombination(answer.map(values => this.toOption(values)), explanation);
   }
 
   private toOptions(options: string[]): Option[] {

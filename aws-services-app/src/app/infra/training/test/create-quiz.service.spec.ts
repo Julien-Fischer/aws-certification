@@ -7,10 +7,12 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../in-memory-quiz-repository";
 import {QuizId} from "../../../domain/training/quiz-id";
-import {aUserAnswer} from "../../../domain/training/test/builders/answer-builder";
+import {aUserAnswer, combination} from "../../../domain/training/test/builders/answer-builder";
 import {Quiz} from "../../../domain/training/quiz";
 import {Option} from "../../../domain/search/models/question";
 import {CreateQuiz, QuestionDto, QuizDto, QuizRequest} from "../create-quiz.service";
+import {ExpectedAnswer} from "../../../domain/training/models/answers/expected-answer";
+import {expectResult} from "../../../domain/training/test/expectations/expect-result";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -69,7 +71,8 @@ describe('CreateQuiz', () => {
         singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
-        ]
+        ],
+        multipleChoiceQuestions: []
       }
 
       quizPublisher.publish(dto);
@@ -87,7 +90,8 @@ describe('CreateQuiz', () => {
         singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
-        ]
+        ],
+        multipleChoiceQuestions: []
       }
 
       quizPublisher.publish(dto);
@@ -106,7 +110,8 @@ describe('CreateQuiz', () => {
         singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
-        ]
+        ],
+        multipleChoiceQuestions: []
       }
 
       const quiz: QuizDto = quizPublisher.publish(dto);
@@ -123,7 +128,8 @@ describe('CreateQuiz', () => {
         singleChoiceQuestions: [
           {label: 'question 1', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']},
           {label: 'question 2', answer: {value: 'A. option 1'}, options: ['A. option 1', 'B. option 2']}
-        ]
+        ],
+        multipleChoiceQuestions: []
       }
 
       const quiz: QuizDto = quizPublisher.publish(dto);
@@ -167,7 +173,8 @@ describe('CreateQuiz', () => {
                 'B. option 2'
               ]
             }
-          ]
+          ],
+          multipleChoiceQuestions: []
         }
 
         const quiz: Quiz = havingPublished(dto);
@@ -201,7 +208,8 @@ describe('CreateQuiz', () => {
                 'B. option 2'
               ]
             }
-          ]
+          ],
+          multipleChoiceQuestions: []
         }
 
         const quiz: Quiz = havingPublished(dto);
@@ -213,6 +221,37 @@ describe('CreateQuiz', () => {
 
         expect(result).toBeDefined();
         expect(result?.explanation).toBe('Explanation 3');
+      })
+
+      it('supports multiple choice questions', () => {
+        const dto: QuizRequest = {
+          booleanQuestions: [],
+          singleChoiceQuestions: [],
+          multipleChoiceQuestions: [
+            {
+              label: 'question 1',
+              answer: ['A. Option 1', 'C. Option 3'],
+              options: ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'],
+              explanation: 'Explanation 1'
+            },
+            {
+              label: 'question 2',
+              answer: ['A. Option 1', 'C. Option 3'],
+              options: ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'],
+              explanation: 'Explanation 2'
+            }
+          ]
+        };
+
+        const quiz: Quiz = havingPublished(dto);
+
+        const result = quiz.submit(['A', 'C']);
+
+        expectResult(result!)
+          .toBeCorrect()
+          .toHaveCorrectAnswer(['A', 'C'])
+          .toHaveExplanation('Explanation 1')
+          .toHaveNextQuestion('question 2');
       })
 
     })
