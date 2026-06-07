@@ -97,7 +97,7 @@ describe('MarkdownParserService', () => {
                     2. Collects **metrics, logs, and events** for real-time visibility.
                     3. Integrates with alarms, dashboards, and automation.
                 `)
-                .with(aMultiChoiceQuestion())
+                .with(aSingleChoiceQuestion())
                 .withAdditionalInfo(` ✅ **Exam Tip**: Some tip. `)
                 .toMarkdown();
 
@@ -114,11 +114,36 @@ describe('MarkdownParserService', () => {
         });
     })
 
-    describe('multiple choice questions', () => {
+    // TODO: implement parsing to make this test pass
+    describe.skip('multiple choice questions', () => {
+        it('parses one question', () => {
+          const markdown = aFlashCard()
+            .with(
+              aMultipleChoiceQuestion()
+                .labelled('Some question?')
+                .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+                .withAnswer(['A', 'C']),
+            )
+            .toMarkdown();
+
+        const parsed = service.parse(markdown);
+
+        expectFlashCard(parsed)
+            .toHaveMultipleChoiceQuestions([
+                {
+                    label: 'Some question?',
+                    options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+                    answer: selection('A', 'C')
+                },
+            ]);
+        })
+    })
+
+    describe('single choice questions', () => {
         it('parses one question', () => {
             const markdown = aFlashCard()
                 .with(
-                    aMultiChoiceQuestion()
+                    aSingleChoiceQuestion()
                         .labelled('Some question?')
                         .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                         .withAnswer('C'),
@@ -140,11 +165,11 @@ describe('MarkdownParserService', () => {
         it('parses multiple questions', () => {
             const markdown = aFlashCard()
                 .with(
-                    aMultiChoiceQuestion()
+                    aSingleChoiceQuestion()
                         .labelled('Some question?')
                         .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                         .withAnswer('C'),
-                    aMultiChoiceQuestion()
+                    aSingleChoiceQuestion()
                         .labelled('Some other question?')
                         .withOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
                         .withAnswer('B')
@@ -292,7 +317,7 @@ describe('MarkdownParserService', () => {
 
                 const markdown = aFlashCard()
                     .with(
-                        aMultiChoiceQuestion()
+                        aSingleChoiceQuestion()
                             .labelled('Some question?')
                             .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                             .withAnswer('C')
@@ -325,12 +350,12 @@ describe('MarkdownParserService', () => {
 
                 const markdown = aFlashCard()
                     .with(
-                        aMultiChoiceQuestion()
+                        aSingleChoiceQuestion()
                             .labelled('Some question?')
                             .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
                             .withAnswer('C')
                             .withExplanation(explanation1),
-                        aMultiChoiceQuestion()
+                        aSingleChoiceQuestion()
                             .labelled('Some other question?')
                             .withOptions('A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4')
                             .withAnswer('B')
@@ -452,6 +477,10 @@ function toMarkdown(markdown: string): string {
         .join('\n');
 }
 
+function selection(...prefixes: string[]): Answer<Option[]> {
+    return new Answer(prefixes.map(prefix => new Option(prefix)));
+}
+
 // builders
 
 interface QuestionStringBuilder {
@@ -497,7 +526,48 @@ class BooleanQuestionStringBuilder implements QuestionStringBuilder {
     }
 }
 
-class MultiChoiceQuestionStringBuilder implements QuestionStringBuilder {
+class MultipleChoiceQuestionStringBuilder implements QuestionStringBuilder {
+    private questionText = 'The question text';
+    private options: string[] = ['A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'];
+    private answer: Letter[] = ['A', 'B'];
+    private explanation = '';
+
+    labelled(questionText: string): this {
+        this.questionText = questionText;
+        return this;
+    }
+    withOptions(...options: string[]): this {
+        this.options = options;
+        return this;
+    }
+    withAnswer(answer: Letter[]): this {
+        this.answer = answer;
+        return this;
+    }
+    withExplanation(explanation: string): this {
+        this.explanation = explanation;
+        return this;
+    }
+    build(): string {
+        const options = this.options.join('\n');
+        const explanation = this.explanation.trim().length === 0
+            ? ''
+            : `Explanation:\n\`\`\`\n${this.explanation}\n\`\`\``
+        return toMarkdown(`
+            ---
+
+            ### 🔹 Multiple Choice
+
+            **Q1.** ${this.questionText}
+            ${options}
+            ✅ **Answer: ${this.answer.join(', ')}**
+
+            ${explanation}
+        `);
+    }
+}
+
+class SingleChoiceQuestionStringBuilder implements QuestionStringBuilder {
     private questionText = 'The question text';
     private options: string[] = ['A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'];
     private answer: Letter = 'A';
@@ -599,12 +669,22 @@ function aBooleanStatement(): BooleanQuestionStringBuilder {
     return new BooleanQuestionStringBuilder();
 }
 
-function aMultiChoiceQuestion(): MultiChoiceQuestionStringBuilder {
-    return new MultiChoiceQuestionStringBuilder();
+function aSingleChoiceQuestion(): SingleChoiceQuestionStringBuilder {
+    return new SingleChoiceQuestionStringBuilder();
+}
+
+function aMultipleChoiceQuestion(): MultipleChoiceQuestionStringBuilder {
+    return new MultipleChoiceQuestionStringBuilder();
 }
 
 function aFlashCard(): FlashCardStringBuilder {
     return new FlashCardStringBuilder();
+}
+
+interface ExpectedMultipleChoiceQuestion {
+   label: string;
+   options: Option[];
+   answer: Answer<Option[]>;
 }
 
 interface ExpectedSingleChoiceQuestion {
@@ -630,6 +710,12 @@ class FlashCardExpectation {
 
     toHaveSingleChoiceQuestions(expected: ExpectedSingleChoiceQuestion[]): this {
         expect(this.flashCard.singleChoiceQuestions)
+            .toStrictEqual(expected)
+        return this;
+    }
+
+    toHaveMultipleChoiceQuestions(expected: ExpectedMultipleChoiceQuestion[]): this {
+        expect(this.flashCard.multipleChoiceQuestions)
             .toStrictEqual(expected)
         return this;
     }

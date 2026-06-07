@@ -27,6 +27,7 @@ import {InMemoryCarousel} from "../../../domain/search/services/in-memory-carous
 import {HighscoreDetailsComponent} from "./content/highscore-details/highscore-details.component";
 import {FlashCardMetadata} from "../../../domain/search/models/metadata";
 import {Confetti, confettiInjectionToken} from "../../animations/confetti";
+import {FlashCard} from "../../../domain/search/models/flash-card";
 
 interface CardDescriptor {
   metadata: FlashCardMetadata;
@@ -281,9 +282,10 @@ function aHighscore(progress: number, accuracy: number) {
 
 function aFlashCard() {
   return {
-    withLearningMaterial(content: string) {
+    withLearningMaterial(content: string): FlashCard {
       return {
         mainContent: content,
+        multipleChoiceQuestions: [],
         singleChoiceQuestions: [],
         booleanQuestions: []
       }

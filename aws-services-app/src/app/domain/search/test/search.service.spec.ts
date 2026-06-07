@@ -284,9 +284,10 @@ describe('SearchService', () => {
 
 function aFlashCard() {
   return {
-    about(content: string) {
+    about(content: string): FlashCard {
       return {
         mainContent: content,
+        multipleChoiceQuestions: [],
         singleChoiceQuestions: [],
         booleanQuestions: []
       }

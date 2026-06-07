@@ -1,5 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Answer, SingleChoiceQuestion, Option, BooleanQuestion} from "../../domain/search/models/question";
+import {
+  Answer,
+  SingleChoiceQuestion,
+  Option,
+  BooleanQuestion,
+  MultipleChoiceQuestion
+} from "../../domain/search/models/question";
 import {FlashCard} from "../../domain/search/models/flash-card";
 
 export type Letter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
@@ -18,16 +24,16 @@ export class MarkdownParserService {
         const mainContent = this.extractMainContent(content, quizSection);
 
         if (!quizSection) {
-            return {mainContent, singleChoiceQuestions: [], booleanQuestions: []};
+            return {mainContent, multipleChoiceQuestions: [], singleChoiceQuestions: [], booleanQuestions: []};
         }
 
-        const {singleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
+        const {multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
 
         if (this.hasNoQuizzes(singleChoiceQuestions, booleanQuestions)) {
             throw new Error('No valid questions found in this quiz');
         }
 
-        return {mainContent, singleChoiceQuestions: singleChoiceQuestions, booleanQuestions};
+        return {mainContent, multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions};
     }
 
     private extractQuizSection(content: string): string | null {
@@ -53,15 +59,17 @@ export class MarkdownParserService {
     }
 
     private parseAllQuizzesFrom(quizContent: string): {
+        multipleChoiceQuestions: MultipleChoiceQuestion[];
         singleChoiceQuestions: SingleChoiceQuestion[];
         booleanQuestions: BooleanQuestion[];
     } {
         const {multipleChoiceContent, booleanContent} = this.splitQuizSections(quizContent);
 
+        const multipleChoiceQuestions: MultipleChoiceQuestion[] = []; // TODO: impl
         const singleChoiceQuestions = this.singleChoiceQuestionsParser.parse(multipleChoiceContent);
         const booleanQuestions = this.booleanQuestionsParser.parse(booleanContent);
 
-        return {singleChoiceQuestions, booleanQuestions};
+        return {multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions};
     }
 
     private splitQuizSections(quizContent: string): {
