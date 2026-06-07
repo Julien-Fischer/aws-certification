@@ -2,7 +2,7 @@ import {BooleanQuestion} from "../../models/questions/boolean-question";
 import {SingleChoiceQuestion} from "../../models/questions/single-choice-question";
 import {OptionBuilder} from "./option-builder";
 import {Option} from "../../models/option";
-import {ExpectedBooleanAnswer} from "../../models/answers/expected-boolean-answer";
+import {ExpectedBoolean} from "../../models/answers/expected-boolean";
 import {ExpectedChoice} from "../../models/answers/expected-choice";
 
 export function aQuestion(): BooleanQuestionBuilder {
@@ -56,7 +56,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
   }
 
   build(): BooleanQuestion {
-    return new BooleanQuestion(this.label, ExpectedBooleanAnswer.of(this.answer, this.explanation));
+    return new BooleanQuestion(this.label, ExpectedBoolean.of(this.answer, this.explanation));
   }
 
 }

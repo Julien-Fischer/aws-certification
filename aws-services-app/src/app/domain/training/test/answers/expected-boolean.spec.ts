@@ -1,11 +1,11 @@
 import {describe, it, expect} from 'vitest';
-import {ExpectedBooleanAnswer} from "../../models/answers/expected-boolean-answer";
+import {ExpectedBoolean} from "../../models/answers/expected-boolean";
 
 describe('BooleanAnswer', () => {
 
   it('constructs', () => {
-    const trueAnswer = ExpectedBooleanAnswer.ofTrue();
-    const falseAnswer = ExpectedBooleanAnswer.ofFalse();
+    const trueAnswer = ExpectedBoolean.ofTrue();
+    const falseAnswer = ExpectedBoolean.ofFalse();
 
     expect(trueAnswer.value).toBe(true);
     expect(falseAnswer.value).toBe(false);
@@ -13,14 +13,14 @@ describe('BooleanAnswer', () => {
 
   describe('equals', () => {
     it('when true', () => {
-      const expectedAnswer = ExpectedBooleanAnswer.ofTrue();
+      const expectedAnswer = ExpectedBoolean.ofTrue();
 
       expect(expectedAnswer.accepts(true)).toBe(true);
       expect(expectedAnswer.accepts(false)).toBe(false);
     })
 
     it('when false', () => {
-      const expectedAnswer = ExpectedBooleanAnswer.ofFalse();
+      const expectedAnswer = ExpectedBoolean.ofFalse();
 
       expect(expectedAnswer.accepts(false)).toBe(true);
       expect(expectedAnswer.accepts(true)).toBe(false);
@@ -29,13 +29,13 @@ describe('BooleanAnswer', () => {
 
   describe('explanation', () => {
     it('with explanation', () => {
-      const expectedAnswer = ExpectedBooleanAnswer.ofTrue('Explanation');
+      const expectedAnswer = ExpectedBoolean.ofTrue('Explanation');
 
       expect(expectedAnswer.explanation).toBe('Explanation');
     })
 
     it('explanation is optional', () => {
-      const expectedAnswer = ExpectedBooleanAnswer.ofFalse();
+      const expectedAnswer = ExpectedBoolean.ofFalse();
 
       expect(expectedAnswer.explanation).toBeUndefined();
     })
@@ -43,13 +43,13 @@ describe('BooleanAnswer', () => {
 
   describe('toString', () => {
     it('true', () => {
-      const answer = ExpectedBooleanAnswer.ofTrue();
+      const answer = ExpectedBoolean.ofTrue();
 
       expect(answer.toString()).toBe('true');
     });
 
     it('false', () => {
-      const answer = ExpectedBooleanAnswer.ofFalse();
+      const answer = ExpectedBoolean.ofFalse();
 
       expect(answer.toString()).toBe('false');
     });

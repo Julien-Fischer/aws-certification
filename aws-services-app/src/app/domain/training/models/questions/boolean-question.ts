@@ -1,5 +1,5 @@
 import {Question} from "./question";
-import {ExpectedBooleanAnswer} from "../answers/expected-boolean-answer";
+import {ExpectedBoolean} from "../answers/expected-boolean";
 
 export class BooleanQuestion extends Question {
 
@@ -7,7 +7,7 @@ export class BooleanQuestion extends Question {
 
   constructor(
     label: string,
-    answer: ExpectedBooleanAnswer,
+    answer: ExpectedBoolean,
   ) {
     super(label, answer);
   }
