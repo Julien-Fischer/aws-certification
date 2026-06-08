@@ -21,7 +21,7 @@ describe('BooleanQuestion', () => {
     it('has an explanation', () => {
       const question = new BooleanQuestion(
         `IAM stands for 'It's Always Misconfigured'`,
-        ExpectedBoolean.of(false, 'Is this supposed to be a joke?')
+        ExpectedBoolean.ofFalse('Is this supposed to be a joke?')
       );
 
       expect(question.explanation)
@@ -31,7 +31,7 @@ describe('BooleanQuestion', () => {
     it('isOptional', () => {
       const question = new BooleanQuestion(
         `IAM stands for 'It's Always Misconfigured'`,
-        ExpectedBoolean.of(false)
+        ExpectedBoolean.ofFalse()
       );
 
       expect(question.explanation)
