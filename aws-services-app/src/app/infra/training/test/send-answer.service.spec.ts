@@ -307,11 +307,7 @@ describe('SendAnswer', () => {
         .toHaveProgress(100)
         .toHaveAccuracy(50)
         .toHaveNoNextQuestion()
-        .toHaveOutcome({
-          hasFailed: false,
-          hasSucceeded: true,
-          hasMastered: false
-        })
+        .toHaveOutcome('SUCCESS')
     })
   })
 
@@ -426,11 +422,7 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toHaveProgress(100)
         .toHaveAccuracy(100)
-        .toHaveOutcome({
-          hasFailed: false,
-          hasSucceeded: false,
-          hasMastered: true
-        });
+        .toHaveOutcome('MASTER');
     })
 
     it('has succeeded quiz if accuracy >= 50%', () => {
@@ -448,11 +440,7 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toHaveProgress(100)
         .toHaveAccuracy(50)
-        .toHaveOutcome({
-          hasFailed: false,
-          hasSucceeded: true,
-          hasMastered: false
-        });
+        .toHaveOutcome('SUCCESS');
     })
 
     it('has failed quiz if accuracy < 50%', () => {
@@ -472,11 +460,7 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toHaveProgress(100)
         .toHaveAccuracy(33.33)
-        .toHaveOutcome({
-          hasFailed: true,
-          hasSucceeded: false,
-          hasMastered: false
-        });
+        .toHaveOutcome('FAIL');
     })
   })
 

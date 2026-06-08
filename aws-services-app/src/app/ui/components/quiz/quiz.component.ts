@@ -205,7 +205,7 @@ export class QuizComponent {
   }
 
   hasSucceeded(): boolean {
-    return !this.lastResult!.outcome!.hasFailed;
+    return this.lastResult!.outcome !== 'FAIL';
   }
 
   protected isLastQuestion(): boolean {
