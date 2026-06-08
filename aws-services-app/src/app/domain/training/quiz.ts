@@ -15,7 +15,7 @@ export class QuizOutcome {
 
   readonly #brand = Symbol();
 
-  constructor(
+  private constructor(
     readonly progress: Percentage,
     readonly accuracy: Percentage
   ) { }
