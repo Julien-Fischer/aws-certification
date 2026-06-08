@@ -6,7 +6,6 @@ import {
   Answer,
   Option,
   SingleChoiceQuestion,
-  Question,
   BooleanQuestion
 } from "../../../domain/search/models/question";
 import PageObject from "../../test/page-object";
@@ -19,6 +18,7 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
 import {Letter} from "../../../infra/learning/markdown-parser.service";
+import {QuestionBuilder} from "../../../domain/training/test/builders/question-builder";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -134,7 +134,6 @@ describe('QuizComponent', () => {
         .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
         .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
         .withCorrectAnswer('B')
-        .build()
     );
 
     expect(page.optionCards).toHaveLength(3);
@@ -145,9 +144,8 @@ describe('QuizComponent', () => {
 
   it('selects option and enable submit', async () => {
     await having(aMultipleChoiceQuestion()
-      .withCorrectAnswer('A')
-      .build()
-    );
+      .withCorrectAnswer('A'));
+
     expect(page.isSubmitButtonDisabled()).toBe(true);
 
     await page.clickOption(0);
@@ -158,8 +156,8 @@ describe('QuizComponent', () => {
 
   it('unselects option and disable submit', async () => {
     await having(
-      aMultipleChoiceQuestion().build(),
-      aMultipleChoiceQuestion().build()
+      aMultipleChoiceQuestion(),
+      aMultipleChoiceQuestion()
     );
     expect(page.isSubmitButtonDisabled()).toBe(true);
 
@@ -210,7 +208,6 @@ describe('QuizComponent', () => {
         .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
         .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
         .withCorrectAnswer('B')
-        .build()
     );
 
     await page.clickOption(0);
@@ -226,9 +223,7 @@ describe('QuizComponent', () => {
 
   it('does not mark incorrect option when submitting correct answer', async () => {
     await having(aMultipleChoiceQuestion()
-      .withCorrectAnswer('B')
-      .build()
-    );
+      .withCorrectAnswer('B'));
 
     await page.clickOption(1);
     await page.clickSubmitButton();
@@ -243,8 +238,8 @@ describe('QuizComponent', () => {
 
   it('show incorrect feedback on submit (multiple choice)', async () => {
     await having(
-      aMultipleChoiceQuestion().withCorrectAnswer('B').build(),
-      aMultipleChoiceQuestion().build()
+      aMultipleChoiceQuestion().withCorrectAnswer('B'),
+      aMultipleChoiceQuestion()
     );
 
     await page.clickOption(0);
@@ -266,8 +261,8 @@ describe('QuizComponent', () => {
 
   it('updates progress bar', async () => {
     await having(
-      aMultipleChoiceQuestion().withCorrectAnswer('B').build(),
-      aMultipleChoiceQuestion().build(),
+      aMultipleChoiceQuestion().withCorrectAnswer('B'),
+      aMultipleChoiceQuestion(),
     );
     expect(page.progress).contains('0%');
 
@@ -325,8 +320,7 @@ describe('QuizComponent', () => {
     const question = aMultipleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
-      .withExplanation('Some explanation')
-      .build();
+      .withExplanation('Some explanation');
 
     await having(question);
 
@@ -340,8 +334,7 @@ describe('QuizComponent', () => {
     const question = aMultipleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
-      .withExplanation('Some explanation')
-      .build();
+      .withExplanation('Some explanation');
 
     await having(question);
 
@@ -353,8 +346,7 @@ describe('QuizComponent', () => {
 
   it('does not show explanation when it does not exist', async () => {
     await having(aMultipleChoiceQuestion()
-      .withCorrectAnswer('B')
-      .build());
+      .withCorrectAnswer('B'));
 
     await page.clickOption(0);
     await page.clickSubmitButton();
@@ -363,8 +355,8 @@ describe('QuizComponent', () => {
   });
 
 
-  async function having(...questions: (BooleanQuestion | SingleChoiceQuestion)[]) {
-    fixture.componentRef.setInput('questions', [...questions]);
+  async function having(...questions: QuestionBuilder[]) {
+    fixture.componentRef.setInput('questions', questions.map(question => question.build()));
     await page.stabilize();
   }
 
@@ -406,20 +398,32 @@ describe('QuizComponent', () => {
 });
 
 
-function aQuestion(): Question {
+function aQuestion(): QuestionBuilder {
   return aTrueStatement();
 }
 
-function aBooleanQuestion(question?: string): BooleanQuestion {
+function aBooleanQuestion(question?: string): BooleanQuestionBuilder {
   return aTrueStatement(question);
 }
 
-function aTrueStatement(question: string = 'Question Text'): BooleanQuestion {
-  return {label: question, answer: new Answer(true)};
+function aTrueStatement(question: string = 'Question Text'): BooleanQuestionBuilder {
+  return new BooleanQuestionBuilder(question, true);
 }
 
-function aFalseStatement(question: string = 'Question Text'): BooleanQuestion {
-  return {label: question, answer: new Answer(false)};
+function aFalseStatement(question: string = 'Question Text'): BooleanQuestionBuilder {
+  return new BooleanQuestionBuilder(question, false);
+}
+
+class BooleanQuestionBuilder {
+
+  constructor(
+    private readonly label: string,
+    private readonly value: boolean
+  ) { }
+
+  build(): BooleanQuestion {
+    return {label: this.label, answer: new Answer(this.value)};
+  }
 }
 
 function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
