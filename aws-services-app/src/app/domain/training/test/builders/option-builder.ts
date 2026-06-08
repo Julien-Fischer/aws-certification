@@ -1,10 +1,11 @@
 import {Option} from "../../models/option";
+import {Builder} from "../../../../test/builder";
 
 export function anOption(): OptionBuilder {
   return new OptionBuilder();
 }
 
-export class OptionBuilder {
+export class OptionBuilder implements Builder<Option> {
 
   private prefix: string = 'A';
   private label: string = 'Option Label';
