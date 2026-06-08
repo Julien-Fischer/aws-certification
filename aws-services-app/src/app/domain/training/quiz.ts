@@ -3,10 +3,11 @@ import Percentage from "./models/percentage";
 import {QuizId} from "./quiz-id";
 import {UserAnswer} from "./models/user-answer";
 import {ExpectedAnswer} from "./models/answers/expected-answer";
+import {Accuracy, Progress} from "./models/types";
 
 export class QuizOutcome {
 
-  public static from(progress: Percentage, accuracy: Percentage): QuizOutcome {
+  public static from(progress: Progress, accuracy: Accuracy): QuizOutcome {
     return new QuizOutcome(progress, accuracy);
   }
 
