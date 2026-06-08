@@ -6,6 +6,10 @@ import {ExpectedAnswer} from "./models/answers/expected-answer";
 
 export class QuizOutcome {
 
+  public static from(progress: Percentage, accuracy: Percentage): QuizOutcome {
+    return new QuizOutcome(progress, accuracy);
+  }
+
   private static readonly SUCCESS_THRESHOLD = Percentage.FIFTY;
 
   readonly #brand = Symbol();
@@ -124,7 +128,7 @@ export class Quiz {
       expectedAnswer,
       explanation,
       over ? undefined : this.nextQuestion(),
-      over ? new QuizOutcome(progress, accuracy) : undefined
+      over ? QuizOutcome.from(progress, accuracy) : undefined
     );
   }
 
