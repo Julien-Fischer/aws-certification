@@ -24,7 +24,7 @@ export function aCompletedQuiz() {
   }
 }
 
-export class QuizBuilder {
+export class QuizBuilder implements Builder<Quiz> {
 
   private questions: Question[] = [];
   private id?: QuizId;
