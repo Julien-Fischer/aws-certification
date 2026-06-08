@@ -7,9 +7,9 @@ import {Accuracy} from "./models/types";
 
 export class QuizOutcome {
 
-  public static readonly FAIL    = new QuizOutcome(new Percentage(0));
-  public static readonly SUCCESS = new QuizOutcome(new Percentage(50));
-  public static readonly MASTER  = new QuizOutcome(new Percentage(100));
+  public static readonly FAIL    = new QuizOutcome(Percentage.ZERO);
+  public static readonly SUCCESS = new QuizOutcome(Percentage.FIFTY);
+  public static readonly MASTER  = new QuizOutcome(Percentage.ONE_HUNDRED);
 
   public static from(accuracy: Accuracy): QuizOutcome {
     const outcomes = [QuizOutcome.MASTER, QuizOutcome.SUCCESS];
