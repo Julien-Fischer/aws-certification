@@ -18,7 +18,7 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
 import {Letter} from "../../../infra/learning/markdown-parser.service";
-import {Builder} from "../../../test/builder";
+import {buildAll, Builder} from "../../../test/builder";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -356,7 +356,7 @@ describe('QuizComponent', () => {
 
 
   async function having(...questions: Builder<any>[]) {
-    fixture.componentRef.setInput('questions', questions.map(question => question.build()));
+    fixture.componentRef.setInput('questions', buildAll(questions));
     await page.stabilize();
   }
 
@@ -414,7 +414,7 @@ function aFalseStatement(question: string = 'Question Text'): BooleanQuestionBui
   return new BooleanQuestionBuilder(question, false);
 }
 
-class BooleanQuestionBuilder {
+class BooleanQuestionBuilder implements Builder<BooleanQuestion> {
 
   constructor(
     private readonly label: string,
@@ -430,7 +430,7 @@ function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
   return new MultipleChoiceQuestionBuilder();
 }
 
-class MultipleChoiceQuestionBuilder {
+class MultipleChoiceQuestionBuilder implements Builder<SingleChoiceQuestion> {
 
   private label: string = 'Question label';
 

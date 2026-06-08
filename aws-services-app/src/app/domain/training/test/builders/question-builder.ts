@@ -6,7 +6,7 @@ import {ExpectedBoolean} from "../../models/answers/expected-boolean";
 import {ExpectedChoice} from "../../models/answers/expected-choice";
 import {ExpectedCombination} from "../../models/answers/expected-combination";
 import { MultipleChoiceQuestion } from "../../models/questions/multiple-choice-question";
-import {Builder} from "../../../../test/builder";
+import {buildAll, Builder} from "../../../../test/builder";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -82,7 +82,7 @@ class SingleChoiceQuestionBuilder implements Builder<SingleChoiceQuestion> {
   }
 
   withOptions(...options: OptionBuilder[]): this {
-    this.options = options.map(option => option.build());
+    this.options = buildAll(options);
     return this;
   }
 
@@ -124,7 +124,7 @@ class MultipleChoiceQuestionBuilder implements Builder<MultipleChoiceQuestion> {
   }
 
   withOptions(...options: OptionBuilder[]): this {
-    this.options = options.map(option => option.build());
+    this.options = buildAll(options);
     return this;
   }
 

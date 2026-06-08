@@ -4,6 +4,7 @@ import {describe, it, expect, beforeEach} from 'vitest';
 import {Letter, MarkdownParserService} from '../markdown-parser.service';
 import {Answer, Option} from "../../../domain/search/models/question";
 import {FlashCard} from "../../../domain/search/models/flash-card";
+import {buildAll, Builder} from "../../../test/builder";
 
 describe('MarkdownParserService', () => {
 
@@ -483,11 +484,7 @@ function selection(...prefixes: string[]): Answer<Option[]> {
 
 // builders
 
-interface QuestionStringBuilder {
-    build(): string;
-}
-
-class BooleanQuestionStringBuilder implements QuestionStringBuilder {
+class BooleanQuestionStringBuilder implements Builder<string> {
     private questionText = 'The question text';
     private answer: boolean = false;
     private explanation = '';
@@ -526,7 +523,7 @@ class BooleanQuestionStringBuilder implements QuestionStringBuilder {
     }
 }
 
-class MultipleChoiceQuestionStringBuilder implements QuestionStringBuilder {
+class MultipleChoiceQuestionStringBuilder implements Builder<string> {
     private questionText = 'The question text';
     private options: string[] = ['A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'];
     private answer: Letter[] = ['A', 'B'];
@@ -567,7 +564,7 @@ class MultipleChoiceQuestionStringBuilder implements QuestionStringBuilder {
     }
 }
 
-class SingleChoiceQuestionStringBuilder implements QuestionStringBuilder {
+class SingleChoiceQuestionStringBuilder implements Builder<string> {
     private questionText = 'The question text';
     private options: string[] = ['A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'];
     private answer: Letter = 'A';
@@ -629,8 +626,8 @@ class FlashCardStringBuilder {
         return this;
     }
 
-    with(...multiChoiceQuiz: QuestionStringBuilder[]): this {
-        this.multiChoiceQuiz = multiChoiceQuiz.map(quiz => quiz.build());
+    with(...builders: Builder<string>[]): this {
+        this.multiChoiceQuiz = buildAll(builders);
         return this;
     }
 
