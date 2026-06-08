@@ -7,22 +7,18 @@ import {Accuracy} from "./models/types";
 
 export class QuizOutcome {
 
-  public static readonly FAIL    = new QuizOutcome(Percentage.ONE_HUNDRED);
-  public static readonly SUCCESS = new QuizOutcome(Percentage.ONE_HUNDRED);
-  public static readonly MASTER  = new QuizOutcome(Percentage.ONE_HUNDRED);
+  public static readonly FAIL    = new QuizOutcome(new Percentage(0));
+  public static readonly SUCCESS = new QuizOutcome(new Percentage(50));
+  public static readonly MASTER  = new QuizOutcome(new Percentage(100));
 
   public static from(accuracy: Accuracy): QuizOutcome {
-    if (accuracy.isLessThan(QuizOutcome.SUCCESS_THRESHOLD)) {
-      return QuizOutcome.FAIL;
-    }
-    return accuracy.isMaximum() ? QuizOutcome.MASTER : QuizOutcome.SUCCESS;
+    const outcomes = [QuizOutcome.MASTER, QuizOutcome.SUCCESS];
+    return outcomes.find(outcome => accuracy.isGreaterOrEqualTo(outcome.accuracy)) ?? QuizOutcome.FAIL;
   }
-
-  private static readonly SUCCESS_THRESHOLD = Percentage.FIFTY;
 
   readonly #brand = Symbol();
 
-  private constructor(accuracy: Percentage) { }
+  private constructor(private readonly accuracy: Percentage) { }
 
 }
 
