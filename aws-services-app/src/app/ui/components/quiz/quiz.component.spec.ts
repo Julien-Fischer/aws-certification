@@ -317,12 +317,10 @@ describe('QuizComponent', () => {
 
 
   it('shows explanation when answer is wrong and explanation exists', async () => {
-    const question = aSingleChoiceQuestion()
+    await having(aSingleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
-      .withExplanation('Some explanation');
-
-    await having(question);
+      .withExplanation('Some explanation'));
 
     await page.clickOption(0);
     await page.clickSubmitButton();
@@ -331,12 +329,10 @@ describe('QuizComponent', () => {
   });
 
   it('does not show explanation when answer is correct', async () => {
-    const question = aSingleChoiceQuestion()
+    await having(aSingleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
-      .withExplanation('Some explanation');
-
-    await having(question);
+      .withExplanation('Some explanation'));
 
     await page.clickOption(1);
     await page.clickSubmitButton();
