@@ -18,7 +18,7 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
 import {Letter} from "../../../infra/learning/markdown-parser.service";
-import {QuestionBuilder} from "../../../domain/training/test/builders/question-builder";
+import {QuestionBuilder} from "../../../test/builder";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 

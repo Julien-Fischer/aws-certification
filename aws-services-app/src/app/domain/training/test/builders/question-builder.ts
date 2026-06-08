@@ -6,6 +6,7 @@ import {ExpectedBoolean} from "../../models/answers/expected-boolean";
 import {ExpectedChoice} from "../../models/answers/expected-choice";
 import {ExpectedCombination} from "../../models/answers/expected-combination";
 import { MultipleChoiceQuestion } from "../../models/questions/multiple-choice-question";
+import {QuestionBuilder} from "../../../../test/builder";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -29,10 +30,6 @@ export function aSingleChoiceQuestion(): SingleChoiceQuestionBuilder {
 
 export function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
   return new MultipleChoiceQuestionBuilder();
-}
-
-export abstract class QuestionBuilder {
-  abstract build(): any;
 }
 
 class BooleanQuestionBuilder extends QuestionBuilder {

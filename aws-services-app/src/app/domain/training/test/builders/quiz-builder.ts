@@ -1,8 +1,8 @@
 import {Question} from "../../models/questions/question";
 import {Quiz} from "../../quiz";
-import {QuestionBuilder} from "./question-builder";
 import {QuizId} from "../../quiz-id";
 import {aUserAnswer} from "./answer-builder";
+import {QuestionBuilder} from "../../../../test/builder";
 
 export function aQuiz(): QuizBuilder {
   return new QuizBuilder();
