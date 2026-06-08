@@ -7,7 +7,7 @@ export default class Percentage {
 
     public static readonly ZERO        = new Percentage(0);
     public static readonly FIFTY       = new Percentage(50);
-    public static readonly ONE_HUNDRED = new Percentage(100);
+    public static readonly HUNDRED = new Percentage(100);
 
     constructor(public readonly value: number) {
         Percentage.validate(value);

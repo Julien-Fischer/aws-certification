@@ -24,9 +24,9 @@ describe('Percentage', () => {
 
     it('checks value', () => {
         expect(Percentage.ZERO.hasValue(0)).toBe(true);
-        expect(Percentage.ONE_HUNDRED.hasValue(100)).toBe(true);
+        expect(Percentage.HUNDRED.hasValue(100)).toBe(true);
         expect(Percentage.ZERO.hasValue(100)).toBe(false);
-        expect(Percentage.ONE_HUNDRED.hasValue(0)).toBe(false);
+        expect(Percentage.HUNDRED.hasValue(0)).toBe(false);
     });
 
     it('less than', () => {
@@ -56,16 +56,16 @@ describe('Percentage', () => {
     });
 
     it('equal to', () => {
-        expect(Percentage.ONE_HUNDRED.isEqualTo(new Percentage(100))).toBe(true);
+        expect(Percentage.HUNDRED.isEqualTo(new Percentage(100))).toBe(true);
         expect(Percentage.ZERO.isEqualTo(new Percentage(0))).toBe(true);
-        expect(Percentage.ONE_HUNDRED.isEqualTo(Percentage.ZERO)).toBe(false);
-        expect(Percentage.ZERO.isEqualTo(Percentage.ONE_HUNDRED)).toBe(false);
+        expect(Percentage.HUNDRED.isEqualTo(Percentage.ZERO)).toBe(false);
+        expect(Percentage.ZERO.isEqualTo(Percentage.HUNDRED)).toBe(false);
     });
 
     it('toString', () => {
         expect(Percentage.ZERO.toString()).toBe('0%');
         expect(Percentage.FIFTY.toString()).toBe('50%');
-        expect(Percentage.ONE_HUNDRED.toString()).toBe('100%');
+        expect(Percentage.HUNDRED.toString()).toBe('100%');
     });
 
     it('toFixed', () => {
@@ -77,7 +77,7 @@ describe('Percentage', () => {
     });
 
     it('is maximum', () => {
-      expect(Percentage.ONE_HUNDRED.isMaximum()).toBe(true);
+      expect(Percentage.HUNDRED.isMaximum()).toBe(true);
       expect(new Percentage(99.9999).isMaximum()).toBe(false);
       expect(Percentage.ZERO.isMaximum()).toBe(false);
     })

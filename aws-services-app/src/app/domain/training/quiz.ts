@@ -9,7 +9,7 @@ export class QuizOutcome {
 
   public static readonly FAIL    = new QuizOutcome(Percentage.ZERO);
   public static readonly SUCCESS = new QuizOutcome(Percentage.FIFTY);
-  public static readonly MASTER  = new QuizOutcome(Percentage.ONE_HUNDRED);
+  public static readonly MASTER  = new QuizOutcome(Percentage.HUNDRED);
 
   public static from(accuracy: Accuracy): QuizOutcome {
     const outcomes = [QuizOutcome.MASTER, QuizOutcome.SUCCESS];
