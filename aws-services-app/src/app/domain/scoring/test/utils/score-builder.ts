@@ -1,12 +1,13 @@
 import Score from "../../models/score";
 import Percentage from "../../models/percentage";
 import Highscore from "../../models/highscore";
+import {Builder} from "../../../../test/builder";
 
 export function aScore(): ScoreBuilder {
     return new ScoreBuilder();
 }
 
-export class ScoreBuilder {
+export class ScoreBuilder implements Builder<Score> {
 
     protected progress = 0;
     protected accuracy = 0;
