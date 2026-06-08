@@ -18,7 +18,7 @@ import {TrainingSession} from "../../../domain/training/training-session";
 import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
 import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
 import {Letter} from "../../../infra/learning/markdown-parser.service";
-import {QuestionBuilder} from "../../../test/builder";
+import {Builder} from "../../../test/builder";
 
 class DeterministicShuffleProvider implements ShuffleProvider {
 
@@ -355,7 +355,7 @@ describe('QuizComponent', () => {
   });
 
 
-  async function having(...questions: QuestionBuilder[]) {
+  async function having(...questions: Builder<any>[]) {
     fixture.componentRef.setInput('questions', questions.map(question => question.build()));
     await page.stabilize();
   }
@@ -398,7 +398,7 @@ describe('QuizComponent', () => {
 });
 
 
-function aQuestion(): QuestionBuilder {
+function aQuestion(): Builder<any> {
   return aTrueStatement();
 }
 

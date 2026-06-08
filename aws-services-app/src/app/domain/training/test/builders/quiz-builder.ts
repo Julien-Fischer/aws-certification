@@ -2,7 +2,7 @@ import {Question} from "../../models/questions/question";
 import {Quiz} from "../../quiz";
 import {QuizId} from "../../quiz-id";
 import {aUserAnswer} from "./answer-builder";
-import {QuestionBuilder} from "../../../../test/builder";
+import {Builder} from "../../../../test/builder";
 
 export function aQuiz(): QuizBuilder {
   return new QuizBuilder();
@@ -10,7 +10,7 @@ export function aQuiz(): QuizBuilder {
 
 export function aCompletedQuiz() {
   return {
-    with(...questions: QuestionBuilder[]) {
+    with(...questions: Builder<any>[]) {
       const quiz = aQuiz()
         .with(...questions)
         .build();
@@ -34,7 +34,7 @@ export class QuizBuilder {
     return this;
   }
 
-  with(...questions: QuestionBuilder[]): this {
+  with(...questions: Builder<any>[]): this {
     this.questions = questions.map(question => question.build());
     return this;
   }

@@ -6,7 +6,7 @@ import {ExpectedBoolean} from "../../models/answers/expected-boolean";
 import {ExpectedChoice} from "../../models/answers/expected-choice";
 import {ExpectedCombination} from "../../models/answers/expected-combination";
 import { MultipleChoiceQuestion } from "../../models/questions/multiple-choice-question";
-import {QuestionBuilder} from "../../../../test/builder";
+import {Builder} from "../../../../test/builder";
 
 export function aQuestion(): BooleanQuestionBuilder {
   return aBooleanQuestion();
@@ -32,7 +32,7 @@ export function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
   return new MultipleChoiceQuestionBuilder();
 }
 
-class BooleanQuestionBuilder extends QuestionBuilder {
+class BooleanQuestionBuilder implements Builder<BooleanQuestion> {
 
   private label: string = 'question text';
   private answer: boolean = true;
@@ -64,7 +64,7 @@ class BooleanQuestionBuilder extends QuestionBuilder {
 
 }
 
-class SingleChoiceQuestionBuilder extends QuestionBuilder {
+class SingleChoiceQuestionBuilder implements Builder<SingleChoiceQuestion> {
 
   private label: string = 'question text';
   private expectedAnswer: string = 'A. Correct answer';
@@ -106,7 +106,7 @@ class SingleChoiceQuestionBuilder extends QuestionBuilder {
 
 }
 
-class MultipleChoiceQuestionBuilder extends QuestionBuilder {
+class MultipleChoiceQuestionBuilder implements Builder<MultipleChoiceQuestion> {
 
   private label: string = 'question text';
   private expectedAnswer: string[] = ['A. Correct answer'];

@@ -1,5 +1,5 @@
-export abstract class QuestionBuilder {
+export interface Builder<T> {
 
-  abstract build(): any;
+  build(): T;
 
 }
