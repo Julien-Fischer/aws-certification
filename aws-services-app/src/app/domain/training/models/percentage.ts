@@ -2,11 +2,11 @@ export default class Percentage {
 
     readonly #brand = Symbol();
 
-    private static readonly MIN_VALUE   = 0;
+    private static readonly MIN_VALUE = 0;
     private static readonly MAX_VALUE = 100;
 
-    public static readonly ZERO        = new Percentage(0);
-    public static readonly FIFTY       = new Percentage(50);
+    public static readonly ZERO    = new Percentage(0);
+    public static readonly FIFTY   = new Percentage(50);
     public static readonly HUNDRED = new Percentage(100);
 
     constructor(public readonly value: number) {
