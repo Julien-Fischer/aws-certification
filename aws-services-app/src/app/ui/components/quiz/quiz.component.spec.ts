@@ -130,7 +130,7 @@ describe('QuizComponent', () => {
 
   it('displays options for multiple choice quiz', async () => {
     await having(
-      aMultipleChoiceQuestion()
+      aSingleChoiceQuestion()
         .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
         .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
         .withCorrectAnswer('B')
@@ -143,7 +143,7 @@ describe('QuizComponent', () => {
   })
 
   it('selects option and enable submit', async () => {
-    await having(aMultipleChoiceQuestion()
+    await having(aSingleChoiceQuestion()
       .withCorrectAnswer('A'));
 
     expect(page.isSubmitButtonDisabled()).toBe(true);
@@ -156,8 +156,8 @@ describe('QuizComponent', () => {
 
   it('unselects option and disable submit', async () => {
     await having(
-      aMultipleChoiceQuestion(),
-      aMultipleChoiceQuestion()
+      aSingleChoiceQuestion(),
+      aSingleChoiceQuestion()
     );
     expect(page.isSubmitButtonDisabled()).toBe(true);
 
@@ -204,7 +204,7 @@ describe('QuizComponent', () => {
 
   it('marks incorrect option when submitting wrong answer', async () => {
     await having(
-      aMultipleChoiceQuestion()
+      aSingleChoiceQuestion()
         .labelled('Which feature provides cross-Region disaster recovery for Aurora?')
         .withOptions('A. Aurora Replicas', 'B. Aurora Global Database', 'C. Multi-AZ')
         .withCorrectAnswer('B')
@@ -222,7 +222,7 @@ describe('QuizComponent', () => {
   });
 
   it('does not mark incorrect option when submitting correct answer', async () => {
-    await having(aMultipleChoiceQuestion()
+    await having(aSingleChoiceQuestion()
       .withCorrectAnswer('B'));
 
     await page.clickOption(1);
@@ -238,8 +238,8 @@ describe('QuizComponent', () => {
 
   it('show incorrect feedback on submit (multiple choice)', async () => {
     await having(
-      aMultipleChoiceQuestion().withCorrectAnswer('B'),
-      aMultipleChoiceQuestion()
+      aSingleChoiceQuestion().withCorrectAnswer('B'),
+      aSingleChoiceQuestion()
     );
 
     await page.clickOption(0);
@@ -261,8 +261,8 @@ describe('QuizComponent', () => {
 
   it('updates progress bar', async () => {
     await having(
-      aMultipleChoiceQuestion().withCorrectAnswer('B'),
-      aMultipleChoiceQuestion(),
+      aSingleChoiceQuestion().withCorrectAnswer('B'),
+      aSingleChoiceQuestion(),
     );
     expect(page.progress).contains('0%');
 
@@ -317,7 +317,7 @@ describe('QuizComponent', () => {
 
 
   it('shows explanation when answer is wrong and explanation exists', async () => {
-    const question = aMultipleChoiceQuestion()
+    const question = aSingleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
       .withExplanation('Some explanation');
@@ -331,7 +331,7 @@ describe('QuizComponent', () => {
   });
 
   it('does not show explanation when answer is correct', async () => {
-    const question = aMultipleChoiceQuestion()
+    const question = aSingleChoiceQuestion()
       .withOptions('A. Wrong Answer 1', 'B. Correct Answer', 'C. Wrong Answer 2')
       .withCorrectAnswer('B')
       .withExplanation('Some explanation');
@@ -345,7 +345,7 @@ describe('QuizComponent', () => {
   });
 
   it('does not show explanation when it does not exist', async () => {
-    await having(aMultipleChoiceQuestion()
+    await having(aSingleChoiceQuestion()
       .withCorrectAnswer('B'));
 
     await page.clickOption(0);
@@ -426,11 +426,11 @@ class BooleanQuestionBuilder implements Builder<BooleanQuestion> {
   }
 }
 
-function aMultipleChoiceQuestion(): MultipleChoiceQuestionBuilder {
-  return new MultipleChoiceQuestionBuilder();
+function aSingleChoiceQuestion(): SingleChoiceQuestionBuilder {
+  return new SingleChoiceQuestionBuilder();
 }
 
-class MultipleChoiceQuestionBuilder implements Builder<SingleChoiceQuestion> {
+class SingleChoiceQuestionBuilder implements Builder<SingleChoiceQuestion> {
 
   private label: string = 'Question label';
 
