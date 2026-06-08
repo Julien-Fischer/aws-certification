@@ -3,34 +3,26 @@ import Percentage from "./models/percentage";
 import {QuizId} from "./quiz-id";
 import {UserAnswer} from "./models/user-answer";
 import {ExpectedAnswer} from "./models/answers/expected-answer";
-import {Accuracy, Progress} from "./models/types";
+import {Accuracy} from "./models/types";
 
 export class QuizOutcome {
 
-  public static from(progress: Progress, accuracy: Accuracy): QuizOutcome {
-    return new QuizOutcome(progress, accuracy);
+  public static readonly FAIL    = new QuizOutcome(Percentage.ONE_HUNDRED);
+  public static readonly SUCCESS = new QuizOutcome(Percentage.ONE_HUNDRED);
+  public static readonly MASTER  = new QuizOutcome(Percentage.ONE_HUNDRED);
+
+  public static from(accuracy: Accuracy): QuizOutcome {
+    if (accuracy.isLessThan(QuizOutcome.SUCCESS_THRESHOLD)) {
+      return QuizOutcome.FAIL;
+    }
+    return accuracy.isMaximum() ? QuizOutcome.MASTER : QuizOutcome.SUCCESS;
   }
 
   private static readonly SUCCESS_THRESHOLD = Percentage.FIFTY;
 
   readonly #brand = Symbol();
 
-  private constructor(
-    readonly progress: Percentage,
-    readonly accuracy: Percentage
-  ) { }
-
-  hasFailed(): boolean {
-    return this.accuracy.isLessThan(QuizOutcome.SUCCESS_THRESHOLD);
-  }
-
-  hasSucceeded(): boolean {
-    return !this.hasFailed();
-  }
-
-  hasMastered(): boolean {
-    return this.accuracy.isMaximum();
-  }
+  private constructor(accuracy: Percentage) { }
 
 }
 
@@ -129,7 +121,7 @@ export class Quiz {
       expectedAnswer,
       explanation,
       over ? undefined : this.nextQuestion(),
-      over ? QuizOutcome.from(progress, accuracy) : undefined
+      over ? QuizOutcome.from(accuracy) : undefined
     );
   }
 

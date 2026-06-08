@@ -428,7 +428,7 @@ describe('SendAnswer', () => {
         .toHaveAccuracy(100)
         .toHaveOutcome({
           hasFailed: false,
-          hasSucceeded: true,
+          hasSucceeded: false,
           hasMastered: true
         });
     })

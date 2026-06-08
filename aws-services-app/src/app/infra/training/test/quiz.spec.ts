@@ -4,32 +4,24 @@ import Percentage from "../../../domain/training/models/percentage";
 
 describe('QuizOutcome', () => {
 
-  it('from', () => {
-    const outcome = QuizOutcome.from(Percentage.FIFTY, Percentage.ONE_HUNDRED);
-
-    expect(outcome).toBeInstanceOf(QuizOutcome);
-    expect(outcome.progress).toEqual(Percentage.FIFTY);
-    expect(outcome.accuracy).toEqual(Percentage.ONE_HUNDRED);
-  });
-
   it.for([0, 49])
   ('has failed when < 50%', (accuracy: number) => {
     const outcome = anOutcome().withAccuracy(accuracy);
 
-    expect(outcome.hasFailed()).toBe(true);
+    expect(outcome === QuizOutcome.FAIL).toBe(true);
   })
 
   it.for([50, 99])
   ('has succeeded when >= 50%', (accuracy: number) => {
     const outcome = anOutcome().withAccuracy(accuracy);
 
-    expect(outcome.hasSucceeded()).toBe(true);
+    expect(outcome === QuizOutcome.SUCCESS).toBe(true);
   })
 
   it('has mastered when == 100%', () => {
     const outcome = anOutcome().withAccuracy(100);
 
-    expect(outcome.hasMastered()).toBe(true);
+    expect(outcome === QuizOutcome.MASTER).toBe(true);
   })
 
 })
@@ -37,7 +29,7 @@ describe('QuizOutcome', () => {
 function anOutcome() {
   return {
     withAccuracy(accuracy: number) {
-      return QuizOutcome.from(new Percentage(100), new Percentage(accuracy));
+      return QuizOutcome.from(new Percentage(accuracy));
     }
   }
 }

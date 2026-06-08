@@ -76,9 +76,9 @@ function toDto(result: Result): ResultDto {
 
 function toOutcomeDto(outcome?: QuizOutcome): OutcomeDto | undefined {
   return outcome == null ? undefined : {
-    hasFailed: outcome.hasFailed(),
-    hasSucceeded: outcome.hasSucceeded(),
-    hasMastered: outcome.hasMastered()
+    hasFailed: outcome === QuizOutcome.FAIL,
+    hasSucceeded: outcome === QuizOutcome.SUCCESS,
+    hasMastered: outcome === QuizOutcome.MASTER
   };
 }
 

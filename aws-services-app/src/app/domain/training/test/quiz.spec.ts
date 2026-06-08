@@ -7,7 +7,7 @@ import {
   aQuestion,
   aTrueStatement,
 } from "./builders/question-builder";
-import {Quiz} from "../quiz";
+import {Quiz, QuizOutcome} from "../quiz";
 import {anOption} from "./builders/option-builder";
 import {expectResult} from "./expectations/expect-result";
 import {aUserAnswer} from "./builders/answer-builder";
@@ -354,7 +354,7 @@ describe('Quiz', () => {
       const result = quiz.submit(false);
 
       expect(result.outcome).toBeDefined();
-      expect(result.outcome?.hasFailed()).toBe(true);
+      expect(result.outcome === QuizOutcome.FAIL).toBe(true);
     })
 
     it('has succeeded when accuracy >= 50%', () => {
@@ -367,9 +367,7 @@ describe('Quiz', () => {
       const result2 = quiz.submit(false);
 
       expect(result2.outcome).toBeDefined();
-      expect(result2.outcome?.hasFailed()).toBe(false);
-      expect(result2.outcome?.hasSucceeded()).toBe(true);
-      expect(result2.outcome?.hasMastered()).toBe(false);
+      expect(result2.outcome === QuizOutcome.SUCCESS).toBe(true);
     })
 
     it('has mastered when accuracy = 100%', () => {
@@ -382,9 +380,7 @@ describe('Quiz', () => {
       const result2 = quiz.submit(true);
 
       expect(result2.outcome).toBeDefined();
-      expect(result2.outcome?.hasFailed()).toBe(false);
-      expect(result2.outcome?.hasSucceeded()).toBe(true);
-      expect(result2.outcome?.hasMastered()).toBe(true);
+      expect(result2.outcome === QuizOutcome.MASTER).toBe(true);
     })
 
   })
