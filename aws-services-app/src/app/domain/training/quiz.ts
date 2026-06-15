@@ -7,11 +7,11 @@ import {Accuracy} from "./models/types";
 
 export class QuizOutcome {
 
-  public static readonly FAIL    = new QuizOutcome(Percentage.ZERO);
-  public static readonly PASS    = new QuizOutcome(new Percentage(72));
-  public static readonly MASTER  = new QuizOutcome(Percentage.HUNDRED);
+  static readonly FAIL    = new QuizOutcome(Percentage.ZERO);
+  static readonly PASS    = new QuizOutcome(new Percentage(72));
+  static readonly MASTER  = new QuizOutcome(Percentage.HUNDRED);
 
-  public static from(accuracy: Accuracy): QuizOutcome {
+  static from(accuracy: Accuracy): QuizOutcome {
     const outcomes = [QuizOutcome.MASTER, QuizOutcome.PASS];
     return outcomes.find(outcome => accuracy.isGreaterOrEqualTo(outcome.accuracy)) ?? QuizOutcome.FAIL;
   }
