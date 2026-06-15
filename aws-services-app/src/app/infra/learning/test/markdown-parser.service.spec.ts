@@ -11,8 +11,8 @@ describe('MarkdownParserService', () => {
     let service: MarkdownParserService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(MarkdownParserService);
+      TestBed.configureTestingModule({});
+      service = TestBed.inject(MarkdownParserService);
     });
 
     it('should be created', () => {
@@ -115,8 +115,7 @@ describe('MarkdownParserService', () => {
         });
     })
 
-    // TODO: implement parsing to make this test pass
-    describe.skip('multiple choice questions', () => {
+    describe('multiple choice questions', () => {
         it('parses one question', () => {
           const markdown = aFlashCard()
             .with(
@@ -134,7 +133,7 @@ describe('MarkdownParserService', () => {
                 {
                     label: 'Some question?',
                     options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
-                    answer: selection('A', 'C')
+                    answer: selection('A. Option A', 'C. Option C')
                 },
             ]);
         })
@@ -478,8 +477,8 @@ function toMarkdown(markdown: string): string {
         .join('\n');
 }
 
-function selection(...prefixes: string[]): Answer<Option[]> {
-    return new Answer(prefixes.map(prefix => new Option(prefix)));
+function selection(...options: string[]): Answer<Option[]> {
+    return new Answer(options.map(option => new Option(option)));
 }
 
 // builders

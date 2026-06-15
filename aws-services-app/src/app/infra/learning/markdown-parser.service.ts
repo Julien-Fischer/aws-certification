@@ -29,7 +29,7 @@ export class MarkdownParserService {
 
         const {multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions} = this.parseAllQuizzesFrom(quizSection);
 
-        if (this.hasNoQuizzes(singleChoiceQuestions, booleanQuestions)) {
+        if (this.hasNoQuizzes(multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions)) {
             throw new Error('No valid questions found in this quiz');
         }
 
@@ -65,8 +65,7 @@ export class MarkdownParserService {
     } {
         const {multipleChoiceContent, booleanContent} = this.splitQuizSections(quizContent);
 
-        const multipleChoiceQuestions: MultipleChoiceQuestion[] = []; // TODO: impl
-        const singleChoiceQuestions = this.singleChoiceQuestionsParser.parse(multipleChoiceContent);
+        const {multipleChoiceQuestions, singleChoiceQuestions} = this.singleChoiceQuestionsParser.parse(multipleChoiceContent);
         const booleanQuestions = this.booleanQuestionsParser.parse(booleanContent);
 
         return {multipleChoiceQuestions, singleChoiceQuestions, booleanQuestions};
@@ -94,10 +93,12 @@ export class MarkdownParserService {
     }
 
     private hasNoQuizzes(
+        multipleChoiceQuestions: MultipleChoiceQuestion[],
         singleChoiceQuestions: SingleChoiceQuestion[],
         booleanQuestions: BooleanQuestion[]
     ): boolean {
         return (
+            multipleChoiceQuestions.length === 0 &&
             singleChoiceQuestions.length === 0 &&
             booleanQuestions.length === 0
         );
@@ -163,18 +164,23 @@ class BooleanQuestionParser {
 
 class MultipleChoiceQuestionParser {
 
-    parse(multipleChoiceContent: string): SingleChoiceQuestion[] {
-        if (!multipleChoiceContent.trim()) return [];
+    parse(multipleChoiceContent: string): { multipleChoiceQuestions: MultipleChoiceQuestion[], singleChoiceQuestions: SingleChoiceQuestion[] } {
+        if (!multipleChoiceContent.trim()) return {multipleChoiceQuestions: [], singleChoiceQuestions: []};
 
         const rawQuestions = this.splitMultipleChoiceBlocks(multipleChoiceContent);
-        return rawQuestions.map((q) => this.parseMultipleChoiceBlock(q));
+        const questions = rawQuestions.map((q) => this.parseMultipleChoiceBlock(q));
+
+        return {
+            multipleChoiceQuestions: questions.filter((q): q is MultipleChoiceQuestion => Array.isArray(q.answer.value)),
+            singleChoiceQuestions: questions.filter((q): q is SingleChoiceQuestion => !Array.isArray(q.answer.value))
+        };
     }
 
     private splitMultipleChoiceBlocks(multipleChoiceContent: string): string[] {
         return multipleChoiceContent.split(/\*\*Q\d+\.\*\*/).slice(1);
     }
 
-    private parseMultipleChoiceBlock(block: string): SingleChoiceQuestion {
+    private parseMultipleChoiceBlock(block: string): MultipleChoiceQuestion | SingleChoiceQuestion {
         const questionLine = block.split('\n').map(l => l.trim()).find(Boolean) || '';
         const questionText = extractQuestionText(questionLine);
 
@@ -188,10 +194,10 @@ class MultipleChoiceQuestionParser {
             throw new Error(`Invalid Multiple Choice question format (missing answer): ${block}`);
         }
 
-        return {label: questionText, options, answer};
+        return {label: questionText, options, answer} as any;
     }
 
-    private parseMultipleChoiceAnswerLines(block: string): { options: Option[], answer: Answer<Option> | null } {
+    private parseMultipleChoiceAnswerLines(block: string): { options: Option[], answer: Answer<Option | Option[]> | null } {
         const lines = block.split('\n').map(l => l.trim());
         const options: Option[] = [];
 
@@ -200,23 +206,28 @@ class MultipleChoiceQuestionParser {
             if (this.isOptionLine(line)) {
                 options.push(new Option(line));
             } else if (line.includes('✅ **Answer:')) {
-                const letter = this.findLetter(line);
-                const answerOption = this.findAnswer(letter, options);
-
+                const letters = this.findLetters(line);
                 const explanation = findExplanation(lines, i);
-                return {options, answer: new Answer(answerOption, explanation)};
+
+                if (letters.length > 1) {
+                    const answerOptions = letters.map(letter => this.findAnswer(letter, options));
+                    return {options, answer: new Answer(answerOptions, explanation)};
+                } else {
+                    const answerOption = this.findAnswer(letters[0], options);
+                    return {options, answer: new Answer(answerOption, explanation)};
+                }
             }
         }
 
         return {options, answer: null};
     }
 
-    private findLetter(line: string) {
-        const match = line.match(/Answer:\s*([A-F])/);
+    private findLetters(line: string): Letter[] {
+        const match = line.match(/Answer:\s*([A-F](?:\s*,\s*[A-F])*)/);
         if (!match) {
             throw new Error(`Invalid Multiple Choice answer format: ${line}`);
         }
-        return toLetter(match[1]);
+        return match[1].split(',').map(prefix => toLetter(prefix.trim()));
     }
 
     private findAnswer(letter: Letter, options: Option[]): Option {
