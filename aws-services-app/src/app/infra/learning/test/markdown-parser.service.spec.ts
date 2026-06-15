@@ -116,6 +116,17 @@ describe('MarkdownParserService', () => {
     })
 
     describe('multiple choice questions', () => {
+      it('parses no multiple-choice question', () => {
+        const markdown = aFlashCard()
+          .with(aBooleanStatement())
+          .toMarkdown();
+
+        const parsed = service.parse(markdown);
+
+        expectFlashCard(parsed)
+          .toHaveNoMultipleChoiceQuestions();
+      })
+
       it('parses one question', () => {
         const markdown = aFlashCard()
           .with(
@@ -793,6 +804,11 @@ class FlashCardExpectation {
         expect(this.flashCard.booleanQuestions)
             .toStrictEqual(expected)
         return this;
+    }
+
+    toHaveNoMultipleChoiceQuestions(): this {
+      expect(this.flashCard.multipleChoiceQuestions).toHaveLength(0);
+      return this;
     }
 }
 
