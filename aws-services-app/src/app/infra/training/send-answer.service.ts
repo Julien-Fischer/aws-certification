@@ -12,7 +12,7 @@ import {SingleChoiceQuestion} from "../../domain/training/models/questions/singl
 
 export type ExpectedAnswerDto = boolean | string | string[];
 
-export type OutcomeDto = 'FAIL' | 'SUCCESS' | 'MASTER';
+export type OutcomeDto = 'FAIL' | 'PASS' | 'MASTER';
 
 export interface ResultDto {
   isAnswerCorrect: boolean;
@@ -73,7 +73,7 @@ function toDto(result: Result): ResultDto {
 function toOutcomeDto(outcome?: QuizOutcome): OutcomeDto | undefined {
   if (outcome == null) return undefined;
   if (outcome == QuizOutcome.MASTER) return 'MASTER';
-  if (outcome == QuizOutcome.SUCCESS) return 'SUCCESS';
+  if (outcome == QuizOutcome.PASS) return 'PASS';
   return 'FAIL';
 }
 

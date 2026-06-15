@@ -15,7 +15,7 @@ describe('QuizOutcome', () => {
   ('has succeeded when >= 50%', (accuracy: number) => {
     const outcome = anOutcome().withAccuracy(accuracy);
 
-    expect(outcome === QuizOutcome.SUCCESS).toBe(true);
+    expect(outcome === QuizOutcome.PASS).toBe(true);
   })
 
   it('has mastered when == 100%', () => {

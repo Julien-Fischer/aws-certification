@@ -307,7 +307,7 @@ describe('SendAnswer', () => {
         .toHaveProgress(100)
         .toHaveAccuracy(50)
         .toHaveNoNextQuestion()
-        .toHaveOutcome('SUCCESS')
+        .toHaveOutcome('PASS')
     })
   })
 
@@ -440,7 +440,7 @@ describe('SendAnswer', () => {
       expectResult(result)
         .toHaveProgress(100)
         .toHaveAccuracy(50)
-        .toHaveOutcome('SUCCESS');
+        .toHaveOutcome('PASS');
     })
 
     it('has failed quiz if accuracy < 50%', () => {

@@ -367,7 +367,7 @@ describe('Quiz', () => {
       const result2 = quiz.submit(false);
 
       expect(result2.outcome).toBeDefined();
-      expect(result2.outcome === QuizOutcome.SUCCESS).toBe(true);
+      expect(result2.outcome === QuizOutcome.PASS).toBe(true);
     })
 
     it('has mastered when accuracy = 100%', () => {
