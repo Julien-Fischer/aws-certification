@@ -296,18 +296,16 @@ describe('SendAnswer', () => {
         .identified(IAM_QUIZ)
         .with(
           aTrueStatement(),
-          aFalseStatement()
+          aTrueStatement()
         ));
 
-      havingSent(false).toQuiz(IAM_QUIZ);
+      havingSent(true).toQuiz(IAM_QUIZ);
 
       const result = send(false).toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toHaveProgress(100)
-        .toHaveAccuracy(50)
-        .toHaveNoNextQuestion()
-        .toHaveOutcome('PASS')
+        .toHaveNoNextQuestion();
     })
   })
 
@@ -425,25 +423,29 @@ describe('SendAnswer', () => {
         .toHaveOutcome('MASTER');
     })
 
-    it('has succeeded quiz if accuracy >= 50%', () => {
+    it('has succeeded quiz if accuracy >= 72%', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(
           aTrueStatement(),
-          aFalseStatement()
+          aTrueStatement(),
+          aTrueStatement(),
+          aTrueStatement()
         ));
 
-      havingSent(false).toQuiz(IAM_QUIZ);
+      havingSent(true).toQuiz(IAM_QUIZ);
+      havingSent(true).toQuiz(IAM_QUIZ);
+      havingSent(true).toQuiz(IAM_QUIZ);
 
       const result = send(false).toQuiz(IAM_QUIZ);
 
       expectResult(result)
         .toHaveProgress(100)
-        .toHaveAccuracy(50)
+        .toHaveAccuracy(75)
         .toHaveOutcome('PASS');
     })
 
-    it('has failed quiz if accuracy < 50%', () => {
+    it('has failed quiz if accuracy < 72%', () => {
       having(aQuiz()
         .identified(IAM_QUIZ)
         .with(

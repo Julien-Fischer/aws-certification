@@ -343,7 +343,7 @@ describe('Quiz', () => {
       expect(result2.outcome).toBeDefined();
     })
 
-    it('has failed when accuracy < 50%', () => {
+    it('has failed when accuracy < 72%', () => {
       const quiz = aQuiz()
         .with(aTrueStatement(), aTrueStatement(), aTrueStatement())
         .build();
@@ -357,11 +357,13 @@ describe('Quiz', () => {
       expect(result.outcome === QuizOutcome.FAIL).toBe(true);
     })
 
-    it('has succeeded when accuracy >= 50%', () => {
+    it('has succeeded when accuracy >= 72%', () => {
       const quiz = aQuiz()
-        .with(aTrueStatement(), aTrueStatement())
+        .with(aTrueStatement(), aTrueStatement(), aTrueStatement(), aTrueStatement())
         .build();
 
+      havingSent(true).to(quiz);
+      havingSent(true).to(quiz);
       havingSent(true).to(quiz);
 
       const result2 = quiz.submit(false);

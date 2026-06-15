@@ -4,15 +4,15 @@ import Percentage from "../../../domain/training/models/percentage";
 
 describe('QuizOutcome', () => {
 
-  it.for([0, 49])
-  ('has failed when < 50%', (accuracy: number) => {
+  it.for([0, 71])
+  ('has failed when < 72%', (accuracy: number) => {
     const outcome = anOutcome().withAccuracy(accuracy);
 
     expect(outcome === QuizOutcome.FAIL).toBe(true);
   })
 
-  it.for([50, 99])
-  ('has succeeded when >= 50%', (accuracy: number) => {
+  it.for([72, 99])
+  ('has succeeded when >= 72%', (accuracy: number) => {
     const outcome = anOutcome().withAccuracy(accuracy);
 
     expect(outcome === QuizOutcome.PASS).toBe(true);

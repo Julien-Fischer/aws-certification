@@ -8,7 +8,7 @@ import {Accuracy} from "./models/types";
 export class QuizOutcome {
 
   public static readonly FAIL    = new QuizOutcome(Percentage.ZERO);
-  public static readonly PASS    = new QuizOutcome(Percentage.FIFTY);
+  public static readonly PASS    = new QuizOutcome(new Percentage(72));
   public static readonly MASTER  = new QuizOutcome(Percentage.HUNDRED);
 
   public static from(accuracy: Accuracy): QuizOutcome {
