@@ -168,6 +168,48 @@ describe('MarkdownParserService', () => {
             },
           ]);
       })
+
+      it('parses multiple and single choice questions', () => {
+        const markdown = aFlashCard()
+          .with(
+            aMultipleChoiceQuestion()
+              .labelled('Some question?')
+              .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+              .withAnswer(['A', 'C']),
+            aSingleChoiceQuestion()
+              .labelled('A single choice question?')
+              .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+              .withAnswer('C'),
+            aMultipleChoiceQuestion()
+              .labelled('Some other question?')
+              .withOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D')
+              .withAnswer(['B', 'D']),
+          )
+          .toMarkdown();
+
+        const parsed = service.parse(markdown);
+
+        expectFlashCard(parsed)
+          .toHaveSingleChoiceQuestions([
+            {
+              label: 'A single choice question?',
+              options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+              answer: choice('C. Option C')
+            },
+          ])
+          .toHaveMultipleChoiceQuestions([
+            {
+              label: 'Some question?',
+              options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+              answer: selection('A. Option A', 'C. Option C')
+            },
+            {
+              label: 'Some other question?',
+              options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
+              answer: selection('B. Option B', 'D. Option D')
+            },
+          ]);
+      })
     })
 
     describe('single choice questions', () => {
@@ -188,7 +230,7 @@ describe('MarkdownParserService', () => {
                     {
                         label: 'Some question?',
                         options: toOptions('A. Option A', 'B. Option B', 'C. Option C', 'D. Option D'),
-                        answer: new Answer(new Option('C. Option C'))
+                        answer: choice('C. Option C')
                     }
                 ])
         });
@@ -756,4 +798,8 @@ class FlashCardExpectation {
 
 function expectFlashCard(flashCard: FlashCard): FlashCardExpectation {
     return new FlashCardExpectation(flashCard);
+}
+
+function choice(value: string): Answer<Option> {
+  return new Answer(new Option(value));
 }
