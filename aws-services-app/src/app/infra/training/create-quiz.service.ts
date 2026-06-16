@@ -21,6 +21,7 @@ export interface QuizDto {
 export interface QuestionDto {
   label: string;
   options?: OptionDto[];
+  multipleSelection?: boolean;
 }
 
 export interface QuizRequest {
@@ -143,8 +144,9 @@ class QuizToResponse {
     const questionDto: Partial<QuestionDto> = {
       label: question.label
     };
-    if (question instanceof SingleChoiceQuestion) {
+    if (question instanceof SingleChoiceQuestion || question instanceof MultipleChoiceQuestion) {
       questionDto.options = question.options.map(option => new OptionDto(option.toString()));
+      questionDto.multipleSelection = question instanceof MultipleChoiceQuestion;
     }
     return questionDto as QuestionDto;
   }

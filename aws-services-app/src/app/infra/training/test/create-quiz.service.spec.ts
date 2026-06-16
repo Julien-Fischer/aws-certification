@@ -141,7 +141,32 @@ describe('CreateQuiz', () => {
           options: [
             new Option('A. option 1'),
             new Option('B. option 2')
-          ]
+          ],
+          multipleSelection: false
+        });
+    })
+
+    it('returns created quiz with a multiple-choice question', () => {
+      const dto: QuizRequest = {
+        booleanQuestions: [],
+        singleChoiceQuestions: [],
+        multipleChoiceQuestions: [
+          {label: 'question 1', answer: ['A. option 1'], options: ['A. option 1', 'B. option 2']}
+        ]
+      }
+
+      const quiz: QuizDto = quizPublisher.publish(dto);
+
+      expectQuiz(quiz)
+        .toBeValid()
+        .toHaveQuestions(1)
+        .toHaveFirstQuestion({
+          label: 'question 1',
+          options: [
+            new Option('A. option 1'),
+            new Option('B. option 2')
+          ],
+          multipleSelection: true
         });
     })
 
