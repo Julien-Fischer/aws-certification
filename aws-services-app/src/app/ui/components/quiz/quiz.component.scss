@@ -2,7 +2,21 @@
   max-width: 800px;
 }
 
+.options-section {
+  &.grid-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
 .option-card {
+  height: 100%;
+  margin-bottom: 0 !important;
   transition: all 0.2s ease-in-out;
   background-color: var(--card-bg, #fff);
 

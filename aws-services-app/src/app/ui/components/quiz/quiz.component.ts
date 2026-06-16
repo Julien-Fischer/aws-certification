@@ -224,7 +224,7 @@ export class QuizComponent {
   }
 
   hasOptions(): boolean {
-    return this.currentQuizOptions !== null && this.currentQuizOptions?.values.length > 0;
+    return this.currentQuizOptions !== null && (this.currentQuizOptions?.values?.length ?? 0) > 0;
   }
 
   protected trackOption(index: number, option: Option): string {
