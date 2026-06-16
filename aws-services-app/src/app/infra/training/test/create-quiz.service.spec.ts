@@ -115,8 +115,9 @@ describe('CreateQuiz', () => {
 
       const quiz: QuizDto = quizPublisher.publish(dto);
 
-      expectQuiz(quiz).toBeValid();
-      expect(quiz.questions).toBe(4);
+      expectQuiz(quiz)
+        .toBeValid()
+        .toHaveQuestions(4);
       expect(quiz.firstQuestion).toStrictEqual({label: 'statement 1'})
     })
 
@@ -132,8 +133,9 @@ describe('CreateQuiz', () => {
 
       const quiz: QuizDto = quizPublisher.publish(dto);
 
-      expectQuiz(quiz).toBeValid();
-      expect(quiz.questions).toBe(2);
+      expectQuiz(quiz)
+        .toBeValid()
+        .toHaveQuestions(2);
       const expectedFirstQuestion: QuestionDto = {
         label: 'question 1',
         options: [
@@ -280,6 +282,11 @@ function expectQuiz(quiz: QuizDto) {
     toBeValid() {
       expect(quiz).toBeDefined();
       expect(quiz.id).toBeDefined();
+      return this;
+    },
+
+    toHaveQuestions(count: number) {
+      expect(quiz.questions).toBe(count);
       return this;
     }
   }
