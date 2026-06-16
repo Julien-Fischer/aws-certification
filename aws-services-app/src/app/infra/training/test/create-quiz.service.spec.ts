@@ -117,8 +117,8 @@ describe('CreateQuiz', () => {
 
       expectQuiz(quiz)
         .toBeValid()
-        .toHaveQuestions(4);
-      expect(quiz.firstQuestion).toStrictEqual({label: 'statement 1'})
+        .toHaveQuestions(4)
+        .toHaveFirstQuestion({label: 'statement 1'});
     })
 
     it('returns created quiz with a single choice question', () => {
@@ -135,15 +135,14 @@ describe('CreateQuiz', () => {
 
       expectQuiz(quiz)
         .toBeValid()
-        .toHaveQuestions(2);
-      const expectedFirstQuestion: QuestionDto = {
-        label: 'question 1',
-        options: [
-          new Option('A. option 1'),
-          new Option('B. option 2')
-        ]
-      };
-      expect(quiz.firstQuestion).toStrictEqual(expectedFirstQuestion)
+        .toHaveQuestions(2)
+        .toHaveFirstQuestion({
+          label: 'question 1',
+          options: [
+            new Option('A. option 1'),
+            new Option('B. option 2')
+          ]
+        });
     })
 
 
@@ -287,6 +286,11 @@ function expectQuiz(quiz: QuizDto) {
 
     toHaveQuestions(count: number) {
       expect(quiz.questions).toBe(count);
+      return this;
+    },
+
+    toHaveFirstQuestion(expected: QuestionDto) {
+      expect(quiz.firstQuestion).toStrictEqual(expected);
       return this;
     }
   }
