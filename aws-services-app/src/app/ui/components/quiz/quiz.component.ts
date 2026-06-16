@@ -1,17 +1,12 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import {
-  SingleChoiceQuestion,
-  Option,
-  Question,
-  BooleanQuestion,
-  MultipleChoiceQuestion
-} from "../../../domain/search/models/question";
+import {Option} from "../../../domain/search/models/question";
 import {ResultDto, SendAnswer} from "../../../infra/training/send-answer.service";
+import {UserAnswer} from "../../../domain/training/models/user-answer";
 import Score from "../../../domain/scoring/models/score";
 import Percentage from "../../../domain/scoring/models/percentage";
-import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/create-quiz.service";
+import {QuestionDto, QuizDto} from "../../../infra/training/create-quiz.service";
 
 export interface ProgressUpdate {
   score: Score;
@@ -32,14 +27,12 @@ export interface QuizOptions {
 })
 export class QuizComponent {
 
-  private static readonly SHUFFLE = true;
-
   accuracy: number = 0;
   progress: number = 0;
 
   protected questionIndex: number = 0;
   protected questionCount: number = 0;
-  protected selectedOption: string | Option | null = null;
+  protected selectedOption: string | Option | (string | Option)[] | null = null;
   protected showFeedback: boolean = false;
   protected isCorrect: boolean = false;
   protected lastResult: ResultDto | null = null;
@@ -48,56 +41,51 @@ export class QuizComponent {
   protected currentQuizOptions: QuizOptions | null = null;
   protected pendingNextQuestion: QuizOptions | null = null;
 
-  private currentIndex: number = 0;
-  private _questions: Question[] = [];
-
-  private readonly requestMapper = new QuestionsToQuizRequest();
+  private _quiz: QuizDto | undefined;
 
   constructor(
     private sendAnswer: SendAnswer,
-    private createQuiz: CreateQuiz
   ) {
   }
 
-  quiz: QuizDto | undefined;
   @Output() onAnswer = new EventEmitter<ProgressUpdate>();
   @Input() onRetry: () => void = () => {};
 
   @Input()
-  set questions(value: Question[]) {
-    this._questions = value;
-    this.resetQuiz();
+  set quiz(value: QuizDto | undefined) {
+    this._quiz = value;
+    this.resetState();
+    if (this._quiz) {
+      this.startQuiz();
+    }
   }
 
-  get questions(): Question[] {
-    return this._questions;
+  get quiz(): QuizDto | undefined {
+    return this._quiz;
   }
 
   private startQuiz(): void {
-    this.quiz = this.sendQuizRequest();
-    this.questionCount = this.quiz.questions;
-    const index = this.questions.findIndex(question => question.label === this.quiz?.firstQuestion.label);
-    if (index !== -1) {
-      this.currentIndex = index;
-    }
+    if (!this._quiz) return;
+    this.questionCount = this._quiz.questions;
     this.initializeCurrentQuizOptions();
   }
 
   private initializeCurrentQuizOptions(): void {
-    const firstQuestion = this.questions[this.currentIndex];
-    if (firstQuestion && 'options' in firstQuestion && Array.isArray(firstQuestion.options)) {
-      const singleChoiceQuestion = firstQuestion as SingleChoiceQuestion;
-      this.currentQuizOptions = {
-        label: singleChoiceQuestion.label,
-        allowMultipleSelection: false,
-        values: singleChoiceQuestion.options.map((option: Option) => `${option.prefix}.${option.label}`)
-      };
-    } else {
-      this.currentQuizOptions = null;
-    }
+    if (!this._quiz) return;
+    const firstQuestion = this._quiz.firstQuestion;
+    this.currentQuizOptions = this.mapQuestion(firstQuestion);
   }
 
-  resetQuiz(): void {
+  private mapQuestion(firstQuestion: QuestionDto): QuizOptions {
+    const hasOptions = firstQuestion.options && firstQuestion.options.length > 0;
+    return {
+        label: firstQuestion.label,
+        allowMultipleSelection: firstQuestion.multipleSelection === true,
+        values: hasOptions ? firstQuestion.options!.map((option: Option) => option.toString()) : []
+      };
+  }
+
+  private resetState(): void {
     this.selectedOption = null;
     this.showFeedback = false;
     this.isCorrect = false;
@@ -109,16 +97,44 @@ export class QuizComponent {
     this.explanation = undefined;
     this.currentQuizOptions = null;
     this.pendingNextQuestion = null;
+  }
 
-    if (this.questions.length > 0) {
-      this.startQuiz();
-      this.onRetry();
-    }
+  resetQuiz(): void {
+    this.resetState();
+    this.onRetry();
   }
 
   selectOption(option: string | Option): void {
     if (this.showFeedback) return;
-    this.selectedOption = option as any;
+
+    if (this.currentQuizOptions?.allowMultipleSelection) {
+      this.toggleSelectedOption(option);
+    } else {
+      this.selectedOption = option as any;
+    }
+  }
+
+  private toggleSelectedOption(option: string | Option): void {
+    const currentSelection = Array.isArray(this.selectedOption)
+      ? this.selectedOption
+      : (this.selectedOption ? [this.selectedOption] : []);
+
+    const index = currentSelection.findIndex(o => this.areOptionsEqual(o, option));
+
+    if (index === -1) {
+      this.selectedOption = [...currentSelection, option];
+    } else {
+      const newSelection = [...currentSelection];
+      newSelection.splice(index, 1);
+      this.selectedOption = newSelection.length > 0 ? newSelection : null;
+    }
+  }
+
+  private areOptionsEqual(a: string | Option, b: string | Option): boolean {
+    if (typeof a === 'string' || typeof b === 'string') {
+      return a === b;
+    }
+    return a.equals(b);
   }
 
   checkAnswer(): void {
@@ -127,7 +143,7 @@ export class QuizComponent {
     const answerValue = this.createAnswer(this.selectedOption);
 
     const result: ResultDto = this.sendAnswer.send({
-      quizId: this.quiz!.id,
+      quizId: this._quiz!.id,
       answer: answerValue
     });
 
@@ -143,22 +159,26 @@ export class QuizComponent {
     this.onAnswer.emit(toScore(result));
   }
 
-  private createAnswer(selectedOption: string | Option): string | boolean {
+  private createAnswer(selectedOption: string | Option | (string | Option)[]): UserAnswer {
+    if (Array.isArray(selectedOption)) {
+      return selectedOption.map(option => (option as Option).prefix);
+    }
     return (typeof selectedOption === 'string')
       ? (selectedOption === 'true')
-      : selectedOption!.prefix;
+      : (selectedOption as Option).prefix;
   }
 
   private storeNextQuestionData(result: ResultDto) {
-    if (result.nextQuestion?.options) {
+    const nextQuestion = result.nextQuestion;
+    if (nextQuestion?.options) {
       this.pendingNextQuestion = {
-        label: result.nextQuestion.label,
-        allowMultipleSelection: result.nextQuestion.options.allowMultipleSelection,
-        values: result.nextQuestion.options.values
+        label: nextQuestion.label,
+        allowMultipleSelection: nextQuestion.options.allowMultipleSelection,
+        values: nextQuestion.options.values
       };
-    } else if (result.nextQuestion) {
+    } else if (nextQuestion) {
       this.pendingNextQuestion = {
-        label: result.nextQuestion.label,
+        label: nextQuestion.label,
         allowMultipleSelection: false,
         values: []
       };
@@ -181,22 +201,14 @@ export class QuizComponent {
     }
   }
 
-  get currentQuestion(): Question {
-    return this.questions[this.currentIndex];
-  }
-
   getCurrentQuestionLabel(): string {
-    if (this.currentQuizOptions) {
-      return this.currentQuizOptions.label;
-    }
-    return this.currentQuestion.label;
+    return this.currentQuizOptions?.label ?? '';
   }
 
   getCurrentQuestionOptions(): Option[] {
-    if (this.currentQuizOptions) {
-      return this.currentQuizOptions.values.map(subject => new Option(subject));
-    }
-    return [];
+    return this.currentQuizOptions == null
+      ? []
+      : this.currentQuizOptions.values.map(subject => new Option(subject));
   }
 
   get renderedExplanation(): string {
@@ -213,13 +225,15 @@ export class QuizComponent {
   }
 
   selectOptionFromContext(option: Option): void {
-    if (this.showFeedback) return;
-    this.selectedOption = option;
+    this.selectOption(option);
   }
 
   matchesAnswerFromString(candidate: string): boolean {
     const expected = this.lastResult?.expectedAnswer;
     const candidateLetter = candidate.split('.')[0];
+    if (Array.isArray(expected)) {
+      return expected.includes(candidateLetter);
+    }
     return candidateLetter === expected;
   }
 
@@ -231,20 +245,16 @@ export class QuizComponent {
     return option.toString();
   }
 
-  private sendQuizRequest(): QuizDto {
-    return this.createQuiz.publish(this.createQuizRequest());
-  }
-
-  private createQuizRequest(): QuizRequest {
-    return this.requestMapper.toQuizRequest(this.questions, QuizComponent.SHUFFLE);
-  }
 
   protected isOptionIncorrect(option: Option): boolean {
-    return option.equals(this.selectedOption) && !this.matchesAnswerFromString(option.toString());
+    return this.isSelected(option) && !this.matchesAnswerFromString(option.toString());
   }
 
   protected isSelected(option: Option): boolean {
-    return option.equals(this.selectedOption);
+    if (Array.isArray(this.selectedOption)) {
+      return this.selectedOption.some(o => (o as Option).equals(option));
+    }
+    return option.equals(this.selectedOption as Option);
   }
 
 }
@@ -259,61 +269,4 @@ function toScore(result: ResultDto): ProgressUpdate {
 }
 
 
-class QuestionsToQuizRequest {
 
-  public toQuizRequest(questions: Question[], shuffle: boolean): QuizRequest {
-    return this.toRequest(
-      this.getBooleanQuestions(questions),
-      this.getSingleChoiceQuestions(questions),
-      this.getMultipleChoiceQuestions(questions),
-      shuffle
-    );
-  }
-
-  private getBooleanQuestions(questions: Question[]): BooleanQuestion[] {
-    return questions.filter(question => !this.hasOptions(question));
-  }
-
-  private getSingleChoiceQuestions(questions: Question[]): SingleChoiceQuestion[] {
-    return questions.filter(question => this.hasOptions(question) && !Array.isArray(question.answer.value)) as SingleChoiceQuestion[];
-  }
-
-  private getMultipleChoiceQuestions(questions: Question[]): MultipleChoiceQuestion[] {
-    return questions.filter(question => this.hasOptions(question) && Array.isArray(question.answer.value)) as MultipleChoiceQuestion[];
-  }
-
-  private hasOptions(question: Question): boolean {
-    return 'options' in question;
-  }
-
-  private toRequest(
-    booleanQuestions: BooleanQuestion[],
-    singleChoiceQuestions: SingleChoiceQuestion[],
-    multipleChoiceQuestions: MultipleChoiceQuestion[],
-    shuffle: boolean,
-  ): QuizRequest {
-    return {
-      booleanQuestions: booleanQuestions.map(question => ({
-        label: question.label,
-        answer: question.answer.value,
-        explanation: question.answer.explanation
-      })),
-      singleChoiceQuestions: singleChoiceQuestions.map(question => ({
-        label: question.label,
-        answer: {
-          value: question.answer.value.prefix,
-          explanation: question.answer.explanation
-        },
-        options: question.options.map((option: Option) => option.toString())
-      })),
-      multipleChoiceQuestions: multipleChoiceQuestions.map(question => ({
-        label: question.label,
-        answer: question.answer.value.map(option => option.prefix),
-        explanation: question.answer.explanation,
-        options: question.options.map((option: Option) => option.toString())
-      })),
-      shuffle
-    };
-  }
-
-}

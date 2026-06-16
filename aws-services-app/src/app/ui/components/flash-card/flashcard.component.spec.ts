@@ -28,6 +28,13 @@ import {HighscoreDetailsComponent} from "./content/highscore-details/highscore-d
 import {FlashCardMetadata} from "../../../domain/search/models/metadata";
 import {Confetti, confettiInjectionToken} from "../../animations/confetti";
 import {FlashCard} from "../../../domain/search/models/flash-card";
+import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
+import {TrainingSession} from "../../../domain/training/training-session";
+import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
+import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
+import {shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
+import {DeterministicShuffleProvider} from "../../test/mock-shuffle";
+import {NoShuffle} from "../../../domain/training/shuffle";
 
 interface CardDescriptor {
   metadata: FlashCardMetadata;
@@ -52,7 +59,7 @@ interface ActivatedRouteStub {
     setCardId(cardId: string): void;
 }
 
-class SubbedActivatedRoute {
+class StubActivatedRoute {
   private paramMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
 
   readonly paramMap = this.paramMapSubject.asObservable();
@@ -99,7 +106,7 @@ describe('FlashCardComponent', () => {
     beforeEach(async () => {
         flashCardProvider = new MockFlashCardProvider();
         gamification = new StubGamificationService();
-        activatedRouteMock = new SubbedActivatedRoute();
+        activatedRouteMock = new StubActivatedRoute();
         confetti = new StubConfetti();
 
         await TestBed.configureTestingModule({
@@ -114,6 +121,9 @@ describe('FlashCardComponent', () => {
                 { provide: forgetHighscoreInjectionToken, useClass: ForgetHighscoreService},
                 { provide: gamificationInjectionToken, useValue: gamification },
                 { provide: confettiInjectionToken, useValue: confetti },
+                { provide: startQuizInjectionToken, useClass: TrainingSession},
+                { provide: quizRepositoryInjectionToken, useClass: InMemoryQuizRepository},
+                { provide: shuffleProviderInjectionToken, useValue: new DeterministicShuffleProvider(NoShuffle)},
             ]
         })
             .compileComponents()

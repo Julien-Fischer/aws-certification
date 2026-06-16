@@ -33,10 +33,11 @@
                 />
               }
 
-              @if (questions.length > 0) {
+              @if (quiz) {
                 <div class="mt-5">
                   <app-quiz
-                    [questions]="questions"
+                    [quiz]="quiz"
+                    [onRetry]="onRetry.bind(this)"
                     (onAnswer)="onProgress($event)"
                   />
                 </div>

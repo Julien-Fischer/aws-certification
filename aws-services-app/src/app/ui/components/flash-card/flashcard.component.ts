@@ -18,7 +18,9 @@ import { HighscoreDetailsComponent } from "./content/highscore-details/highscore
 import { FlashCardNavigationComponent } from "./content/navigation/flash-card-navigation.component";
 import { FlashCardHeaderComponent } from "./content/flash-card-header.component";
 import {ScoringAppService, AnswerResult} from "../../../domain/scoring/scoring-application.service";
-import {Question} from "../../../domain/search/models/question";
+import { Question} from "../../../domain/search/models/question";
+import {CreateQuiz, QuizDto, QuizRequest} from "../../../infra/training/create-quiz.service";
+import {QuestionsToQuizRequest} from "../../services/questions-to-quiz-request";
 
 @Component({
   selector: 'app-flash-card',
@@ -37,6 +39,8 @@ import {Question} from "../../../domain/search/models/question";
 })
 export class FlashcardComponent implements OnInit, OnDestroy {
 
+  private static readonly SHUFFLE = true;
+
   flashCard: FlashCardMetadata | undefined;
   markdownContent: string = '';
   highscore: Highscore = Highscore.NONE;
@@ -49,11 +53,15 @@ export class FlashcardComponent implements OnInit, OnDestroy {
 
   private resetSubscription: Subscription | undefined;
   protected questions: Question[] = [];
+  protected quiz: QuizDto | undefined;
+
+  private readonly requestMapper = new QuestionsToQuizRequest();
 
   constructor(
     private route: ActivatedRoute,
     private flashCardService: SearchService,
     private scoringAppService: ScoringAppService,
+    private createQuiz: CreateQuiz,
     @Inject(confettiInjectionToken) private confetti: Confetti
   ) {}
 
@@ -113,11 +121,12 @@ export class FlashcardComponent implements OnInit, OnDestroy {
         if (!card) {
           return;
         }
-        const { mainContent, booleanQuestions, singleChoiceQuestions } = card;
+        const { mainContent, booleanQuestions, singleChoiceQuestions, multipleChoiceQuestions } = card;
         const renderer = tableRenderer();
 
         this.markdownContent = marked(mainContent, { renderer }) as string;
-        this.questions = [...booleanQuestions, ...singleChoiceQuestions];
+        this.questions = [...booleanQuestions, ...singleChoiceQuestions, ...multipleChoiceQuestions];
+        this.startQuiz();
         this.loading = false;
       },
       error: (error) => {
@@ -142,6 +151,20 @@ export class FlashcardComponent implements OnInit, OnDestroy {
     if (result.deservesReward) {
       this.rewardUser(result);
     }
+  }
+
+  private startQuiz() {
+    if (this.questions.length > 0) {
+      this.quiz = this.createQuiz.publish(this.createQuizRequest());
+    }
+  }
+
+  private createQuizRequest(): QuizRequest {
+    return this.requestMapper.toQuizRequest(this.questions, FlashcardComponent.SHUFFLE);
+  }
+
+  onRetry() {
+    this.startQuiz();
   }
 
   private rewardUser(result: AnswerResult) {

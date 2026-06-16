@@ -1,5 +1,5 @@
 <div class="quiz-container mt-4 md:p-6 md:border md:border-[var(--aws-orange)] md:border-1 rounded shadow-sm bg-light-theme">
-    @if (!quizCompleted && questions.length > 0) {
+    @if (!quizCompleted && quiz) {
         <div class="progress mb-4 bg-gray-200 dark:bg-gray-600" style="height: 10px;">
             <div class="progress-bar"
                  role="progressbar"
@@ -114,7 +114,7 @@
         </div>
     }
 
-    @if (questions.length === 0) {
+    @if (!quiz) {
         <div class="text-center py-4">
             <p>No quiz questions available for this service.</p>
         </div>

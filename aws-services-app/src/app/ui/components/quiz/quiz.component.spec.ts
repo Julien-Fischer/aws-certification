@@ -11,40 +11,18 @@ import {
 import PageObject from "../../test/page-object";
 import {submitAnswerInjectionToken} from "../../../domain/training/ports/inbound/submit-answer";
 import {AnswerEvaluator} from "../../../domain/training/answer-evaluator";
-import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 import {InMemoryQuizRepository} from "../../../infra/training/in-memory-quiz-repository";
-import {startQuizInjectionToken} from "../../../domain/training/ports/inbound/start-quiz";
 import {TrainingSession} from "../../../domain/training/training-session";
-import {NoShuffle, Shuffle} from "../../../domain/training/shuffle";
-import {ShuffleProvider, shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
-import {Letter} from "../../../infra/learning/markdown-parser.service";
+import {shuffleProviderInjectionToken} from "../../../infra/training/shuffle-provider";
+import {CreateQuiz} from "../../../infra/training/create-quiz.service";
 import {buildAll, Builder} from "../../../test/builder";
+import {Letter} from "../../../infra/learning/markdown-parser.service";
+import {DeterministicShuffleProvider, MockNoShuffle} from "../../test/mock-shuffle";
+import {StartQuiz} from "../../../domain/training/ports/inbound/start-quiz";
+import {QuestionsToQuizRequest} from "../../services/questions-to-quiz-request";
+import {quizRepositoryInjectionToken} from "../../../domain/training/ports/outbound/quiz-repository";
 
-class DeterministicShuffleProvider implements ShuffleProvider {
-
-  constructor(private deterministicShuffle: Shuffle) {
-  }
-
-  get(shuffle: boolean): Shuffle {
-    return shuffle ? this.deterministicShuffle : NoShuffle;
-  }
-
-}
-
-class MockNoShuffle implements Shuffle {
-
-  private called = false;
-
-  shuffle<T>(array: T[]): T[] {
-    this.called = true;
-    return array;
-  }
-
-  wasCalled(): boolean {
-    return this.called;
-  }
-
-}
+const questionsMapper = new QuestionsToQuizRequest();
 
 describe('QuizComponent', () => {
 
@@ -55,16 +33,22 @@ describe('QuizComponent', () => {
   let shuffle: MockNoShuffle;
   let shuffleProvider: DeterministicShuffleProvider;
 
+  let trainingSession: StartQuiz;
+  let quizRepository: InMemoryQuizRepository;
+  let createQuiz: CreateQuiz;
+
   beforeEach(async () => {
     shuffle = new MockNoShuffle();
     shuffleProvider = new DeterministicShuffleProvider(shuffle);
+    quizRepository = new InMemoryQuizRepository();
+    trainingSession = new TrainingSession(quizRepository);
+    createQuiz = new CreateQuiz(trainingSession, shuffleProvider);
 
     await TestBed.configureTestingModule({
       imports: [QuizComponent],
       providers: [
         {provide: submitAnswerInjectionToken, useClass: AnswerEvaluator},
-        {provide: quizRepositoryInjectionToken, useClass: InMemoryQuizRepository},
-        {provide: startQuizInjectionToken, useClass: TrainingSession},
+        {provide: quizRepositoryInjectionToken, useValue: quizRepository},
         {provide: shuffleProviderInjectionToken, useValue: shuffleProvider}
       ]
     })
@@ -352,12 +336,16 @@ describe('QuizComponent', () => {
 
 
   async function having(...questions: Builder<any>[]) {
-    fixture.componentRef.setInput('questions', buildAll(questions));
+    const built = buildAll(questions);
+    const quizRequest = questionsMapper.toQuizRequest(built, true);
+    const quizDto = createQuiz.publish(quizRequest);
+    fixture.componentRef.setInput('quiz', quizDto);
     await page.stabilize();
   }
 
   async function havingNoQuiz() {
-    await having();
+    fixture.componentRef.setInput('quiz', undefined);
+    await page.stabilize();
   }
 
   async function havingCompletedQuiz() {
